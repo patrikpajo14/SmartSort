@@ -1,9 +1,9 @@
 import { StyleSheet, Text, View } from "react-native";
 
-export default function ScannerScreen() {
+export default function ScanPreviewScreen() {
   return (
     <View style={styles.container}>
-      <Text>Scanner screen</Text>
+      <Text>Scan Preview screen</Text>
     </View>
   );
 }

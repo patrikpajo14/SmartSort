@@ -1,9 +1,9 @@
 import { StyleSheet, Text, View } from "react-native";
 
-export default function EducationScreen() {
+export default function LanguageScreen() {
   return (
     <View style={styles.container}>
-      <Text>Education screen</Text>
+      <Text>Language screen</Text>
     </View>
   );
 }

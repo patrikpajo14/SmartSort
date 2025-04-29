@@ -1,15 +1,13 @@
 import { Button, StyleSheet, Text, View } from "react-native";
-import { useRouter } from "expo-router";
+import { router } from "expo-router";
 
-export default function SettingsScreen() {
-  const router = useRouter();
-
+export default function ScannerScreen() {
   return (
     <View style={styles.container}>
-      <Text>Settings screen</Text>
+      <Text>Scanner screen</Text>
       <Button
-        onPress={() => router.navigate("/(main)/(tabs)/settings/language")}
-        title={"Language"}
+        onPress={() => router.navigate("/(main)/(tabs)/scanner/camera")}
+        title={"Camera Screen"}
       />
     </View>
   );
