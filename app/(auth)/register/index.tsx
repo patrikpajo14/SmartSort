@@ -1,23 +1,20 @@
-import { Button, StyleSheet, Text, View } from "react-native";
-import { useRouter } from "expo-router";
+import icons from "@/constants/icons";
+import { moderateScale } from "react-native-size-matters";
+import RegisterForm from "@/screens/auth-screens/RegisterForm";
+import MainLayout from "@/screen-layouts/MainLayout";
 
 export default function RegisterScreen() {
-  const router = useRouter();
   return (
-    <View style={styles.container}>
-      <Text>Register screen</Text>
-      <Button onPress={() => router.navigate("/")} title={"Back"} />
-      <Button onPress={() => router.navigate("/register")} title={"Register"} />
-    </View>
+    <MainLayout
+      title={"Register"}
+      returnIcon={icons.chevron_left}
+      contentContainerStyle={{ paddingHorizontal: moderateScale(20) }}
+    >
+      <RegisterForm
+        handleShowInlineAlert={() => {
+          console.log("SHow alert");
+        }}
+      />
+    </MainLayout>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    width: "100%",
-    height: "100%",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});

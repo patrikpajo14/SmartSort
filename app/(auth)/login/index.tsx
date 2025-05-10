@@ -1,33 +1,20 @@
-import { Button, StyleSheet, Text, View } from "react-native";
-import { useRouter } from "expo-router";
-import { useSession } from "@/context/AuthContext";
+import LoginForm from "@/screens/auth-screens/LoginForm";
+import MainLayout from "@/screen-layouts/MainLayout";
+import icons from "@/constants/icons";
+import { moderateScale } from "react-native-size-matters";
 
 export default function LoginScreen() {
-  const { signIn } = useSession();
-  const router = useRouter();
   return (
-    <View style={styles.container}>
-      <Text>Login screen</Text>
-      <Text
-        onPress={() => {
-          signIn();
-          router.replace("/(main)/(tabs)");
+    <MainLayout
+      title={"Sign in"}
+      returnIcon={icons.chevron_left}
+      contentContainerStyle={{ paddingHorizontal: moderateScale(20) }}
+    >
+      <LoginForm
+        handleShowInlineAlert={() => {
+          console.log("SHow alert");
         }}
-      >
-        Sign In
-      </Text>
-      <Button onPress={() => router.navigate("/")} title={"Back"} />
-      <Button onPress={() => router.navigate("/register")} title={"Register"} />
-    </View>
+      />
+    </MainLayout>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    width: "100%",
-    height: "100%",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});

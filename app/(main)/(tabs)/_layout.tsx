@@ -3,29 +3,28 @@ import React from "react";
 import { Platform } from "react-native";
 
 import { IconSymbol } from "@/components/ui/IconSymbol";
-import { Colors } from "@/constants/Colors";
+import { COLORS } from "@/constants/theme";
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { TabsUi } from "@/components/navigation/TabsUi";
+
+const tabs = [
+  { name: "index" },
+  { name: "map" },
+  { name: "scanner" },
+  { name: "education" },
+  { name: "settings/index" },
+];
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  let activeColors = COLORS[colorScheme ?? "light"];
 
   return (
     <Tabs
+      tabBar={(props) => <TabsUi tabs={tabs} {...props} />}
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
+        tabBarActiveTintColor: activeColors.text,
         headerShown: false,
-        // tabBarButton: HapticTab,
-        // tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: "absolute",
-            background: Colors[colorScheme ?? "light"].primary,
-          },
-          default: {
-            background: Colors[colorScheme ?? "light"].primary,
-          },
-        }),
       }}
     >
       <Tabs.Screen

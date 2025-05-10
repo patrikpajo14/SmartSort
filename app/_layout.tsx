@@ -12,6 +12,7 @@ import "react-native-reanimated";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { SessionProvider } from "@/context/AuthContext";
 import { StatusBar } from "expo-status-bar";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -19,7 +20,9 @@ SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
-    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
+    Poppins: require("../assets/fonts/poppins_regular.ttf"),
+    "Poppins-Bold": require("../assets/fonts/poppins_bold.ttf"),
+    "Poppins-Semibold": require("../assets/fonts/poppins_semiBold.ttf"),
   });
 
   useEffect(() => {
@@ -34,14 +37,18 @@ export default function RootLayout() {
 
   return (
     <SessionProvider>
-      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-        <Stack screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="(auth)" />
-          <Stack.Screen name="(main)" />
-          <Stack.Screen name="+not-found" />
-        </Stack>
-        <StatusBar style="auto" />
-      </ThemeProvider>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <ThemeProvider
+          value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+        >
+          <Stack screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="(auth)" />
+            <Stack.Screen name="(main)" />
+            <Stack.Screen name="+not-found" />
+          </Stack>
+          <StatusBar style="auto" />
+        </ThemeProvider>
+      </GestureHandlerRootView>
     </SessionProvider>
   );
 }

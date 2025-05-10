@@ -1,6 +1,7 @@
 import { createContext, useContext } from "react";
 import type { PropsWithChildren } from "react";
 import { useStorageState } from "@/hooks/useStorageState";
+import { router } from "expo-router";
 
 // 1. Define the AuthContext and its types
 const AuthContext = createContext<{
