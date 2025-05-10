@@ -5,13 +5,16 @@ import { useColorScheme } from "@/hooks/useColorScheme";
 import { ScaledSheet } from "react-native-size-matters";
 import { Image } from "expo-image";
 import PrimaryButton from "@/components/ui/PrimaryButton";
+import { useTheme } from "@/context/ThemeContext";
 
 export default function MainAuthScreen() {
   const router = useRouter();
-  const colorScheme = useColorScheme();
-  let activeColors = COLORS[colorScheme ?? "light"];
+  const { mode } = useTheme();
+  let activeColors = COLORS[mode ?? "light"];
   return (
-    <View style={styles.container}>
+    <View
+      style={[styles.container, { backgroundColor: activeColors.background }]}
+    >
       <View style={styles.imageWrap}>
         <Image
           style={styles.image}

@@ -17,6 +17,8 @@ import Animated, {
 import ListItem from "@/components/ListItem";
 import PaginationElement from "@/components/PaginationElement";
 import Button from "@/components/Button";
+import { useTheme } from "@/context/ThemeContext";
+import { COLORS } from "@/constants/theme";
 
 const pages = [
   {
@@ -39,6 +41,9 @@ const pages = [
 ];
 
 export default function App() {
+  const { mode } = useTheme();
+  let activeColors = COLORS[mode ?? "light"];
+
   const x = useSharedValue(0);
   const flatListIndex = useSharedValue(0);
   const flatListRef = useAnimatedRef<
@@ -73,7 +78,9 @@ export default function App() {
     [x],
   );
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: activeColors.background }]}
+    >
       <Animated.FlatList
         ref={flatListRef}
         onScroll={scrollHandle}
@@ -92,7 +99,9 @@ export default function App() {
       </View>
       <View style={styles.bottomContainer}>
         <Pressable>
-          <Text style={styles.skipButton}>Skip</Text>
+          <Text style={[styles.skipButton, { color: activeColors.textGray }]}>
+            Skip
+          </Text>
         </Pressable>
         <Button
           currentIndex={flatListIndex}
@@ -108,17 +117,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    backgroundColor: "#fff",
   },
   bottomContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: 30,
-    backgroundColor: "white",
   },
   skipButton: {
-    color: "#A8A8A8",
     fontSize: 16,
     fontWeight: "500",
   },

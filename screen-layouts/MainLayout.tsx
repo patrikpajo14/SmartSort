@@ -6,6 +6,7 @@ import { MainLayoutProps } from "@/types/layoutTypes";
 import { COLORS } from "@/constants/theme";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { router } from "expo-router";
+import { useTheme } from "@/context/ThemeContext";
 
 const MainLayout: React.FC<MainLayoutProps> = ({
   title,
@@ -27,8 +28,8 @@ const MainLayout: React.FC<MainLayoutProps> = ({
   if (!onReturnPress) {
     onReturnPress = () => router.back();
   }
-  const colorScheme = useColorScheme();
-  let activeColors = COLORS[colorScheme ?? "light"];
+  const { mode } = useTheme();
+  let activeColors = COLORS[mode ?? "light"];
   let insets = bottomInset
     ? ["left", "right", "top", "bottom"]
     : ["left", "right", "top"];

@@ -40,7 +40,7 @@ export const getBottomTabIcon = (tab: string, activeColors: ActiveColors) => {
         />
       );
     }
-    case "settings/index": {
+    case "settings": {
       const style = getIconStyle(24, 24);
       return (
         <Image

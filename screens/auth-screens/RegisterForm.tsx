@@ -1,16 +1,15 @@
-import React, { Dispatch, SetStateAction, useRef, useState } from "react";
-import { Text, TextStyle, TouchableOpacity, View } from "react-native";
+import React, { useRef, useState } from "react";
+import { Text, TouchableOpacity, View } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { moderateScale } from "react-native-size-matters";
 import FormInput from "../../components/formElements/FormInput";
-import PhoneWithCountryCodeGroup from "../../components/formElements/PhoneWithCountryCodeGroup";
 import { AlertType } from "@/types/global";
-import { useColorScheme } from "@/hooks/useColorScheme";
-import { COLORS, FONTS } from "@/constants/theme";
+import { COLORS } from "@/constants/theme";
 import PrimaryButton from "@/components/ui/PrimaryButton";
 import { router } from "expo-router";
+import { useTheme } from "@/context/ThemeContext";
 
 interface RegisterFormProps {
   handleShowInlineAlert: (message: string, type: AlertType) => void;
@@ -19,12 +18,9 @@ interface RegisterFormProps {
 const RegisterForm: React.FC<RegisterFormProps> = ({
   handleShowInlineAlert,
 }) => {
-  const colorScheme = useColorScheme();
-  let activeColors = COLORS[colorScheme ?? "light"];
+  const { mode } = useTheme();
+  let activeColors = COLORS[mode ?? "light"];
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [formatedPhoneValue, setFormatedPhoneValue] = useState("");
-  const [countryCode, setCountryCode] = useState("HR");
-  const [countryCodeNumber, setCountryCodeNumber] = useState("385");
 
   // const {verifyCaptcha} = useRecaptcha();
   const schema = z
@@ -66,17 +62,6 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
   const clearForm = () => {
     reset();
   };
-  const handleCountryChange = (country: {
-    cca2: React.SetStateAction<string>;
-    callingCode: any;
-  }) => {
-    if (country.callingCode[0]) {
-      setCountryCodeNumber(country.callingCode[0]);
-    } else {
-      setCountryCodeNumber("");
-    }
-    setCountryCode(country.cca2);
-  };
 
   const nameRef = useRef(null);
   const lastNameRef = useRef(null);
@@ -91,7 +76,6 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
         name: data?.name,
         surname: data?.surname,
         email: data?.email,
-        country_code: countryCode,
         password: data?.password,
         password2: data?.password2,
       };
@@ -217,7 +201,14 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
         />
       </View>
 
-      <View style={{ flexDirection: "row", gap: 5 }}>
+      <View
+        style={{
+          flexDirection: "row",
+          gap: 5,
+          marginBottom: 10,
+          justifyContent: "center",
+        }}
+      >
         <Text style={{ color: activeColors.text }}>
           Your already have account?
         </Text>

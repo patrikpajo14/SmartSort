@@ -1,26 +1,5 @@
-import { Button, StyleSheet, Text, View } from "react-native";
-import { useRouter } from "expo-router";
+import Settings from "@/screens/settings-screens";
 
 export default function SettingsScreen() {
-  const router = useRouter();
-
-  return (
-    <View style={styles.container}>
-      <Text>Settings screen</Text>
-      <Button
-        onPress={() => router.navigate("/(main)/(tabs)/settings/language")}
-        title={"Language"}
-      />
-    </View>
-  );
+  return <Settings />;
 }
-
-const styles = StyleSheet.create({
-  container: {
-    width: "100%",
-    height: "100%",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});

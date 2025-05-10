@@ -35,8 +35,8 @@ export const COLORS = {
     infoLight: "#B3D8FC",
   },
   dark: {
-    background: "#ffffff",
-    text: "#101400",
+    background: "#26291d",
+    text: "#FFFFFF",
     textGray: "#5A5A5A",
     textLightGray: "#ABABAB",
     border: "#E1E1E1",

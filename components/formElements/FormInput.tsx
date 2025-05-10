@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { moderateScale } from "react-native-size-matters";
 import { COLORS, FONTS } from "@/constants/theme";
+import { useTheme } from "@/context/ThemeContext";
 
 interface FormInputProps extends TextInputProps {
   containerStyle?: ViewStyle;
@@ -57,8 +58,8 @@ const FormInput = forwardRef<TextInput, FormInputProps>(
     ref,
   ) => {
     const [isFocused, setIsFocused] = useState(false);
-    const colorScheme = useColorScheme();
-    let activeColors = COLORS[colorScheme ?? "light"];
+    const { mode } = useTheme();
+    let activeColors = COLORS[mode ?? "light"];
 
     return (
       <View style={[containerStyle]}>

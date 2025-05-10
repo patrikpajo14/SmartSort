@@ -12,14 +12,15 @@ import { router } from "expo-router";
 import { AlertType } from "@/types/global";
 import PrimaryButton from "@/components/ui/PrimaryButton";
 import { useSession } from "@/context/AuthContext";
+import { useTheme } from "@/context/ThemeContext";
 
 interface LoginFormProps {
   handleShowInlineAlert: (message: string, type: AlertType) => void;
 }
 
 const LoginForm: React.FC<LoginFormProps> = ({ handleShowInlineAlert }) => {
-  const colorScheme = useColorScheme();
-  let activeColors = COLORS[colorScheme ?? "light"];
+  const { mode } = useTheme();
+  let activeColors = COLORS[mode ?? "light"];
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isDisabled, setIsDisabled] = useState<boolean>(false);
   const { signIn } = useSession();

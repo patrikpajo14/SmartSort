@@ -12,7 +12,7 @@ const tabs = [
   { name: "map" },
   { name: "scanner" },
   { name: "education" },
-  { name: "settings/index" },
+  { name: "settings" },
 ];
 
 export default function TabLayout() {
@@ -64,7 +64,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="settings/index"
+        name="settings"
         options={{
           title: "Settings",
           tabBarIcon: ({ color }) => (
