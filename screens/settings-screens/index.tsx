@@ -57,7 +57,7 @@ const Settings = () => {
       id: 1,
       title: "Language",
       icon: icons.chevron_right,
-      link: "Language",
+      link: "/settings/language",
       value: "HR",
       type: "lang",
     },

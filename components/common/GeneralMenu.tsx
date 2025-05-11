@@ -77,17 +77,12 @@ const GeneralMenu = ({
   };
   const handleNavigate = (menuItem: MenuItem) => {
     if (menuItem?.menu_item_type === 2 || menuItem?.menu_item_type === 3) {
-      router.navigate("SimpleScreen", {
+      /*router.navigate("SimpleScreen", {
         id: menuItem?.id,
         menu_type: menuItem?.menu_item_type,
-      });
+      });*/
     } else if (!menuItem?.menu_item_type) {
-      router.navigate("SettingsNavigator", {
-        screen: menuItem.link,
-        params: {
-          forScreen: menuItem.type,
-        },
-      });
+      router.navigate(menuItem?.link || "/settings");
     } else {
       if (menuItem?.link) {
         Linking.openURL(menuItem?.link).catch((err) =>
@@ -100,6 +95,8 @@ const GeneralMenu = ({
         });
       }
     }
+
+    console.log("GENERAL MENU ITEM", menuItem);
   };
 
   return (

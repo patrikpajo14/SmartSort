@@ -10,7 +10,8 @@ import { router } from "expo-router";
 import { useTheme } from "@/context/ThemeContext";
 import { COLORS, FONTS } from "@/constants/theme";
 import { truncateText } from "@/utils/truncateText";
-import { Image } from "expo-image";
+import { Image, ImageBackground } from "expo-image";
+import { red } from "react-native-reanimated/lib/typescript/Colors";
 
 const SettingsLayout: React.FC<MainLayoutProps> = ({
   title,
@@ -97,6 +98,11 @@ const SettingsLayout: React.FC<MainLayoutProps> = ({
               <View style={styles.placeholder} />
             )}
           </View>
+          <ImageBackground
+            style={styles.image}
+            source={require("@/assets/images/bg-shape.png")}
+            contentFit="cover"
+          />
         </View>
       </View>
 
@@ -144,9 +150,7 @@ const styles = ScaledSheet.create({
     marginLeft: "10@ms",
   },
   title: {
-    ...(FONTS.semiBold2 as TextStyle),
-    fontSize: "18@ms0.2",
-    lineHeight: "20@ms0.2",
+    ...(FONTS.semiBold1 as TextStyle),
   },
 
   placeholder: {
@@ -157,9 +161,13 @@ const styles = ScaledSheet.create({
   },
   gradientWrapper: {
     overflow: "hidden",
-    borderBottomLeftRadius: moderateScale(30, 0.2),
-    borderBottomRightRadius: moderateScale(30, 0.2),
     position: "relative",
+  },
+  image: {
+    position: "absolute",
+    zIndex: -1,
+    width: "100%",
+    height: "100%",
   },
 });
 export default SettingsLayout;
