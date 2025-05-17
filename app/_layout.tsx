@@ -3,7 +3,7 @@ import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "react-native-reanimated";
-
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { SessionProvider } from "@/context/AuthContext";
 import { StatusBar } from "expo-status-bar";
@@ -34,14 +34,16 @@ export default function RootLayout() {
   return (
     <SessionProvider>
       <GestureHandlerRootView style={{ flex: 1 }}>
-        <ThemeProvider>
-          <Stack screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="(auth)" />
-            <Stack.Screen name="(main)" />
-            <Stack.Screen name="+not-found" />
-          </Stack>
-          <StatusBar style="auto" />
-        </ThemeProvider>
+        <BottomSheetModalProvider>
+          <ThemeProvider>
+            <Stack screenOptions={{ headerShown: false }}>
+              <Stack.Screen name="(auth)" />
+              <Stack.Screen name="(main)" />
+              <Stack.Screen name="+not-found" />
+            </Stack>
+            <StatusBar style="auto" />
+          </ThemeProvider>
+        </BottomSheetModalProvider>
       </GestureHandlerRootView>
     </SessionProvider>
   );

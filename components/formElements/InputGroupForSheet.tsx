@@ -1,15 +1,15 @@
-import React, {useState, forwardRef} from 'react';
+import React, { useState, forwardRef } from "react";
 import {
   Text,
   TextInputProps,
   ViewStyle,
   TextStyle,
   TouchableOpacity,
-} from 'react-native';
-import {FONTS} from '../../constants';
-import {moderateScale} from 'react-native-size-matters';
-import {CachedImage} from '@georstat/react-native-image-cache';
-import {BottomSheetTextInput, BottomSheetView} from '@gorhom/bottom-sheet';
+} from "react-native";
+import { moderateScale } from "react-native-size-matters";
+import { BottomSheetTextInput, BottomSheetView } from "@gorhom/bottom-sheet";
+import { FONTS } from "@/constants/theme";
+import { Image } from "expo-image";
 
 interface InputGroupForSheetProps extends TextInputProps {
   activeColors: any;
@@ -51,13 +51,13 @@ const InputGroupForSheet = forwardRef<
       prependComponent,
       onChange,
       secureTextEntry,
-      keyboardType = 'default',
-      autoComplete = 'off',
-      autoCapitalize = 'none',
-      textContentType = 'none',
-      errorMsg = '',
+      keyboardType = "default",
+      autoComplete = "off",
+      autoCapitalize = "none",
+      textContentType = "none",
+      errorMsg = "",
       value,
-      returnKeyType = 'done',
+      returnKeyType = "done",
       readOnly = false,
       ...restProps
     },
@@ -66,44 +66,50 @@ const InputGroupForSheet = forwardRef<
     const [isFocused, setIsFocused] = useState(false);
     return (
       <BottomSheetView
-        style={[{marginBottom: moderateScale(15, 0.2)}, containerStyle]}>
+        style={[{ marginBottom: moderateScale(15, 0.2) }, containerStyle]}
+      >
         <BottomSheetView
           style={{
-            flexDirection: 'row',
-            alignItems: 'flex-end',
-            justifyContent: 'space-between',
+            flexDirection: "row",
+            alignItems: "flex-end",
+            justifyContent: "space-between",
             ...labelContainerStyle,
-          }}>
+          }}
+        >
           <Text
             style={[
               {
                 ...(FONTS.body5 as TextStyle),
                 color: activeColors.text,
-                fontSize: moderateScale(14, 0.2),
+                fontSize: moderateScale(16, 0.2),
+                lineHeight: moderateScale(20, 0.2),
+                paddingTop: moderateScale(10),
               },
               labelStyle,
-            ]}>
+            ]}
+          >
             {label}
           </Text>
           <Text
             style={[
               {
-                color: activeColors.error,
+                color: activeColors.danger,
                 fontSize: 12,
-                opacity: errorMsg === '' ? 0 : 1,
+                opacity: errorMsg === "" ? 0 : 1,
               },
               errorLabelStyle,
-            ]}>
-            {errorMsg === '' ? '* mandatory' : errorMsg}
+            ]}
+          >
+            {errorMsg === "" ? "* mandatory" : errorMsg}
           </Text>
         </BottomSheetView>
-        <BottomSheetView style={{flexDirection: 'row', alignItems: 'center'}}>
+        <BottomSheetView style={{ flexDirection: "row", alignItems: "center" }}>
           {prependComponent}
           <BottomSheetView
             style={[
               {
-                position: 'relative',
-                width: icon ? '80%' : '100%',
+                position: "relative",
+                width: icon ? "80%" : "100%",
                 height: moderateScale(50, 0.2),
                 paddingHorizontal: moderateScale(15),
                 marginTop: moderateScale(5),
@@ -113,15 +119,16 @@ const InputGroupForSheet = forwardRef<
                 borderBottomRightRadius: icon ? 0 : 6,
                 backgroundColor: activeColors.input,
                 borderWidth: 1,
-                borderStyle: 'solid',
+                borderStyle: "solid",
                 borderColor: isFocused
                   ? activeColors.primary
-                  : errorMsg === ''
-                  ? 'transparent'
-                  : activeColors.error,
+                  : errorMsg === ""
+                    ? activeColors.border
+                    : activeColors.danger,
               },
               innerContainerStyle,
-            ]}>
+            ]}
+          >
             <BottomSheetTextInput
               ref={ref as any}
               style={[
@@ -135,7 +142,7 @@ const InputGroupForSheet = forwardRef<
                 inputStyle,
               ]}
               placeholder={placeholder}
-              placeholderTextColor="#D2D4D5"
+              placeholderTextColor={activeColors.textLightGray}
               secureTextEntry={secureTextEntry}
               value={value}
               keyboardType={keyboardType}
@@ -154,8 +161,8 @@ const InputGroupForSheet = forwardRef<
           {icon && (
             <TouchableOpacity
               style={{
-                position: 'relative',
-                width: '20%',
+                position: "relative",
+                width: "20%",
                 height: moderateScale(50, 0.2),
                 paddingHorizontal: moderateScale(15),
                 marginTop: moderateScale(5),
@@ -164,16 +171,13 @@ const InputGroupForSheet = forwardRef<
                 backgroundColor: activeColors.input,
                 borderLeftWidth: 1,
                 borderColor: activeColors.borderColor,
-                borderStyle: 'solid',
-                justifyContent: 'center',
-                alignItems: 'center',
+                borderStyle: "solid",
+                justifyContent: "center",
+                alignItems: "center",
               }}
-              onPress={onIconClick}>
-              <CachedImage
-                source={icon}
-                style={iconStyle}
-                imageStyle={iconStyle}
-              />
+              onPress={onIconClick}
+            >
+              <Image source={icon} style={iconStyle} />
             </TouchableOpacity>
           )}
         </BottomSheetView>

@@ -11,8 +11,11 @@ import SettingsLayout from "@/screen-layouts/SettingsLayout";
 import Profile from "@/screens/settings-screens/components/Profile";
 import GeneralMenu from "@/components/common/GeneralMenu";
 import CustomBottomSheet from "@/components/common/CustomBottomSheet";
-// import ProfileSheetContent from "@/screens/settings-screens/components/ProfileSheetContent";
+import ProfileSheetContent from "@/screens/settings-screens/components/ProfileSheetContent";
 import { router } from "expo-router";
+import langList from "../../services/langList.json";
+import { useTranslation } from "react-i18next";
+import useGlobalStore from "@/stores/globalStore";
 
 interface LanguageItem {
   name: string;
@@ -23,7 +26,10 @@ type LangList = {
   [key: string]: LanguageItem;
 };
 
+const typedLangList = langList as LangList;
 const Settings = () => {
+  const { t } = useTranslation();
+  const lang = useGlobalStore((state) => state.lang);
   const { signOut } = useSession();
   const [modalVisible, setModalVisible] = useState(false);
   const { mode, toggleTheme } = useTheme();
@@ -31,17 +37,18 @@ const Settings = () => {
   let activeColors = COLORS[mode ?? "light"];
 
   const bottomSheetRef = useRef<BottomSheetModal>(null);
-  const user = {
+  /*const user = {
     name: "Patrik",
     lastname: "Stojsavljevic",
     email: "pstojsavl@text.net",
-  };
+  };*/
+  const user = undefined;
 
   const handleClosePress = () => {
     bottomSheetRef.current?.dismiss();
   };
   const handleOpenPress = () => {
-    user ? router.navigate("ProfileScreen") : router.navigate("LoginScreen");
+    bottomSheetRef.current?.present();
   };
   const handleOnLogoutButtonPress = () => {
     setModalVisible(true);
@@ -55,22 +62,22 @@ const Settings = () => {
   const settingsLinks = [
     {
       id: 1,
-      title: "Language",
+      title: t("settings.app_language"),
       icon: icons.chevron_right,
       link: "/settings/language",
-      value: "HR",
+      value: typedLangList[lang].name,
       type: "lang",
     },
     {
       id: 2,
-      title: "Dark mode",
+      title: t("settings.dark_mode"),
       switch: true,
       isEnabled: isDarkMode,
       toggleSwitch: toggleTheme,
     },
     {
       id: 3,
-      title: "Account",
+      title: t("settings.account"),
       icon: icons.chevron_right,
       link: "AccountSettings",
       type: "account",
@@ -79,44 +86,44 @@ const Settings = () => {
   const settingsLinksAbout = [
     {
       id: 4,
-      title: "Help and Support",
+      title: t("settings.help_support"),
       icon: icons.chevron_right,
       link: "HelpAndSupport",
     },
     {
       id: 5,
-      title: "Impressum",
+      title: t("settings.impressum"),
       icon: icons.chevron_right,
       link: "Impressum",
     },
     {
       id: 6,
-      title: "Privacy and policy",
+      title: t("settings.privacy"),
       icon: icons.chevron_right,
       menu_item_type: 1,
       link: "https://www.noa-zrce.com/en/legal/mobile-application-privacy-policy",
     },
     {
       id: 7,
-      title: "Terms and conditions",
+      title: t("settings.terms"),
       icon: icons.chevron_right,
       link: "TermsSettings",
     },
   ];
   return (
     <SettingsLayout
-      title={"Settings"}
+      title={t("settings.title")}
       returnIcon={icons.chevron_left}
       actionIcon={user ? icons.logout : null}
       onActionPress={handleOnLogoutButtonPress}
     >
-      {/*<Profile onButtonPress={handleOpenPress} user={user} />*/}
+      <Profile onButtonPress={handleOpenPress} user={user} />
       <ScrollView
         style={[styles.container, { backgroundColor: activeColors.background }]}
         contentContainerStyle={styles.scrollContent}
       >
         <GeneralMenu
-          title={"General settings"}
+          title={t("settings.general")}
           data={settingsLinks}
           linkContainerStyle={{
             borderBottomWidth: 1,
@@ -155,10 +162,10 @@ const Settings = () => {
           }}
         />*/}
       </ScrollView>
-      {/*<CustomBottomSheet
+      <CustomBottomSheet
         snapPoints={["75%"]}
         ref={bottomSheetRef}
-        handleIcon={icons.scan}
+        handleIcon={icons.avatar}
         useKeyboardScrollView={true}
         showFooter={false}
         onClose={handleClosePress}
@@ -169,7 +176,7 @@ const Settings = () => {
           user={user}
           isDarkMode={isDarkMode}
         />
-      </CustomBottomSheet>*/}
+      </CustomBottomSheet>
 
       <GeneralModal
         title={"Logout"}

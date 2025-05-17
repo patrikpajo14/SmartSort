@@ -1,4 +1,4 @@
-import React, { useCallback, forwardRef, ReactNode, useRef } from "react";
+import React, { useCallback, forwardRef, ReactNode } from "react";
 import {
   View,
   TouchableOpacity,
@@ -163,7 +163,12 @@ const CustomBottomSheet = forwardRef<
         android_keyboardInputMode="adjustResize"
       >
         <BottomSheetView style={styles.handleRow}>
-          <View style={styles.indicatorWrapperStyle}>
+          <View
+            style={[
+              styles.indicatorWrapperStyle,
+              { backgroundColor: activeColors.primary },
+            ]}
+          >
             {handleIcon && (
               <Image
                 source={handleIcon}

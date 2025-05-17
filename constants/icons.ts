@@ -6,6 +6,8 @@ const education = require("../assets/icons/ico_education.png");
 const settings = require("../assets/icons/ico_settings.png");
 const scan = require("../assets/icons/ico_scan.png");
 const logout = require("../assets/icons/ico_logout.png");
+const checkmark = require("../assets/icons/ico_checked.png");
+const avatar = require("../assets/icons/ico_person-fill.png");
 export default {
   chevron_left,
   chevron_right,
@@ -15,4 +17,6 @@ export default {
   settings,
   scan,
   logout,
+  checkmark,
+  avatar,
 };

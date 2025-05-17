@@ -103,7 +103,7 @@ const SingleLink = ({
           {label}
         </Text>
         <Image
-          source={selected ? icons.chevron_right : icon}
+          source={selected ? icons.checkmark : icon}
           style={{
             height: moderateScale(20, 0.3),
             width: moderateScale(20, 0.3),
@@ -128,7 +128,7 @@ const SingleLink = ({
         </Text>
         {selected && (
           <Image
-            source={icons.chevron_right}
+            source={icons.checkmark}
             style={{
               height: moderateScale(12),
               width: moderateScale(15),
