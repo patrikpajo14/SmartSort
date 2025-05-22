@@ -1,4 +1,4 @@
-import { useCallback, useRef } from "react";
+import { useCallback } from "react";
 import {
   ImageURISource,
   Pressable,
@@ -19,31 +19,12 @@ import PaginationElement from "@/components/PaginationElement";
 import Button from "@/components/Button";
 import { useTheme } from "@/context/ThemeContext";
 import { COLORS } from "@/constants/theme";
-
-const pages = [
-  {
-    title: "Join the Green Movement",
-    subtitle: "Contribute to sustainability with easy, effective recycling.",
-    image: require("../assets/images/screen1.png"),
-  },
-  {
-    title: "Nearby Recycling Stations",
-    subtitle:
-      "Find the nearest recycling drop-off points with real-time updates.",
-    image: require("../assets/images/screen2.png"),
-  },
-  {
-    title: "Smart Waste Identification:",
-    subtitle:
-      "Instantly identify your waste and get proper disposal instructions with AI.",
-    image: require("../assets/images/screen3.png"),
-  },
-];
+import { useTranslation } from "react-i18next";
 
 export default function App() {
+  const { t } = useTranslation();
   const { mode } = useTheme();
   let activeColors = COLORS[mode ?? "light"];
-
   const x = useSharedValue(0);
   const flatListIndex = useSharedValue(0);
   const flatListRef = useAnimatedRef<
@@ -77,6 +58,25 @@ export default function App() {
     },
     [x],
   );
+
+  const pages = [
+    {
+      title: t("onboardScreen.page_one_title"),
+      subtitle: t("onboardScreen.page_one_subtitle"),
+      image: require("../assets/images/screen1.png"),
+    },
+    {
+      title: t("onboardScreen.page_two_title"),
+      subtitle: t("onboardScreen.page_two_subtitle"),
+      image: require("../assets/images/screen2.png"),
+    },
+    {
+      title: t("onboardScreen.page_three_title"),
+      subtitle: t("onboardScreen.page_three_subtitle"),
+      image: require("../assets/images/screen3.png"),
+    },
+  ];
+
   return (
     <SafeAreaView
       style={[styles.container, { backgroundColor: activeColors.background }]}
@@ -98,12 +98,20 @@ export default function App() {
         <PaginationElement length={pages.length} x={x} />
       </View>
       <View style={styles.bottomContainer}>
-        <Pressable>
+        <Pressable
+          onPress={() => {
+            flatListRef.current?.scrollToIndex({
+              index: pages.length - 1,
+              animated: true,
+            });
+          }}
+        >
           <Text style={[styles.skipButton, { color: activeColors.textGray }]}>
-            Skip
+            {t("general.skip")}
           </Text>
         </Pressable>
         <Button
+          btnText={t("onboardScreen.cta_label")}
           currentIndex={flatListIndex}
           length={pages.length}
           flatListRef={flatListRef}

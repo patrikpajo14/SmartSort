@@ -37,12 +37,12 @@ const Settings = () => {
   let activeColors = COLORS[mode ?? "light"];
 
   const bottomSheetRef = useRef<BottomSheetModal>(null);
-  /*const user = {
+  const user = {
     name: "Patrik",
     lastname: "Stojsavljevic",
     email: "pstojsavl@text.net",
-  };*/
-  const user = undefined;
+  };
+  // const user = undefined;
 
   const handleClosePress = () => {
     bottomSheetRef.current?.dismiss();
@@ -199,7 +199,7 @@ const styles = ScaledSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingHorizontal: "30@ms0.2",
+    paddingHorizontal: "20@ms0.2",
     paddingVertical: "20@ms0.2",
   },
 });

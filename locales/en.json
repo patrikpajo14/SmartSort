@@ -135,7 +135,9 @@
     "confirmation_modal": "Are you sure?",
     "delete_profile": "Delete profile",
     "logout_success": "Logged out successfully!",
-    "delete_profile_success": "Profile deleted!"
+    "delete_profile_success": "Profile deleted!",
+    "plastic": "Plastic",
+    "skip": "Skip"
   },
   "terms": {
     "accept":"I have read and i Agree and accept this ",
@@ -143,27 +145,29 @@
     "turn_notifications": "Turn on notifications",
     "turn_location": "Turn on location services"
   },
-  "incidents": {
-    "title": "Incidents",
-    "report_incident": "Report an incident",
-    "your_incidents": "Your Incidents",
-    "no_incidents": "No incidents reported",
-    "no_incidents_text": "Currently there is no reported incidents. To keep it that way please continue following our Rules of Conduct.",
-    "no_incidents_login_text": "Currently there is no reported incidents. To show your incidents please try to login.",
-    "delete_report": "Delete report",
-    "cancel_preview": "Cancel preview",
-    "pending": "Pending",
-    "in_progress": "In progress",
-    "resolved": "Resolved",
-    "rejected": "Rejected",
-    "total": "Total",
-    "attached_images": "Attached images",
-    "images": "images",
-    "radio_yes": "Yes",
-    "radio_no": "No",
-    "report_incident_title": "Send incident report",
-    "report_incident_description": "If you encounter any incident, please report them through the app so we can investigate and resolve the problem promptly.",
-    "report_incident_subtitle": "Tell us what happened"
+  "education": {
+    "title": "Education"
+  },
+  "onboardScreen": {
+    "page_one_title": "Join the Green Movement",
+    "page_one_subtitle": "Contribute to sustainability with easy, effective recycling.",
+    "page_two_title": "Nearby Recycling Stations",
+    "page_two_subtitle": "Find the nearest recycling drop-off points with real-time updates.",
+    "page_three_title": "Smart Waste Identification:",
+    "page_three_subtitle": "Instantly identify your waste and get proper disposal instructions with AI.",
+    "cta_label": "Get Started"
+  },
+  "home": {
+    "title": "Hi,",
+    "description": "Let’s contribution to our earth."
+  },
+  "scanner": {
+    "title": "Scan your scrap",
+    "cta_label": "Click to scan",
+    "scan_preview_title": "Scan results",
+    "recyclable": "It’s Recyclable",
+    "not_recyclable": "It’s not Recyclable",
+    "scan_preview_cta": "Show Container on Map"
   },
   "friends": {
     "main_title": "Find my friends",

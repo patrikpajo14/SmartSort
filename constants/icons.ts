@@ -8,6 +8,7 @@ const scan = require("../assets/icons/ico_scan.png");
 const logout = require("../assets/icons/ico_logout.png");
 const checkmark = require("../assets/icons/ico_checked.png");
 const avatar = require("../assets/icons/ico_person-fill.png");
+const scan_big = require("../assets/icons/ico_scan-big.png");
 export default {
   chevron_left,
   chevron_right,
@@ -19,4 +20,5 @@ export default {
   logout,
   checkmark,
   avatar,
+  scan_big,
 };

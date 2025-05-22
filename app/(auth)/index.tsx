@@ -10,6 +10,7 @@ import { useTheme } from "@/context/ThemeContext";
 export default function MainAuthScreen() {
   const router = useRouter();
   const { mode } = useTheme();
+  const isDarkMode = mode === "dark";
   let activeColors = COLORS[mode ?? "light"];
   return (
     <View
@@ -17,7 +18,7 @@ export default function MainAuthScreen() {
     >
       <View style={styles.imageWrap}>
         <Image
-          style={styles.image}
+          style={[styles.image, { opacity: isDarkMode ? 0.25 : 1 }]}
           source={require("@/assets/images/bg-shape.png")}
           contentFit="cover"
         />
@@ -35,7 +36,8 @@ export default function MainAuthScreen() {
           Explore the app
         </Text>
         <Text style={[styles.description, { color: activeColors.textGray }]}>
-          Now your finances are in one place and always under control
+          Discover how our app simplifies waste separation and promotes
+          sustainability.
         </Text>
         <PrimaryButton
           onPress={() => router.navigate("/login")}

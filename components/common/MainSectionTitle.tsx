@@ -22,13 +22,7 @@ const MainSectionTitle: React.FC<MainSectionTitleProps> = ({
 }) => {
   const truncatedTitle = truncateText(title || "", 30);
   return (
-    <View
-      style={[
-        styles.container,
-        { backgroundColor: activeColors.background },
-        contentContainerStyle,
-      ]}
-    >
+    <View style={[styles.container, contentContainerStyle]}>
       <View
         style={[
           styles.content,

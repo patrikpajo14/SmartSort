@@ -10,6 +10,7 @@ import {
 import { moderateScale } from "react-native-size-matters";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { COLORS, FONTS } from "@/constants/theme";
+import { useTheme } from "@/context/ThemeContext";
 
 type PrimaryButtonProps = {
   label: string;
@@ -34,8 +35,8 @@ const PrimaryButton: React.FC<PrimaryButtonProps> = ({
   outerContainerStyle,
   type = "primary",
 }) => {
-  const colorScheme = useColorScheme();
-  let activeColors = COLORS[colorScheme ?? "light"];
+  const { mode } = useTheme();
+  let activeColors = COLORS[mode ?? "light"];
   return (
     <TouchableOpacity
       disabled={disabled || isLoading}

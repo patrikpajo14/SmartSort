@@ -12,15 +12,21 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { router } from "expo-router";
+import { useTheme } from "@/context/ThemeContext";
+import { COLORS } from "@/constants/theme";
 
 type Props = {
   currentIndex: Animated.SharedValue<number>;
   length: number;
   flatListRef: any;
+  btnText: string;
 };
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
-const Button = ({ currentIndex, length, flatListRef }: Props) => {
+const Button = ({ currentIndex, length, flatListRef, btnText }: Props) => {
+  const { mode } = useTheme();
+  let activeColors = COLORS[mode ?? "light"];
+
   const rnBtnStyle = useAnimatedStyle(() => {
     return {
       width:
@@ -57,7 +63,6 @@ const Button = ({ currentIndex, length, flatListRef }: Props) => {
 
   const onPress = useCallback(() => {
     if (currentIndex.value === length - 1) {
-      console.log("Get Started");
       router.navigate("/(auth)");
       return;
     } else {
@@ -67,9 +72,18 @@ const Button = ({ currentIndex, length, flatListRef }: Props) => {
     }
   }, []);
   return (
-    <AnimatedPressable style={[styles.container, rnBtnStyle]} onPress={onPress}>
-      <Animated.Text style={[styles.textStyle, rnTextStyle]}>
-        Get Started
+    <AnimatedPressable
+      style={[
+        styles.container,
+        { backgroundColor: activeColors.primary },
+        rnBtnStyle,
+      ]}
+      onPress={onPress}
+    >
+      <Animated.Text
+        style={[styles.textStyle, { color: activeColors.white }, rnTextStyle]}
+      >
+        {btnText}
       </Animated.Text>
       <Animated.Image
         source={require("../assets/icons/ico_arrow-white.png")}
@@ -87,13 +101,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingVertical: 16,
     borderRadius: 100,
-    backgroundColor: "#67A515",
     alignItems: "center",
     justifyContent: "center",
     overflow: "hidden",
   },
   textStyle: {
-    color: "white",
     position: "absolute",
     fontWeight: "600",
     fontSize: 16,

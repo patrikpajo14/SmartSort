@@ -10,6 +10,8 @@ import Animated, {
   interpolate,
   useAnimatedStyle,
 } from "react-native-reanimated";
+import { useTheme } from "@/context/ThemeContext";
+import { COLORS } from "@/constants/theme";
 
 type Props = {
   item: { title: string; subtitle: string; image: ImageURISource };
@@ -19,6 +21,9 @@ type Props = {
 
 const ListItem = ({ item, index, x }: Props) => {
   const { width: SCREEN_WIDTH } = useWindowDimensions();
+  const { mode } = useTheme();
+  let activeColors = COLORS[mode ?? "light"];
+
   const rnImageStyle = useAnimatedStyle(() => {
     const translateY = interpolate(
       x.value,
@@ -82,10 +87,14 @@ const ListItem = ({ item, index, x }: Props) => {
         resizeMode="contain"
       />
       <View style={styles.textWrap}>
-        <Animated.Text style={[styles.title, rnTextStyle]}>
+        <Animated.Text
+          style={[styles.title, { color: activeColors.text }, rnTextStyle]}
+        >
           {item.title}
         </Animated.Text>
-        <Animated.Text style={[styles.subtitle, rnTextStyle]}>
+        <Animated.Text
+          style={[styles.subtitle, { color: activeColors.text }, rnTextStyle]}
+        >
           {item.subtitle}
         </Animated.Text>
       </View>

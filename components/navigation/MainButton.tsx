@@ -1,10 +1,10 @@
 import React, { FC } from "react";
 import { TouchableOpacity, View } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
-import { useColorScheme } from "@/hooks/useColorScheme";
 import { COLORS } from "@/constants/theme";
 import { Image } from "expo-image";
 import icons from "@/constants/icons";
+import { useTheme } from "@/context/ThemeContext";
 
 type MainButtonProps = {
   onPress: () => void;
@@ -12,14 +12,19 @@ type MainButtonProps = {
 };
 
 export const MainButton: FC<MainButtonProps> = ({ onPress, width }) => {
-  const colorScheme = useColorScheme();
-  let activeColors = COLORS[colorScheme ?? "light"];
+  const { mode } = useTheme();
+  let activeColors = COLORS[mode ?? "light"];
 
   return (
     <View style={[styles.container, { width }]}>
       <TouchableOpacity style={[styles.button, { width }]} onPress={onPress}>
         <Image source={icons.scan} style={styles.mainIcon} />
-        <View style={styles.backgroundIcon}></View>
+        <View
+          style={[
+            styles.backgroundIcon,
+            { backgroundColor: activeColors.white },
+          ]}
+        ></View>
       </TouchableOpacity>
     </View>
   );
@@ -46,12 +51,11 @@ const styles = ScaledSheet.create({
     marginBottom: "3@ms",
   },
   backgroundIcon: {
-    width: "61@ms0.2",
-    height: "61@ms0.2",
+    width: "65@ms0.2",
+    height: "65@ms0.2",
     objectFit: "contain",
     position: "absolute",
-    bottom: "-5@ms0.2",
-    backgroundColor: "#fff",
+    bottom: "-7@ms0.2",
     borderRadius: "50%",
   },
 });

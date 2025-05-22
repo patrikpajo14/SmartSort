@@ -4,8 +4,8 @@ import { NavigationState } from "@react-navigation/native";
 import { NavigationDot } from "./NavigationDot";
 import { TabsHandler } from "./TabsHandler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useColorScheme } from "@/hooks/useColorScheme";
 import { COLORS } from "@/constants/theme";
+import { useTheme } from "@/context/ThemeContext";
 
 type TabsUiProps = {
   tabs: {
@@ -19,8 +19,9 @@ const { width: windowWidth } = Dimensions.get("window");
 export const TabsUi: FC<TabsUiProps> = ({ tabs, state }) => {
   const tabWidth = useMemo(() => windowWidth / tabs.length, [tabs.length]);
   const insets = useSafeAreaInsets();
-  const colorScheme = useColorScheme();
-  let activeColors = COLORS[colorScheme ?? "light"];
+  const { mode } = useTheme();
+  const isDarkMode = mode === "dark";
+  let activeColors = COLORS[mode ?? "light"];
 
   return (
     <View
@@ -29,7 +30,7 @@ export const TabsUi: FC<TabsUiProps> = ({ tabs, state }) => {
         paddingBottom: insets.bottom,
         shadowColor: "#000",
         shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: colorScheme === "dark" ? 0.4 : 0.1,
+        shadowOpacity: isDarkMode ? 0.4 : 0.1,
         shadowRadius: 10,
         elevation: 15,
       }}

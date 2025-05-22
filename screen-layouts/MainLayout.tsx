@@ -14,6 +14,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({
   returnLabel,
   returnIconStyle,
   contentContainerStyle = {},
+  headerContainerStyle = {},
   children,
   refreshing,
   actionIcon,
@@ -58,6 +59,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({
           paddingBottom: moderateScale(5),
           paddingTop: moderateScale(5),
           zIndex: 11,
+          ...headerContainerStyle,
         }}
         actionButtonStyle={actionButtonStyle}
       />

@@ -22,6 +22,7 @@ export interface SharedLayoutProps {
 
 export interface MainLayoutProps extends SharedLayoutProps {
   contentContainerStyle?: ViewStyle;
+  headerContainerStyle?: ViewStyle;
   children: React.ReactNode;
   bottomInset?: boolean;
 }

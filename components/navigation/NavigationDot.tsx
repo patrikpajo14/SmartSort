@@ -8,8 +8,8 @@ import Animated, {
   withSequence,
   withTiming,
 } from "react-native-reanimated";
-import { useColorScheme } from "@/hooks/useColorScheme";
 import { COLORS } from "@/constants/theme";
+import { useTheme } from "@/context/ThemeContext";
 
 type NavigationDotProps = {
   width: number;
@@ -20,8 +20,8 @@ export const NavigationDot: FC<NavigationDotProps> = ({
   width,
   activeTabIndex,
 }) => {
-  const colorScheme = useColorScheme();
-  let activeColors = COLORS[colorScheme ?? "light"];
+  const { mode } = useTheme();
+  let activeColors = COLORS[mode ?? "light"];
 
   const startingPos = (width - 5) / 2;
   const dotWidth = useSharedValue(5);
@@ -60,7 +60,7 @@ export const NavigationDot: FC<NavigationDotProps> = ({
       <Animated.View
         style={[
           progressStyle,
-          { borderRadius: 2.5, backgroundColor: activeColors.primary },
+          { borderRadius: 2.5, backgroundColor: activeColors.white },
         ]}
       />
     </Animated.View>

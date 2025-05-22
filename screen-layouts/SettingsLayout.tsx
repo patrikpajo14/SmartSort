@@ -31,6 +31,7 @@ const SettingsLayout: React.FC<MainLayoutProps> = ({
     onReturnPress = () => router.back();
   }
   const { mode } = useTheme();
+  const isDarkMode = mode === "dark";
   let activeColors = COLORS[mode];
   let insets = useSafeAreaInsets();
   const truncatedTitle = truncateText(title || "", 30);
@@ -99,7 +100,7 @@ const SettingsLayout: React.FC<MainLayoutProps> = ({
             )}
           </View>
           <ImageBackground
-            style={styles.image}
+            style={[styles.image, { opacity: isDarkMode ? 0.4 : 1 }]}
             source={require("@/assets/images/bg-shape.png")}
             contentFit="cover"
           />
@@ -115,7 +116,7 @@ const styles = ScaledSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: "30@ms0.2",
+    paddingHorizontal: "20@ms0.2",
   },
   returnButton: {
     flexDirection: "row",

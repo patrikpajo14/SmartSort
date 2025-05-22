@@ -1,28 +1,20 @@
 import { Stack } from "expo-router";
-import { Button } from "react-native";
-import { useSession } from "@/context/AuthContext";
 
 export default function ScannerLayout() {
   return (
     <Stack
       screenOptions={{
-        headerStyle: {
-          backgroundColor: "#f4511e",
-        },
-        headerTintColor: "#fff",
-        headerTitleStyle: {
-          fontWeight: "bold",
-        },
+        headerShown: false,
       }}
     >
+      <Stack.Screen name="index" />
+      <Stack.Screen name="camera" />
       <Stack.Screen
-        name="index"
+        name="scan-preview"
         options={{
-          title: "Scanner",
+          presentation: "modal",
         }}
       />
-      <Stack.Screen name="camera" options={{ title: "Camera" }} />
-      <Stack.Screen name="scan-preview" options={{ title: "Scan preview" }} />
     </Stack>
   );
 }
