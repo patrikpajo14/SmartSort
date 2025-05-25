@@ -13,12 +13,14 @@ import { AlertType } from "@/types/global";
 import PrimaryButton from "@/components/ui/PrimaryButton";
 import { useSession } from "@/context/AuthContext";
 import { useTheme } from "@/context/ThemeContext";
+import { useTranslation } from "react-i18next";
 
 interface LoginFormProps {
   handleShowInlineAlert: (message: string, type: AlertType) => void;
 }
 
 const LoginForm: React.FC<LoginFormProps> = ({ handleShowInlineAlert }) => {
+  const { t } = useTranslation();
   const { mode } = useTheme();
   let activeColors = COLORS[mode ?? "light"];
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -28,10 +30,10 @@ const LoginForm: React.FC<LoginFormProps> = ({ handleShowInlineAlert }) => {
   const schema = z.object({
     email: z
       .string()
-      .min(1, { message: "Required" })
-      .email({ message: "Invalid email" }),
+      .min(1, { message: t("form.mandatory") })
+      .email({ message: t("form.invalid_email") }),
     password: z.string().min(8, {
-      message: "Password length must be at least 8 characters long",
+      message: t("form.password_length"),
     }),
   });
   type FormData = z.infer<typeof schema>;
@@ -60,7 +62,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ handleShowInlineAlert }) => {
     } catch (error) {
       Toast.show({
         type: "error",
-        text1: "Something went wrong!",
+        text1: t("form.general_error"),
       });
       setIsLoading(false);
     }
@@ -79,7 +81,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ handleShowInlineAlert }) => {
           name="email"
           render={({ field: { onChange, value } }) => (
             <FormInput
-              label={"Email"}
+              label={t("form.email")}
               value={value}
               onChange={onChange}
               errorMsg={errors.email?.message}
@@ -99,7 +101,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ handleShowInlineAlert }) => {
           name="password"
           render={({ field: { onChange, value } }) => (
             <FormInput
-              label={"Password"}
+              label={t("form.password")}
               value={value}
               onChange={onChange}
               errorMsg={errors.password?.message}
@@ -114,7 +116,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ handleShowInlineAlert }) => {
 
         <View style={{ marginVertical: moderateScale(30, 0.2) }}>
           <PrimaryButton
-            label={"Sign in"}
+            label={t("auth.sign_in")}
             isLoading={isLoading}
             onPress={handleSubmit(onSubmit)}
           />
@@ -135,7 +137,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ handleShowInlineAlert }) => {
             color: activeColors.text,
           }}
         >
-          Don't have an account?{" "}
+          {t("auth.no_account")}{" "}
         </Text>
         <TouchableOpacity onPress={() => router.navigate("/register")}>
           <Text
@@ -144,7 +146,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ handleShowInlineAlert }) => {
               color: activeColors.primary,
             }}
           >
-            Sign up
+            {t("auth.create_acc")}
           </Text>
         </TouchableOpacity>
       </View>

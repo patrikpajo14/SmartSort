@@ -1,15 +1,16 @@
 export type ActiveColors = any;
 
-export interface Friend {
-  id: number;
-  friend_name: string;
-  phone_number: string;
-  status: number;
-  created_at: string | null;
-  updated_at: string | null;
-  friend_user_id: number;
-  latitude: number | null;
-  longitude: number | null;
+export interface Location {
+  id: string;
+  name: string;
+  coordinates: {
+    latitude: number;
+    longitude: number;
+  };
+  isOpen: boolean;
+  rating: number;
+  distanceKm: number;
+  garbageType: string;
 }
 
 export interface FriendCoordinate {

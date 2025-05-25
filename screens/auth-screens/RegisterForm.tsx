@@ -10,6 +10,7 @@ import { COLORS } from "@/constants/theme";
 import PrimaryButton from "@/components/ui/PrimaryButton";
 import { router } from "expo-router";
 import { useTheme } from "@/context/ThemeContext";
+import { useTranslation } from "react-i18next";
 
 interface RegisterFormProps {
   handleShowInlineAlert: (message: string, type: AlertType) => void;
@@ -18,6 +19,7 @@ interface RegisterFormProps {
 const RegisterForm: React.FC<RegisterFormProps> = ({
   handleShowInlineAlert,
 }) => {
+  const { t } = useTranslation();
   const { mode } = useTheme();
   let activeColors = COLORS[mode ?? "light"];
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -25,21 +27,17 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
   // const {verifyCaptcha} = useRecaptcha();
   const schema = z
     .object({
-      name: z.string().min(1, { message: "Required" }),
-      surname: z.string().min(1, { message: "Required" }),
+      name: z.string().min(1, { message: t("form.mandatory") }),
+      lastname: z.string().min(1, { message: t("form.mandatory") }),
       email: z
         .string()
-        .min(1, { message: "Required" })
-        .email({ message: "Invalid email address" }),
-      password: z
-        .string()
-        .min(8, { message: "Password length must be 8 characters long!" }),
-      password2: z
-        .string()
-        .min(8, { message: "Password length must be 8 characters long!" }),
+        .min(1, { message: t("form.mandatory") })
+        .email({ message: t("form.invalid_email") }),
+      password: z.string().min(8, { message: t("form.password_length") }),
+      password2: z.string().min(8, { message: t("form.password_length") }),
     })
     .refine((data) => data.password === data.password2, {
-      message: "Password match",
+      message: t("form.password_match"),
       path: ["password2"],
     });
 
@@ -53,7 +51,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
     resolver: zodResolver(schema),
     defaultValues: {
       name: "",
-      surname: "",
+      lastname: "",
       email: "",
       password: "",
       password2: "",
@@ -74,7 +72,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
       setIsLoading(true);
       const registerUserObject = {
         name: data?.name,
-        surname: data?.surname,
+        lastname: data?.lastname,
         email: data?.email,
         password: data?.password,
         password2: data?.password2,
@@ -99,7 +97,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
         name="name"
         render={({ field: { onChange, value } }) => (
           <FormInput
-            label={"Name"}
+            label={t("form.name")}
             value={value}
             onChange={(text) => {
               onChange(text);
@@ -115,15 +113,15 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
       />
       <Controller
         control={control}
-        name="surname"
+        name="lastname"
         render={({ field: { onChange, value } }) => (
           <FormInput
-            label={"Surname"}
+            label={t("form.lastname")}
             value={value}
             onChange={(text) => {
               onChange(text);
             }}
-            errorMsg={errors.surname?.message}
+            errorMsg={errors.lastname?.message}
             ref={lastNameRef}
             nextInputRef={emailRef}
             returnKeyType="next"
@@ -137,7 +135,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
         name="email"
         render={({ field: { onChange, value } }) => (
           <FormInput
-            label={"Email"}
+            label={t("form.email")}
             value={value}
             onChange={(text) => {
               onChange(text);
@@ -159,7 +157,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
         name="password"
         render={({ field: { onChange, value } }) => (
           <FormInput
-            label={"Password"}
+            label={t("form.password")}
             value={value}
             onChange={(text) => {
               onChange(text);
@@ -178,7 +176,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
         name="password2"
         render={({ field: { onChange, value } }) => (
           <FormInput
-            label={"Confirm Password"}
+            label={t("form.confirm_password")}
             value={value}
             onChange={(text) => {
               onChange(text);
@@ -194,7 +192,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
 
       <View style={{ marginVertical: moderateScale(30, 0.2) }}>
         <PrimaryButton
-          label={"Register"}
+          label={t("form.register_btn")}
           isLoading={isLoading}
           disabled={isSubmitting || isLoading}
           onPress={handleSubmit(onSubmit)}
@@ -210,10 +208,13 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
         }}
       >
         <Text style={{ color: activeColors.text }}>
-          Your already have account?
+          {t("auth.have_account")}
         </Text>
         <TouchableOpacity onPress={() => router.navigate("/login")}>
-          <Text style={{ color: activeColors.primary }}>Sign in</Text>
+          <Text style={{ color: activeColors.primary }}>
+            {" "}
+            {t("auth.sign_in")}{" "}
+          </Text>
         </TouchableOpacity>
       </View>
     </View>

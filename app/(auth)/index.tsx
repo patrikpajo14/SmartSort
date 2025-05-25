@@ -1,13 +1,14 @@
 import { Text, TextStyle, View } from "react-native";
 import { useRouter } from "expo-router";
 import { COLORS, FONTS } from "@/constants/theme";
-import { useColorScheme } from "@/hooks/useColorScheme";
 import { ScaledSheet } from "react-native-size-matters";
 import { Image } from "expo-image";
 import PrimaryButton from "@/components/ui/PrimaryButton";
 import { useTheme } from "@/context/ThemeContext";
+import { useTranslation } from "react-i18next";
 
 export default function MainAuthScreen() {
+  const { t } = useTranslation();
   const router = useRouter();
   const { mode } = useTheme();
   const isDarkMode = mode === "dark";
@@ -33,20 +34,19 @@ export default function MainAuthScreen() {
       </View>
       <View style={styles.textWrap}>
         <Text style={[styles.title, { color: activeColors.text }]}>
-          Explore the app
+          {t("auth.main_title")}
         </Text>
         <Text style={[styles.description, { color: activeColors.textGray }]}>
-          Discover how our app simplifies waste separation and promotes
-          sustainability.
+          {t("auth.main_description")}
         </Text>
         <PrimaryButton
           onPress={() => router.navigate("/login")}
-          label={"Sign In"}
+          label={t("auth.sign_in")}
           outerContainerStyle={{ marginBottom: 15 }}
         />
         <PrimaryButton
           onPress={() => router.navigate("/register")}
-          label={"Create account"}
+          label={t("auth.create_acc")}
           type={"outlined"}
         />
       </View>

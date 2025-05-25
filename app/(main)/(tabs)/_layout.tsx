@@ -3,6 +3,14 @@ import React from "react";
 import { IconSymbol } from "@/components/ui/IconSymbol";
 import { TabsUi } from "@/components/navigation/TabsUi";
 
+export type TabParamList = {
+  Home: undefined;
+  Map: { openBottomSheet?: boolean; selectedTab?: number; id?: number };
+  Scanner: undefined;
+  Education: undefined;
+  Settings: undefined;
+};
+
 const tabs = [
   { name: "" },
   { name: "map" },

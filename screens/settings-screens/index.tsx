@@ -12,7 +12,6 @@ import Profile from "@/screens/settings-screens/components/Profile";
 import GeneralMenu from "@/components/common/GeneralMenu";
 import CustomBottomSheet from "@/components/common/CustomBottomSheet";
 import ProfileSheetContent from "@/screens/settings-screens/components/ProfileSheetContent";
-import { router } from "expo-router";
 import langList from "../../services/langList.json";
 import { useTranslation } from "react-i18next";
 import useGlobalStore from "@/stores/globalStore";
