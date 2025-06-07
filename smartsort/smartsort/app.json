@@ -1,30 +1,27 @@
 {
   "expo": {
-    "name": "SmartSort",
-    "slug": "SmartSort",
+    "name": "smartsort",
+    "slug": "smartsort",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/logo.png",
-    "scheme": "myapp",
+    "icon": "./assets/images/icon.png",
+    "scheme": "smartsort",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
+      "bundleIdentifier": "com.ps.smartsort",
       "infoPlist": {
-        "NSLocationWhenInUseUsageDescription": "Allow location access to show your position on the map."
+        "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/logo.png",
+        "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "config": {
-        "googleMaps": {
-          "apiKey": "AIzaSyCrw2IHeefJpt46MPp2MQJWhbHy9EF7_88"
-        }
-      },
-      "permissions": ["ACCESS_FINE_LOCATION"]
+      "edgeToEdgeEnabled": true,
+      "package": "com.ps.smartsort"
     },
     "web": {
       "bundler": "metro",
@@ -41,17 +38,17 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
-      ],
-      [
-        "expo-maps",
-        {
-          "requestLocationPermission": true,
-          "locationPermission": "Allow $(PRODUCT_NAME) to use your location"
-        }
       ]
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "73437183-73de-4668-87c2-55b57ae63a52"
+      }
+    },
+    "owner": "patrikpajo14"
   }
 }
