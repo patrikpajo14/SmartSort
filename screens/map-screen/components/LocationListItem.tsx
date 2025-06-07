@@ -7,6 +7,10 @@ import { Location } from "@/types/global";
 import { Image } from "expo-image";
 import icons from "@/constants/icons";
 import { useTranslation } from "react-i18next";
+import { isLocationOpen } from "@/utils/locationOpen";
+import { getContainerColor } from "@/utils/mapThemePickers";
+import { calculateDistance, showDistanceText } from "@/utils/calculateDistance";
+import useGlobalStore from "@/stores/globalStore";
 
 const LocationListItem = ({
   item,
@@ -18,41 +22,74 @@ const LocationListItem = ({
   const { t } = useTranslation();
   const { mode } = useTheme();
   let activeColors = COLORS[mode];
+  const userLocation = useGlobalStore((state) => state.userLocation);
+  const isOpen = item ? isLocationOpen(item.open_at, item.closing_at) : false;
+  const showDistance =
+    userLocation?.latitude &&
+    userLocation?.longitude &&
+    item?.latitude &&
+    item?.longitude;
+
+  let distanceText = "";
+  if (showDistance) {
+    const distance = calculateDistance(
+      userLocation.latitude,
+      userLocation.longitude,
+      item?.latitude,
+      item?.longitude,
+    );
+
+    distanceText = showDistanceText(distance, t);
+  }
+
   return (
     <TouchableOpacity
       onPress={onPress}
-      style={[styles.container, { borderColor: activeColors.border }]}
-      disabled={!item?.isOpen}
+      style={[
+        styles.container,
+        { borderColor: activeColors.border, opacity: isOpen ? 1 : 0.5 },
+      ]}
+      disabled={!isOpen}
     >
-      <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-        <View>
-          <Text style={[styles.name, { color: activeColors.text }]}>
-            {item?.name}
-          </Text>
-          <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>
+      <View style={{ paddingTop: moderateScale(5) }}>
+        <Text
+          style={[
+            styles.type,
+            {
+              color: getContainerColor(activeColors, item?.type || ""),
+            },
+          ]}
+        >
+          {item?.type}
+        </Text>
+        <Text style={[styles.name, { color: activeColors.text }]}>
+          {item?.title}
+        </Text>
+        <Text style={[styles.address, { color: activeColors.textLightGray }]}>
+          {item?.address}
+        </Text>
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>
+          {item?.open_at && item?.closing_at && (
             <Text
               style={[
                 styles.desc,
                 {
-                  color: item?.isOpen
-                    ? activeColors.success
-                    : activeColors.danger,
+                  color: isOpen ? activeColors.success : activeColors.danger,
                 },
               ]}
             >
-              {item?.isOpen ? t("locations.opened") : t("locations.closed")}
+              {isOpen ? t("locations.opened") : t("locations.closed")}
             </Text>
-            <Text style={[styles.desc, { color: activeColors.text }]}>
-              3.2 km away
-            </Text>
-          </View>
+          )}
           <Text style={[styles.desc, { color: activeColors.text }]}>
-            {item?.garbageType}
-          </Text>
-          <Text style={[styles.desc, { color: activeColors.text }]}>
-            {item?.rating}
+            {distanceText}
           </Text>
         </View>
+        {item?.rating && (
+          <Text style={[styles.rating, { color: activeColors.text }]}>
+            {item?.rating}
+          </Text>
+        )}
       </View>
       <View
         style={{
@@ -85,11 +122,21 @@ const styles = ScaledSheet.create({
   },
   name: {
     ...(FONTS.body2 as TextStyle),
-    paddingTop: "5@ms0.2",
     fontWeight: 500,
   },
   desc: {
     ...(FONTS.body3 as TextStyle),
+  },
+  rating: {
+    ...(FONTS.body3 as TextStyle),
+    paddingVertical: "5@ms0.2",
+  },
+  address: {
+    ...(FONTS.body3 as TextStyle),
+  },
+  type: {
+    ...(FONTS.semiBold4 as TextStyle),
+    textTransform: "uppercase",
   },
 });
 

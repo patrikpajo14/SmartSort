@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { TouchableOpacity, View } from "react-native";
+import { Pressable, TouchableOpacity, View } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { COLORS } from "@/constants/theme";
 import { Image } from "expo-image";
@@ -17,7 +17,7 @@ export const MainButton: FC<MainButtonProps> = ({ onPress, width }) => {
 
   return (
     <View style={[styles.container, { width }]}>
-      <TouchableOpacity style={[styles.button, { width }]} onPress={onPress}>
+      <Pressable style={[styles.button, { width }]} onPress={onPress}>
         <Image source={icons.scan} style={styles.mainIcon} />
         <View
           style={[
@@ -25,7 +25,7 @@ export const MainButton: FC<MainButtonProps> = ({ onPress, width }) => {
             { backgroundColor: activeColors.white },
           ]}
         ></View>
-      </TouchableOpacity>
+      </Pressable>
     </View>
   );
 };

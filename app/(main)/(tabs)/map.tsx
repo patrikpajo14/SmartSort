@@ -24,6 +24,8 @@ import { Location } from "@/types/global";
 import MainLayout from "@/screen-layouts/MainLayout";
 import icons from "@/constants/icons";
 import CustomBottomSheet from "@/components/common/CustomBottomSheet";
+import { containerLocations } from "@/constants/config";
+import Filters from "@/screens/map-screen/components/Filters";
 
 type Route = any;
 
@@ -35,7 +37,7 @@ const FirstRoute = ({
   locations,
   onLocationPress,
 }: {
-  locations: any;
+  locations: Location[];
   onLocationPress: any;
 }) => <MapTab locations={locations} onLocationPress={onLocationPress} />;
 
@@ -51,35 +53,6 @@ const SecondRoute = ({
   />
 );
 
-const locations = [
-  {
-    id: "1",
-    name: "Recycling Station A",
-    coordinates: { latitude: 45.815, longitude: 15.9819 },
-    isOpen: true,
-    rating: 4.5,
-    distanceKm: 1.2,
-    garbageType: "Plastic",
-  },
-  {
-    id: "2",
-    name: "Recycling Station B",
-    coordinates: { latitude: 45.816, longitude: 15.9805 },
-    isOpen: false,
-    rating: 3.8,
-    distanceKm: 2.7,
-    garbageType: "Glass",
-  },
-  {
-    id: "3",
-    name: "Recycling Station C",
-    coordinates: { latitude: 45.814, longitude: 15.9825 },
-    isOpen: true,
-    rating: 4.9,
-    distanceKm: 0.6,
-    garbageType: "Electronics",
-  },
-];
 type MapScreenRouteProp = RouteProp<TabParamList, "Map">;
 
 const MapScreen = () => {
@@ -89,11 +62,14 @@ const MapScreen = () => {
   const { openBottomSheet } = route.params || {};
   const { mode } = useTheme();
   let activeColors = COLORS[mode];
+  const bottomSheetRef = useRef<BottomSheetModal>(null);
+
   const [navigationModalVisible, setNavigationModalVisible] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState<Location>();
   const [index, setIndex] = useState(0);
   const [isFocused, setIsFocused] = useState(false);
-  const bottomSheetRef = useRef<BottomSheetModal>(null);
+  const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
+
   const [routes] = useState([
     { key: "map", title: t("locations.map") },
     { key: "locations", title: t("locations.locations_list") },
@@ -123,7 +99,7 @@ const MapScreen = () => {
     }, [route.params?.openBottomSheet]),
   );
 
-  const fetchMoreRef = useRef(false);
+  // const fetchMoreRef = useRef(false);
 
   /*const loadMore = () => {
     if (hasNextPage && !isFetchingNextPage && !fetchMoreRef.current) {
@@ -136,25 +112,38 @@ const MapScreen = () => {
 
   const handleFilterPress = () => {
     console.log("handleFilterPress");
-    bottomSheetRef.current?.expand();
+    bottomSheetRef.current?.present();
   };
 
   const handleFilterClose = () => {
     bottomSheetRef.current?.dismiss();
   };
 
+  const handleFilterChange = (type: string) => {
+    setSelectedFilters((prev) =>
+      prev.includes(type)
+        ? prev.filter((item) => item !== type)
+        : [...prev, type],
+    );
+  };
+
+  const handleClearAll = () => {
+    setSelectedFilters([]);
+  };
+
   const onLocationPress = (location: Location) => {
+    console.log("onLocationPress", location);
     setSelectedLocation(location);
     setNavigationModalVisible(true);
   };
 
-  useEffect(() => {
+  /* useEffect(() => {
     if (route.params?.selectedTab) {
       setTimeout(() => {
         setIndex(1);
       }, 400);
     }
-    /* if (route.params?.id && flatFriends.length > 0) {
+    /!* if (route.params?.id && flatFriends.length > 0) {
       const friend = flatFriends.find(
         (friend) => friend.id === route.params?.id,
       );
@@ -164,7 +153,7 @@ const MapScreen = () => {
           id: null,
         });
       }
-    }*/
+    }*!/
     return () => {
       if (route.params?.selectedTab) {
         navigation.setParams({
@@ -172,19 +161,22 @@ const MapScreen = () => {
         });
       }
     };
-  }, [route.params]);
+  }, [route.params]);*/
 
   const renderScene = ({ route }: RenderSceneProps) => {
     switch (route.key) {
       case "map":
         return (
-          <FirstRoute locations={locations} onLocationPress={onLocationPress} />
+          <FirstRoute
+            locations={containerLocations}
+            onLocationPress={onLocationPress}
+          />
         );
       case "locations":
         return (
           <SecondRoute
             user={user}
-            locations={locations}
+            locations={containerLocations}
             onLocationPress={onLocationPress}
           />
         );
@@ -192,6 +184,8 @@ const MapScreen = () => {
         return null;
     }
   };
+
+  console.log("selectedFilters", selectedFilters);
 
   const renderTabBar = (props: any) => {
     return (
@@ -255,16 +249,23 @@ const MapScreen = () => {
           initialLayout={{ width: SIZES.width }}
           renderTabBar={renderTabBar}
         />
-        <CustomBottomSheet
-          ref={bottomSheetRef}
-          snapPoints={["50%", "80%"]}
-          onClose={handleFilterClose}
-          handleIcon={icons.settings}
-          showFooter={false}
-        >
-          <Text>Filters</Text>
-        </CustomBottomSheet>
       </View>
+      <CustomBottomSheet
+        ref={bottomSheetRef}
+        snapPoints={["50%"]}
+        onClose={handleFilterClose}
+        showFooter={false}
+        useKeyboardScrollView={true}
+      >
+        <Filters
+          activeColors={activeColors}
+          t={t}
+          filters={selectedFilters}
+          onFilterChange={handleFilterChange}
+          onClearAll={handleClearAll}
+          handleFilterClose={handleFilterClose}
+        />
+      </CustomBottomSheet>
       <NavigationModal
         location={selectedLocation}
         isVisible={navigationModalVisible}

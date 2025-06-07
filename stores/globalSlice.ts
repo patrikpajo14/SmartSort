@@ -46,7 +46,7 @@ export const createGlobalSlice: StateCreator<GlobalSlice> = (set) => ({
   walkthroughVersion: null,
   privacySettings: 10,
   configuration: null,
-  userLocation: null,
+  userLocation: { latitude: 45.8131, longitude: 15.977 },
   timezone: "Europe/Berlin",
   incidentsCount: 0,
   notificationsCount: 0,

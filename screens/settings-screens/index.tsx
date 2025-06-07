@@ -178,13 +178,13 @@ const Settings = () => {
       </CustomBottomSheet>
 
       <GeneralModal
-        title={"Logout"}
-        message={"Do you really want to logout?"}
+        title={t("general.logout")}
+        message={t("general.logout_confirmation")}
         isVisible={modalVisible}
         onClose={() => {
           setModalVisible(false);
         }}
-        submitButtonText={"Confirm"}
+        submitButtonText={t("general.confirm")}
         onSubmit={logoutUserSettings}
       />
     </SettingsLayout>

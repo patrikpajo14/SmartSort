@@ -27,14 +27,13 @@ type CustomBottomSheetProps = {
   snapPoints?: string[] | number[];
   onClose?: () => void;
   onDelete?: () => void;
-  handleIcon: string | undefined;
   leftButtonText?: string;
   rightButtonText?: string;
   showFooter?: boolean;
   useKeyboardScrollView?: boolean;
 };
 
-type CustomBottomSheetRef = BottomSheetModal;
+type CustomBottomSheetRef = BottomSheetModal | null;
 
 const CustomBottomSheet = forwardRef<
   CustomBottomSheetRef,
@@ -44,7 +43,6 @@ const CustomBottomSheet = forwardRef<
     {
       children,
       snapPoints = ["80%", "90%"],
-      handleIcon,
       onClose,
       onDelete,
       leftButtonText,
@@ -153,7 +151,7 @@ const CustomBottomSheet = forwardRef<
         snapPoints={snapPoints}
         enablePanDownToClose={true}
         backgroundStyle={{
-          backgroundColor: "transparent",
+          backgroundColor: activeColors.background,
         }}
         handleStyle={{ display: "none" }}
         backdropComponent={renderBackdrop}
@@ -162,43 +160,14 @@ const CustomBottomSheet = forwardRef<
         keyboardBlurBehavior="restore"
         android_keyboardInputMode="adjustResize"
       >
-        <BottomSheetView style={styles.handleRow}>
-          <View
-            style={[
-              styles.indicatorWrapperStyle,
-              { backgroundColor: activeColors.primary },
-            ]}
-          >
-            {handleIcon && (
-              <Image
-                source={handleIcon}
-                style={styles.indicatorIconStyle}
-                tintColor={activeColors.white}
-              />
-            )}
-          </View>
-        </BottomSheetView>
-        <BottomSheetView
-          style={[
-            styles.container,
-            { backgroundColor: activeColors.background },
-          ]}
-        >
+        <BottomSheetView style={[styles.container]}>
           {useKeyboardScrollView ? (
-            <BottomSheetView
-              style={[
-                styles.childrenWrap,
-                { backgroundColor: activeColors.background },
-              ]}
-            >
+            <BottomSheetView style={[styles.childrenWrap]}>
               {children}
             </BottomSheetView>
           ) : (
             <ScrollView
-              style={[
-                styles.childrenWrap,
-                { backgroundColor: activeColors.background },
-              ]}
+              style={[styles.childrenWrap]}
               onScroll={handleScroll}
               scrollEventThrottle={16}
             >
@@ -214,13 +183,14 @@ const CustomBottomSheet = forwardRef<
 CustomBottomSheet.displayName = "CustomBottomSheet";
 const styles = ScaledSheet.create({
   container: {
-    flex: 1,
+    height: "100%",
     position: "relative",
-    paddingTop: "50@ms",
+    paddingTop: "60@ms",
     borderTopLeftRadius: "20@ms",
     borderTopRightRadius: "20@ms",
   },
   childrenWrap: {
+    paddingTop: "60@ms",
     paddingHorizontal: "30@ms",
     flex: 1,
   },
@@ -250,8 +220,8 @@ const styles = ScaledSheet.create({
     objectFit: "contain",
   },
   handleRow: {
+    width: "100%",
     alignItems: "center",
-    marginBottom: "-40@ms",
     zIndex: 10,
   },
   indicatorWrapperStyle: {

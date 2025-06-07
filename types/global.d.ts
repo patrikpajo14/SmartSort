@@ -2,15 +2,14 @@ export type ActiveColors = any;
 
 export interface Location {
   id: string;
-  name: string;
-  coordinates: {
-    latitude: number;
-    longitude: number;
-  };
-  isOpen: boolean;
+  title: string;
+  address: string;
+  latitude: number;
+  longitude: number;
+  open_at: string;
+  closing_at: string;
   rating: number;
-  distanceKm: number;
-  garbageType: string;
+  type: string;
 }
 
 export interface FriendCoordinate {

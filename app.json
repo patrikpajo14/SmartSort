@@ -9,7 +9,10 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "config": {
+        "googleMapsApiKey":  "process.env.IOS_GOOGLE_MAPS_API_KEY"
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -18,7 +21,7 @@
       },
       "config": {
         "googleMaps": {
-          "apiKey": "AIzaSyCS1LiGwAtuU_hg1lmDvm1ERtMrY555C2M"
+          "apiKey": "process.env.ANDROID_GOOGLE_MAPS_API_KEY"
         }
       }
     },

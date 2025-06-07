@@ -8,7 +8,6 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { moderateScale } from "react-native-size-matters";
-import { useColorScheme } from "@/hooks/useColorScheme";
 import { COLORS, FONTS } from "@/constants/theme";
 import { useTheme } from "@/context/ThemeContext";
 
@@ -21,7 +20,8 @@ type PrimaryButtonProps = {
   prependComponent?: React.ReactNode;
   appendComponent?: React.ReactNode;
   outerContainerStyle?: ViewStyle;
-  type?: string;
+  type?: "outlined" | "primary";
+  small?: boolean;
 };
 
 const PrimaryButton: React.FC<PrimaryButtonProps> = ({
@@ -34,6 +34,7 @@ const PrimaryButton: React.FC<PrimaryButtonProps> = ({
   appendComponent,
   outerContainerStyle,
   type = "primary",
+  small = false,
 }) => {
   const { mode } = useTheme();
   let activeColors = COLORS[mode ?? "light"];
@@ -60,8 +61,10 @@ const PrimaryButton: React.FC<PrimaryButtonProps> = ({
             alignItems: "center",
             justifyContent: "center",
             flexDirection: "row",
-            height: moderateScale(53, 0.2),
-            paddingHorizontal: moderateScale(25, 0.2),
+            height: small ? moderateScale(45, 0.2) : moderateScale(53, 0.2),
+            paddingHorizontal: small
+              ? moderateScale(15, 0.2)
+              : moderateScale(25, 0.2),
             position: "relative",
           }}
         >
@@ -73,8 +76,10 @@ const PrimaryButton: React.FC<PrimaryButtonProps> = ({
           <Text
             style={{
               ...(FONTS.semiBold2 as TextStyle),
-              fontSize: moderateScale(20, 0.2),
-              lineHeight: moderateScale(24, 0.2),
+              fontSize: small ? moderateScale(16, 0.2) : moderateScale(20, 0.2),
+              lineHeight: small
+                ? moderateScale(20, 0.2)
+                : moderateScale(24, 0.2),
               color:
                 type === "outlined" ? activeColors.primary : activeColors.white,
               opacity: isLoading ? 0 : 1,

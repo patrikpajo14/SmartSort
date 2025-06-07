@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Modal,
   View,
@@ -17,8 +17,11 @@ import { useTheme } from "@/context/ThemeContext";
 import { COLORS, FONTS } from "@/constants/theme";
 import openMapOnDevice from "@/utils/openMapOnDevice";
 import { Location } from "@/types/global";
-import { calculateDistance } from "@/utils/calculateDistance";
+import { calculateDistance, showDistanceText } from "@/utils/calculateDistance";
 import PrimaryButton from "@/components/ui/PrimaryButton";
+import { Image } from "expo-image";
+import icons from "@/constants/icons";
+import { getContainerColor } from "@/utils/mapThemePickers";
 
 type NavigationModalProps = {
   location: Location | undefined;
@@ -38,39 +41,38 @@ export default function NavigationModal({
   const insets = useSafeAreaInsets();
   const { t } = useTranslation();
   const userLocation = useGlobalStore((state) => state.userLocation);
+  const setUserLocation = useGlobalStore((state) => state.setUserLocation);
+  useEffect(() => {
+    setUserLocation({ latitude: 45.8131, longitude: 15.977 });
+  }, []);
+  const showDistance =
+    userLocation?.latitude &&
+    userLocation?.longitude &&
+    location?.latitude &&
+    location?.longitude;
   const handleNavigation = () => {
     openMapOnDevice({
       fromLatitude: userLocation?.latitude,
       fromLongitude: userLocation?.longitude,
-      toLatitude: location?.coordinates.latitude,
-      toLongitude: location?.coordinates.longitude,
-      destinationName: location?.name,
+      toLatitude: location?.latitude,
+      toLongitude: location?.longitude,
+      destinationName: location?.title,
     });
   };
 
   let distanceText = "";
-  if (
-    userLocation?.latitude &&
-    userLocation?.longitude &&
-    location?.coordinates.latitude &&
-    location?.coordinates.longitude
-  ) {
-    const distanceInMeters = calculateDistance(
+  console.log("userLocation", userLocation);
+  if (showDistance) {
+    const distance = calculateDistance(
       userLocation.latitude,
       userLocation.longitude,
-      location?.coordinates.latitude,
-      location?.coordinates.longitude,
+      location?.latitude,
+      location?.longitude,
     );
 
-    if (distanceInMeters < 1000) {
-      distanceText = `${Math.round(distanceInMeters)} ${t(
-        "locations.meters_away",
-      )}`;
-    } else {
-      distanceText = `${(distanceInMeters / 1000).toFixed(2)} ${t(
-        "locations.kilometers_away",
-      )}`;
-    }
+    distanceText = showDistanceText(distance, t);
+
+    console.log("distanceText", distanceText);
   }
 
   return (
@@ -95,7 +97,7 @@ export default function NavigationModal({
             { backgroundColor: activeColors.background },
           ]}
         >
-          {location?.name && (
+          {location?.title && (
             <View
               style={[
                 styles.topCircle,
@@ -105,27 +107,46 @@ export default function NavigationModal({
               <View
                 style={[
                   styles.topCircleInner,
-                  { backgroundColor: activeColors.border },
+                  {
+                    backgroundColor: getContainerColor(
+                      activeColors,
+                      location.type,
+                    ),
+                  },
                 ]}
               >
-                <Text>{location.name}</Text>
+                <Image
+                  source={icons.recycle}
+                  style={styles.icon}
+                  contentFit={"contain"}
+                />
               </View>
             </View>
           )}
 
           {location ? (
             <>
-              <Text style={[styles.name, { color: activeColors.text }]}>
-                {location?.name}
+              <Text
+                style={[
+                  styles.type,
+                  { color: getContainerColor(activeColors, location.type) },
+                ]}
+              >
+                {location?.type}
               </Text>
-              {location?.coordinates?.longitude &&
-                location?.coordinates?.latitude && (
-                  <Text
-                    style={[styles.distance, { color: activeColors.primary }]}
-                  >
-                    {distanceText}
-                  </Text>
-                )}
+              <Text style={[styles.name, { color: activeColors.text }]}>
+                {location?.title}
+              </Text>
+              <Text style={[styles.address, { color: activeColors.textGray }]}>
+                {location?.address}
+              </Text>
+              {showDistance && (
+                <Text
+                  style={[styles.distance, { color: activeColors.textGray }]}
+                >
+                  {distanceText}
+                </Text>
+              )}
             </>
           ) : (
             <Text style={[styles.description, { color: activeColors.text }]}>
@@ -137,11 +158,7 @@ export default function NavigationModal({
             style={[
               styles.btnContainer,
               {
-                justifyContent:
-                  location?.coordinates?.latitude &&
-                  location?.coordinates?.latitude
-                    ? "space-between"
-                    : "center",
+                justifyContent: showDistance ? "space-between" : "center",
               },
             ]}
           >
@@ -149,14 +166,15 @@ export default function NavigationModal({
               label={t("general.cancel")}
               onPress={onClose}
               type={"outlined"}
+              small={true}
             />
-            {location?.coordinates?.latitude &&
-              location?.coordinates?.longitude && (
-                <PrimaryButton
-                  label={t("locations.start_navigation")}
-                  onPress={handleNavigation}
-                />
-              )}
+            {showDistance && (
+              <PrimaryButton
+                label={t("locations.start_navigation")}
+                onPress={handleNavigation}
+                small={true}
+              />
+            )}
           </View>
         </View>
       </View>
@@ -248,8 +266,22 @@ const styles = ScaledSheet.create({
   btnContainer: {
     flexDirection: "row",
     width: "100%",
+    gap: "10@ms",
     alignItems: "center",
     marginTop: "15@ms",
     marginBottom: "10@ms",
+  },
+  icon: {
+    width: "30@ms0.2",
+    height: "30@ms0.2",
+  },
+  address: {
+    ...(FONTS.body3 as TextStyle),
+    paddingBottom: "15@ms0.2",
+  },
+  type: {
+    ...(FONTS.semiBold2 as TextStyle),
+    textTransform: "uppercase",
+    paddingBottom: "10@ms0.2",
   },
 });
