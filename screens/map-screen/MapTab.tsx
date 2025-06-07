@@ -10,6 +10,7 @@ import { useTheme } from "@/context/ThemeContext";
 import { COLORS, FONTS } from "@/constants/theme";
 import { ScaledSheet } from "react-native-size-matters";
 import { Location } from "@/types/global";
+import Map from "@/screens/map-screen/components/Map";
 // import MapViewClustering from "react-native-map-clustering";
 // import { PROVIDER_GOOGLE, Region } from "react-native-maps";
 // import CustomMarker from "./components/CustomMarker.tsx";
@@ -179,7 +180,7 @@ const MapTab = ({ locations, onLocationPress }: MapTabProps) => {
   );*/
   return (
     <View style={{ flex: 1 }}>
-      <Text>Map tab</Text>
+      <Map />
     </View>
   );
 };
