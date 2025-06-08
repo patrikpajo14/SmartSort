@@ -62,9 +62,9 @@ const Profile = ({ onButtonPress, user }: ProfileProps) => {
           label={
             user ? t("settings.edit_profile") : t("settings.create_profile")
           }
+          small={true}
           onPress={onButtonPress}
           outerContainerStyle={{
-            minWidth: moderateScale(170, 0.2),
             marginVertical: moderateScale(20, 0.2),
           }}
         />
