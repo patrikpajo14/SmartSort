@@ -25,17 +25,17 @@ const Badge: React.FC<BadgeProps> = ({
       style={{
         alignItems: "center",
         justifyContent: "center",
-        height: moderateScale(32, 0.2),
+        height: moderateScale(30, 0.2),
         paddingHorizontal: moderateScale(15, 0.2),
         backgroundColor: backgroundColor,
-        borderRadius: 17,
+        borderRadius: 15,
         ...outerContainerStyle,
       }}
     >
       <Text
         style={{
-          ...(FONTS.semiBold2 as TextStyle),
-          fontSize: moderateScale(13, 0.2),
+          ...(FONTS.body5 as TextStyle),
+          fontWeight: "500",
           color: color,
           ...labelStyle,
         }}

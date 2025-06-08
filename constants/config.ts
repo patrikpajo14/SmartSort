@@ -1,4 +1,5 @@
 import { Location } from "@/types/global";
+import icons from "@/constants/icons";
 
 export const API_URL = process.env.EXPO_PUBLIC_API_URL;
 export const API_VERSION = process.env.EXPO_PUBLIC_API_VERSION;
@@ -79,5 +80,68 @@ export const containerLocations: Location[] = [
     open_at: "2025-06-07 07:30:00",
     closing_at: "2025-06-07 20:00:00",
     rating: 4.2,
+  },
+];
+
+export const educationList = [
+  {
+    id: 1,
+    type: "plastic",
+    title: "Plastic",
+    icon: icons.bottle,
+  },
+  {
+    id: 2,
+    type: "electronics",
+    title: "Electronics",
+    icon: icons.electronics,
+  },
+  {
+    id: 3,
+    type: "clothes",
+    title: "Clothes",
+    icon: icons.clothes,
+  },
+  {
+    id: 4,
+    type: "carton",
+    title: "Cardboard",
+    icon: icons.carton,
+  },
+  {
+    id: 5,
+    type: "metal",
+    title: "Metal",
+    icon: icons.metal,
+  },
+  {
+    id: 6,
+    type: "batteries",
+    title: "Batteries",
+    icon: icons.batteries,
+  },
+  {
+    id: 7,
+    type: "glass",
+    title: "Glass",
+    icon: icons.glass,
+  },
+  {
+    id: 8,
+    type: "paper",
+    title: "Paper",
+    icon: icons.paper,
+  },
+  {
+    id: 9,
+    type: "bio",
+    title: "Bio",
+    icon: icons.bio,
+  },
+  {
+    id: 10,
+    type: "construction",
+    title: "Construction",
+    icon: icons.construction,
   },
 ];

@@ -11,6 +11,17 @@ const avatar = require("../assets/icons/ico_person-fill.png");
 const scan_big = require("../assets/icons/ico_scan-big.png");
 const filters = require("../assets/icons/ico_filters.png");
 const recycle = require("../assets/icons/ico_recycle.png");
+const bottle = require("../assets/icons/ico_bottle.png");
+const bio = require("../assets/icons/ico_bio.png");
+const batteries = require("../assets/icons/ico_batteries.png");
+const metal = require("../assets/icons/ico_metal.png");
+const paper = require("../assets/icons/ico_paper.png");
+const glass = require("../assets/icons/ico_glass.png");
+const construction = require("../assets/icons/ico_construction.png");
+const electronics = require("../assets/icons/ico_light-bulb.png");
+const carton = require("../assets/icons/ico_milk.png");
+const clothes = require("../assets/icons/ico_clothes.png");
+const close = require("../assets/icons/ico_close.png");
 export default {
   chevron_left,
   chevron_right,
@@ -25,4 +36,15 @@ export default {
   scan_big,
   filters,
   recycle,
+  bottle,
+  bio,
+  batteries,
+  metal,
+  paper,
+  glass,
+  construction,
+  electronics,
+  carton,
+  clothes,
+  close,
 };

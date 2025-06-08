@@ -15,7 +15,12 @@ export default function EducationLayout() {
           title: "Education",
         }}
       />
-      <Stack.Screen name="[category]" options={{ title: "Plastic" }} />
+      <Stack.Screen
+        name="[category]"
+        options={{
+          presentation: "modal",
+        }}
+      />
     </Stack>
   );
 }

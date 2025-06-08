@@ -164,7 +164,6 @@ const Settings = () => {
       <CustomBottomSheet
         snapPoints={["75%"]}
         ref={bottomSheetRef}
-        handleIcon={icons.avatar}
         useKeyboardScrollView={true}
         showFooter={false}
         onClose={handleClosePress}

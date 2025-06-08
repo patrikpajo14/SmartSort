@@ -108,7 +108,9 @@
     "turn_location": "Turn on location services"
   },
   "education": {
-    "title": "Education"
+    "title": "Education",
+    "how_to": "How to Recycle",
+    "guidelines": "View guidelines",
   },
   "locations": {
     "map": "Map",

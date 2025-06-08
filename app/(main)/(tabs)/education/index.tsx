@@ -7,6 +7,7 @@ import { COLORS } from "@/constants/theme";
 import MainLayout from "@/screen-layouts/MainLayout";
 import EducationItem from "@/screens/education-screens/components/EducationItem";
 import { Image } from "expo-image";
+import { educationList } from "@/constants/config";
 
 export default function EducationScreen() {
   const { t } = useTranslation();
@@ -27,51 +28,19 @@ export default function EducationScreen() {
       </View>
       <View style={styles.container}>
         <View style={styles.itemList}>
-          <EducationItem
-            label={"Plastic"}
-            onPress={() =>
-              router.push({
-                pathname: "/(main)/(tabs)/education/[category]",
-                params: { category: "plastic" },
-              })
-            }
-          />
-          <EducationItem
-            label={"Plastic"}
-            onPress={() =>
-              router.push({
-                pathname: "/(main)/(tabs)/education/[category]",
-                params: { category: "plastic" },
-              })
-            }
-          />
-          <EducationItem
-            label={"Plastic"}
-            onPress={() =>
-              router.push({
-                pathname: "/(main)/(tabs)/education/[category]",
-                params: { category: "plastic" },
-              })
-            }
-          />
-          <EducationItem
-            label={"Plastic"}
-            onPress={() =>
-              router.push({
-                pathname: "/(main)/(tabs)/education/[category]",
-                params: { category: "plastic" },
-              })
-            }
-          />
-          <EducationItem
-            label={"Plastic"}
-            onPress={() =>
-              router.push({
-                pathname: "/(main)/(tabs)/education/[category]",
-                params: { category: "plastic" },
-              })
-            }
-          />
+          {educationList.map((item) => (
+            <EducationItem
+              key={item.id}
+              label={item.title}
+              image={item.icon}
+              onPress={() =>
+                router.push({
+                  pathname: "/(main)/(tabs)/education/[category]",
+                  params: { category: item.type },
+                })
+              }
+            />
+          ))}
         </View>
       </View>
     </MainLayout>
@@ -85,6 +54,7 @@ const styles = ScaledSheet.create({
   },
   itemList: {
     flexDirection: "row",
+    justifyContent: "center",
     width: "100%",
     flexWrap: "wrap",
     gap: "20@ms",

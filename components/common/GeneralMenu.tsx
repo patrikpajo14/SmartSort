@@ -16,6 +16,7 @@ import { COLORS, FONTS } from "@/constants/theme";
 import { useTheme } from "@/context/ThemeContext";
 import { Image } from "expo-image";
 import { router } from "expo-router";
+import { SingleSwitch } from "@/components/ui/SingleSwitch";
 
 interface MenuItem {
   id: string | number;
@@ -48,14 +49,6 @@ interface SingleLinkProps {
   value?: string;
   description?: string;
   onPress: () => void;
-  linkContainerStyle?: ViewStyle;
-  labelStyle?: TextStyle;
-}
-
-interface SingleSwitchProps {
-  toggleSwitch: () => void;
-  isEnabled: boolean;
-  title: string;
   linkContainerStyle?: ViewStyle;
   labelStyle?: TextStyle;
 }
@@ -242,46 +235,6 @@ const SingleLink = ({
         />
       </View>
     </TouchableOpacity>
-  );
-};
-
-const SingleSwitch = ({
-  toggleSwitch,
-  isEnabled,
-  title,
-  linkContainerStyle,
-  labelStyle,
-}: SingleSwitchProps): JSX.Element => {
-  const { mode } = useTheme();
-  let activeColors = COLORS[mode];
-  return (
-    <View
-      style={{
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-        height: verticalScale(50),
-        ...linkContainerStyle,
-      }}
-    >
-      <Text
-        style={{ ...FONTS.body1, fontSize: moderateScale(14), ...labelStyle }}
-      >
-        {title}
-      </Text>
-      <Switch
-        trackColor={{
-          false: activeColors.textGray,
-          true: activeColors.primary,
-        }}
-        thumbColor={activeColors.white}
-        ios_backgroundColor={
-          !isEnabled ? activeColors.white : activeColors.primary
-        }
-        onValueChange={toggleSwitch}
-        value={isEnabled}
-      />
-    </View>
   );
 };
 

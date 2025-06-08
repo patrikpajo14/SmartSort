@@ -14,6 +14,7 @@ import icons from "@/constants/icons";
 
 type EducationItemProps = {
   label: string;
+  image: string;
   labelStyle?: TextStyle;
   disabled?: boolean;
   onPress: () => void;
@@ -24,6 +25,7 @@ type EducationItemProps = {
 
 const EducationItem: React.FC<EducationItemProps> = ({
   label,
+  image,
   labelStyle,
   disabled,
   onPress,
@@ -62,7 +64,7 @@ const EducationItem: React.FC<EducationItemProps> = ({
           }}
         >
           <Image
-            source={icons.recycle}
+            source={image}
             contentFit={"contain"}
             style={{
               width: moderateScale(30),
