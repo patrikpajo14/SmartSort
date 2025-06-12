@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import {
   ImageURISource,
   Pressable,
@@ -20,11 +20,13 @@ import Button from "@/components/Button";
 import { useTheme } from "@/context/ThemeContext";
 import { COLORS } from "@/constants/theme";
 import { useTranslation } from "react-i18next";
+import loginForm from "@/screens/auth-screens/LoginForm";
 
 export default function App() {
   const { t } = useTranslation();
   const { mode } = useTheme();
   let activeColors = COLORS[mode ?? "light"];
+  const [currentIndex, setCurrentIndex] = useState(0);
   const x = useSharedValue(0);
   const flatListIndex = useSharedValue(0);
   const flatListRef = useAnimatedRef<
@@ -36,7 +38,9 @@ export default function App() {
 
   const onViewableItemsChanged = useCallback(
     ({ viewableItems }: { viewableItems: ViewToken[] }) => {
-      flatListIndex.value = viewableItems[0].index ?? 0;
+      const newIndex = viewableItems[0]?.index ?? 0;
+      flatListIndex.value = newIndex;
+      setCurrentIndex(newIndex);
     },
     [],
   );
@@ -98,18 +102,22 @@ export default function App() {
         <PaginationElement length={pages.length} x={x} />
       </View>
       <View style={styles.bottomContainer}>
-        <Pressable
-          onPress={() => {
-            flatListRef.current?.scrollToIndex({
-              index: pages.length - 1,
-              animated: true,
-            });
-          }}
-        >
-          <Text style={[styles.skipButton, { color: activeColors.textGray }]}>
-            {t("general.skip")}
-          </Text>
-        </Pressable>
+        {currentIndex !== pages.length - 1 ? (
+          <Pressable
+            onPress={() => {
+              flatListRef.current?.scrollToIndex({
+                index: pages.length - 1,
+                animated: true,
+              });
+            }}
+          >
+            <Text style={[styles.skipButton, { color: activeColors.textGray }]}>
+              {t("general.skip")}
+            </Text>
+          </Pressable>
+        ) : (
+          <View></View>
+        )}
         <Button
           btnText={t("onboardScreen.cta_label")}
           currentIndex={flatListIndex}

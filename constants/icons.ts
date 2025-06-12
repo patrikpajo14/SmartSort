@@ -22,6 +22,7 @@ const electronics = require("../assets/icons/ico_light-bulb.png");
 const carton = require("../assets/icons/ico_milk.png");
 const clothes = require("../assets/icons/ico_clothes.png");
 const close = require("../assets/icons/ico_close.png");
+const trash = require("../assets/icons/ico_trash.png");
 export default {
   chevron_left,
   chevron_right,
@@ -47,4 +48,5 @@ export default {
   carton,
   clothes,
   close,
+  trash,
 };

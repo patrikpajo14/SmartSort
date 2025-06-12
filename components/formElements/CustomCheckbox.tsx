@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, { useEffect, useRef } from "react";
 import {
   Text,
   View,
@@ -6,12 +6,11 @@ import {
   Pressable,
   ViewStyle,
   TextStyle,
-  ImageStyle,
-} from 'react-native';
-import icons from '../../constants/icons.ts';
-import {COLORS, FONTS} from '../../constants';
-import {moderateScale, ScaledSheet} from 'react-native-size-matters';
-import {useTheme} from '../../context/themeContext.tsx';
+} from "react-native";
+import { moderateScale, ScaledSheet } from "react-native-size-matters";
+import { useTheme } from "@/context/ThemeContext";
+import { COLORS, FONTS } from "@/constants/theme";
+import icons from "@/constants/icons";
 
 type CustomCheckboxProps = {
   text: string;
@@ -34,7 +33,7 @@ const CustomCheckbox: React.FC<CustomCheckboxProps> = ({
   checkboxStyle,
   errorMsg,
 }) => {
-  const {mode} = useTheme();
+  const { mode } = useTheme();
   let activeColors = COLORS[mode];
   const scale = useRef(new Animated.Value(0)).current;
   const opacity = useRef(new Animated.Value(0)).current;
@@ -71,34 +70,37 @@ const CustomCheckbox: React.FC<CustomCheckboxProps> = ({
   };
 
   return (
-    <View style={{marginBottom: moderateScale(20, 0.2)}}>
+    <View style={{ marginBottom: moderateScale(20, 0.2) }}>
       <Pressable
         onPress={() => {
           onPress();
         }}
-        style={[styles.container, containerStyle]}>
+        style={[styles.container, containerStyle]}
+      >
         <View
           style={[
             styles.checkbox,
             {
               backgroundColor: isChecked
                 ? activeColors.primary
-                : activeColors.lighterGray,
+                : activeColors.textLightGray,
             },
             checkboxStyle,
-          ]}>
+          ]}
+        >
           <Animated.Image
             source={icons.checkmark}
             resizeMode="contain"
             tintColor={activeColors.white}
             style={[
-              {width: moderateScale(17), height: moderateScale(12)},
+              { width: moderateScale(17), height: moderateScale(12) },
               animatedStyle,
             ]}
           />
         </View>
         <Text
-          style={[styles.checkboxText, {color: activeColors.text}, textStyle]}>
+          style={[styles.checkboxText, { color: activeColors.text }, textStyle]}
+        >
           {textComponent || text}
         </Text>
       </Pressable>
@@ -108,11 +110,12 @@ const CustomCheckbox: React.FC<CustomCheckboxProps> = ({
             {
               paddingLeft: moderateScale(45, 0.2),
               marginTop: moderateScale(5, 0.2),
-              color: activeColors.error,
+              color: activeColors.danger,
               fontSize: 12,
-              opacity: errorMsg === '' ? 0 : 1,
+              opacity: errorMsg === "" ? 0 : 1,
             },
-          ]}>
+          ]}
+        >
           {errorMsg}
         </Text>
       )}
@@ -122,22 +125,22 @@ const CustomCheckbox: React.FC<CustomCheckboxProps> = ({
 
 const styles = ScaledSheet.create({
   container: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   checkbox: {
-    height: '30@ms',
-    width: '30@ms',
+    height: "30@ms",
+    width: "30@ms",
     borderRadius: 6,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
 
   checkboxText: {
     ...FONTS.body4,
-    fontSize: '15@ms0.2',
-    lineHeight: '20@ms0.7',
-    marginLeft: '15@ms',
+    fontSize: "15@ms0.2",
+    lineHeight: "20@ms0.7",
+    marginLeft: "15@ms",
   },
 });
 

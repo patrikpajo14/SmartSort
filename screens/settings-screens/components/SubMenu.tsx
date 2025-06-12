@@ -55,7 +55,7 @@ const SubMenu = ({
             flex: 1,
           }}
         >
-          {data.map((item) => (
+          {data?.map((item) => (
             <SingleLink
               key={item}
               label={typedLangList[item]?.name || item}

@@ -1,7 +1,6 @@
 import { ScrollView } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
-import React, { useRef, useState } from "react";
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import React, { useState } from "react";
 import GeneralModal from "../../components/common/GeneralModal";
 import { COLORS } from "@/constants/theme";
 import { useSession } from "@/context/AuthContext";
@@ -10,11 +9,10 @@ import { useTheme } from "@/context/ThemeContext";
 import SettingsLayout from "@/screen-layouts/SettingsLayout";
 import Profile from "@/screens/settings-screens/components/Profile";
 import GeneralMenu from "@/components/common/GeneralMenu";
-import CustomBottomSheet from "@/components/common/CustomBottomSheet";
-import ProfileSheetContent from "@/screens/settings-screens/components/ProfileSheetContent";
 import langList from "../../services/langList.json";
 import { useTranslation } from "react-i18next";
 import useGlobalStore from "@/stores/globalStore";
+import { router } from "expo-router";
 
 interface LanguageItem {
   name: string;
@@ -35,7 +33,6 @@ const Settings = () => {
   const isDarkMode = mode === "dark";
   let activeColors = COLORS[mode ?? "light"];
 
-  const bottomSheetRef = useRef<BottomSheetModal>(null);
   const user = {
     name: "Patrik",
     lastname: "Stojsavljevic",
@@ -43,11 +40,8 @@ const Settings = () => {
   };
   // const user = undefined;
 
-  const handleClosePress = () => {
-    bottomSheetRef.current?.dismiss();
-  };
-  const handleOpenPress = () => {
-    bottomSheetRef.current?.present();
+  const handleEditProfile = () => {
+    router.navigate("/(main)/(tabs)/settings/profile");
   };
   const handleOnLogoutButtonPress = () => {
     setModalVisible(true);
@@ -78,35 +72,23 @@ const Settings = () => {
       id: 3,
       title: t("settings.account"),
       icon: icons.chevron_right,
-      link: "AccountSettings",
+      link: "/settings/account",
       type: "account",
     },
   ];
   const settingsLinksAbout = [
     {
       id: 4,
-      title: t("settings.help_support"),
-      icon: icons.chevron_right,
-      link: "HelpAndSupport",
-    },
-    {
-      id: 5,
-      title: t("settings.impressum"),
-      icon: icons.chevron_right,
-      link: "Impressum",
-    },
-    {
-      id: 6,
       title: t("settings.privacy"),
       icon: icons.chevron_right,
-      menu_item_type: 1,
+      menu_item_type: 1 as 1,
       link: "https://www.noa-zrce.com/en/legal/mobile-application-privacy-policy",
     },
     {
-      id: 7,
+      id: 5,
       title: t("settings.terms"),
       icon: icons.chevron_right,
-      link: "TermsSettings",
+      link: "/settings/terms",
     },
   ];
   return (
@@ -116,7 +98,7 @@ const Settings = () => {
       actionIcon={user ? icons.logout : null}
       onActionPress={handleOnLogoutButtonPress}
     >
-      <Profile onButtonPress={handleOpenPress} user={user} />
+      <Profile onButtonPress={handleEditProfile} user={user} />
       <ScrollView
         style={[styles.container, { backgroundColor: activeColors.background }]}
         contentContainerStyle={styles.scrollContent}
@@ -140,13 +122,12 @@ const Settings = () => {
             color: activeColors.text,
           }}
         />
-        {/*<GeneralMenu
+        <GeneralMenu
           title={t("settings.about_app")}
-          navigation={navigation}
           data={settingsLinksAbout}
           linkContainerStyle={{
             borderBottomWidth: 1,
-            borderColor: activeColors.borderColor,
+            borderColor: activeColors.border,
           }}
           contentContainerStyle={{
             backgroundColor: activeColors.background,
@@ -159,22 +140,8 @@ const Settings = () => {
           sectionTitleStyle={{
             color: activeColors.text,
           }}
-        />*/}
-      </ScrollView>
-      <CustomBottomSheet
-        snapPoints={["75%"]}
-        ref={bottomSheetRef}
-        useKeyboardScrollView={true}
-        showFooter={false}
-        onClose={handleClosePress}
-      >
-        <ProfileSheetContent
-          activeColors={activeColors}
-          onClose={handleClosePress}
-          user={user}
-          isDarkMode={isDarkMode}
         />
-      </CustomBottomSheet>
+      </ScrollView>
 
       <GeneralModal
         title={t("general.logout")}

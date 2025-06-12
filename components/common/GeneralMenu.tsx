@@ -1,7 +1,6 @@
 import React from "react";
 import {
   Linking,
-  Switch,
   Text,
   TouchableOpacity,
   View,
@@ -9,7 +8,7 @@ import {
   TextStyle,
   ImageSourcePropType,
 } from "react-native";
-import { moderateScale, verticalScale } from "react-native-size-matters";
+import { moderateScale } from "react-native-size-matters";
 import Toast from "react-native-toast-message";
 import icons from "../../constants/icons";
 import { COLORS, FONTS } from "@/constants/theme";
@@ -23,7 +22,7 @@ interface MenuItem {
   title: string;
   subtitle?: string;
   menu_item_type?: 1 | 2 | 3;
-  link?: string;
+  link?: string | any;
   type?: string;
   value?: string;
   switch?: boolean;
@@ -62,7 +61,7 @@ const GeneralMenu = ({
   labelStyle,
   isEnabled = false,
   toggleSwitch = () => {},
-}: GeneralMenuProps): JSX.Element => {
+}: GeneralMenuProps) => {
   const user = {
     name: "Patrik",
     lastname: "Stojsavljevic",
@@ -88,8 +87,6 @@ const GeneralMenu = ({
         });
       }
     }
-
-    console.log("GENERAL MENU ITEM", menuItem);
   };
 
   return (
@@ -171,7 +168,7 @@ const SingleLink = ({
   onPress,
   linkContainerStyle,
   labelStyle,
-}: SingleLinkProps): JSX.Element => {
+}: SingleLinkProps) => {
   const { mode } = useTheme();
   let activeColors = COLORS[mode];
   return (

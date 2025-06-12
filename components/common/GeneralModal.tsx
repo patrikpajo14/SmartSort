@@ -14,7 +14,6 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTheme } from "@/context/ThemeContext";
 import { COLORS, FONTS } from "@/constants/theme";
 import { Image } from "expo-image";
-import icons from "@/constants/icons";
 import PrimaryButton from "@/components/ui/PrimaryButton";
 
 type GeneralModalProps = {
@@ -38,12 +37,10 @@ export default function GeneralModal({
   icon,
   onSubmit,
   submitButtonText,
-  submitButtonColors,
 }: GeneralModalProps) {
   const { mode } = useTheme();
   let activeColors = COLORS[mode];
   const insets = useSafeAreaInsets();
-  // const {t} = useTranslation();
   return (
     <Modal
       animationType="fade"
@@ -82,14 +79,18 @@ export default function GeneralModal({
                   { backgroundColor: activeColors.danger },
                 ]}
               >
-                <Image source={icons.home} style={styles.iconStyle} />
+                <Image
+                  source={icon}
+                  style={[styles.iconStyle]}
+                  tintColor={activeColors.white}
+                />
               </View>
             </View>
           )}
           <Text style={[styles.name, { color: activeColors.text }]}>
             {title}
           </Text>
-          <Text style={[styles.date, { color: activeColors.textLightGray }]}>
+          <Text style={[styles.date, { color: activeColors.textGray }]}>
             {message}
           </Text>
           <View style={styles.btnContainer}>

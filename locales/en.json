@@ -99,7 +99,8 @@
     "tiers": "Tiers",
     "clear_all": "Clear all",
     "filters_title": "Type of waste",
-    "apply_filters": "Apply filters"
+    "apply_filters": "Apply filters",
+    "change_password": "Change password?"
   },
   "terms": {
     "accept":"I have read and i Agree and accept this ",
@@ -110,7 +111,7 @@
   "education": {
     "title": "Education",
     "how_to": "How to Recycle",
-    "guidelines": "View guidelines",
+    "guidelines": "View guidelines"
   },
   "locations": {
     "map": "Map",
@@ -122,7 +123,7 @@
     "opened": "Opened",
     "closed": "Closed",
     "no_locations": "No locations found",
-    "no_locations_text": "Currently there are no locations available near you.",
+    "no_locations_text": "Currently there are no locations available near you."
   },
   "onboardScreen": {
     "page_one_title": "Join the Green Movement",
