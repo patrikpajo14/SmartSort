@@ -136,7 +136,11 @@
   },
   "home": {
     "title": "Hi,",
-    "description": "Let’s contribution to our earth."
+    "description": "Let’s contribute to our earth.",
+    "scan_widget_text": "Use app scan feature to detect if your waste can be recycled.",
+    "scan_widget_btn_text": "Scan now",
+    "map_widget_text": "Find nearby recycling containers and recycling stations",
+    "map_widget_btn_text": "Show map"
   },
   "scanner": {
     "title": "Scan your scrap",

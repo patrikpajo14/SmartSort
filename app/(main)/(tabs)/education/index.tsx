@@ -1,5 +1,5 @@
 import { Button, StyleSheet, Text, View } from "react-native";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { moderateScale, ScaledSheet } from "react-native-size-matters";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "@/context/ThemeContext";
@@ -8,11 +8,24 @@ import MainLayout from "@/screen-layouts/MainLayout";
 import EducationItem from "@/screens/education-screens/components/EducationItem";
 import { Image } from "expo-image";
 import { educationList } from "@/constants/config";
+import { useEffect } from "react";
 
 export default function EducationScreen() {
   const { t } = useTranslation();
   const { mode } = useTheme();
   let activeColors = COLORS[mode ?? "light"];
+  const { category } = useLocalSearchParams();
+
+  console.log("Category", category);
+
+  useEffect(() => {
+    if (category) {
+      router.push({
+        pathname: "/(main)/(tabs)/education/[category]",
+        params: { category: category as string },
+      });
+    }
+  }, [category]);
 
   return (
     <MainLayout

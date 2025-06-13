@@ -10,7 +10,6 @@ import { moderateScale } from "react-native-size-matters";
 import { COLORS, FONTS } from "@/constants/theme";
 import { useTheme } from "@/context/ThemeContext";
 import { Image } from "expo-image";
-import icons from "@/constants/icons";
 
 type EducationItemProps = {
   label: string;
@@ -21,6 +20,7 @@ type EducationItemProps = {
   outerContainerStyle?: ViewStyle;
   type?: "outlined" | "primary";
   small?: boolean;
+  educationStyles?: ViewStyle;
 };
 
 const EducationItem: React.FC<EducationItemProps> = ({
@@ -32,6 +32,7 @@ const EducationItem: React.FC<EducationItemProps> = ({
   outerContainerStyle,
   type = "primary",
   small = false,
+  educationStyles,
 }) => {
   const { mode } = useTheme();
   let activeColors = COLORS[mode ?? "light"];
@@ -39,7 +40,7 @@ const EducationItem: React.FC<EducationItemProps> = ({
     <TouchableOpacity
       disabled={disabled}
       onPress={onPress}
-      style={{ opacity: disabled ? 0.5 : 1 }}
+      style={[{ opacity: disabled ? 0.5 : 1 }, educationStyles]}
     >
       <View
         style={{
