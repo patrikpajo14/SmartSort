@@ -9,21 +9,26 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
+      "bundleIdentifier": "com.ps.SmartSort",
       "supportsTablet": true,
       "config": {
-        "googleMapsApiKey":  "process.env.IOS_GOOGLE_MAPS_API_KEY"
+        "googleMapsApiKey": "process.env.IOS_GOOGLE_MAPS_API_KEY"
+      },
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/logo.png",
+        "foregroundImage": "./assets/images/foreground.png",
         "backgroundColor": "#ffffff"
       },
       "config": {
         "googleMaps": {
           "apiKey": "process.env.ANDROID_GOOGLE_MAPS_API_KEY"
         }
-      }
+      },
+      "package": "com.ps.SmartSort"
     },
     "web": {
       "bundler": "metro",
@@ -44,6 +49,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "6f77d250-4258-42c4-8dd9-2f94555f2f02"
+      }
     }
   }
 }
