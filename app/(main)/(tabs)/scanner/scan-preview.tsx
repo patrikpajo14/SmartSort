@@ -1,19 +1,59 @@
-import { Text, TextStyle, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Text, TextStyle, View, ActivityIndicator } from "react-native";
 import icons from "@/constants/icons";
 import { moderateScale, ScaledSheet } from "react-native-size-matters";
 import { Image } from "expo-image";
 import PrimaryButton from "@/components/ui/PrimaryButton";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import MainLayout from "@/screen-layouts/MainLayout";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "@/context/ThemeContext";
 import { COLORS, FONTS } from "@/constants/theme";
 import Badge from "@/components/ui/Badge";
+import * as FileSystem from "expo-file-system";
+import axios from "axios";
 
 export default function ScanPreviewScreen() {
   const { t } = useTranslation();
   const { mode } = useTheme();
-  let activeColors = COLORS[mode ?? "light"];
+  const activeColors = COLORS[mode ?? "light"];
+  const { uri } = useLocalSearchParams<{ uri: string }>();
+  const [isLoading, setIsLoading] = useState(true);
+  const [prediction, setPrediction] = useState<string | null>(null);
+
+  useEffect(() => {
+    const processImage = async () => {
+      try {
+        if (!uri) return;
+
+        const base64 = await FileSystem.readAsStringAsync(uri, {
+          encoding: FileSystem.EncodingType.Base64,
+        });
+
+        const response = await axios({
+          method: "POST",
+          url: "https://serverless.roboflow.com/atik-ayristirma/4",
+          params: {
+            api_key: "g4OtrfWuqIEudJ2QkAz1",
+          },
+          data: base64,
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        });
+
+        const className = response?.data?.predictions?.[0]?.class ?? null;
+        setPrediction(className);
+        console.log("Roboflow response:", response.data);
+      } catch (err) {
+        console.log("Roboflow error:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    processImage();
+  }, [uri]);
 
   return (
     <MainLayout
@@ -32,26 +72,46 @@ export default function ScanPreviewScreen() {
         />
       </View>
       <View style={styles.container}>
-        <View style={[styles.innerContainer]}>
-          <Image
-            style={styles.scanImage}
-            source={require("@/assets/images/scan-img.png")}
-            contentFit="contain"
-          />
+        <View style={styles.innerContainer}>
+          {uri && (
+            <Image
+              style={styles.scanImage}
+              source={{ uri }}
+              contentFit="contain"
+            />
+          )}
         </View>
-        <View style={{ alignItems: "center", marginBottom: moderateScale(10) }}>
-          <Badge label={"Plastic bottle"} />
-        </View>
-        <Text style={[styles.title, { color: activeColors.text }]}>
-          {t("scanner.recyclable")}
-        </Text>
-        <PrimaryButton
-          onPress={() => {
-            router.back();
-            router.replace("/(main)/(tabs)/map");
-          }}
-          label={t("scanner.scan_preview_cta")}
-        />
+
+        {isLoading ? (
+          <View
+            style={{ alignItems: "center", marginVertical: moderateScale(20) }}
+          >
+            <ActivityIndicator size="large" color={activeColors.primary} />
+            <Text style={{ color: activeColors.text, marginTop: 10 }}>
+              {t("scanner.loading")}
+            </Text>
+          </View>
+        ) : (
+          <>
+            <View
+              style={{ alignItems: "center", marginBottom: moderateScale(10) }}
+            >
+              <Badge label={prediction ?? "Unknown"} />
+            </View>
+            <Text style={[styles.title, { color: activeColors.text }]}>
+              {prediction
+                ? t("scanner.recyclable")
+                : t("scanner.no_prediction_found")}
+            </Text>
+            <PrimaryButton
+              onPress={() => {
+                router.back();
+                router.replace("/(main)/(tabs)/map");
+              }}
+              label={t("scanner.scan_preview_cta")}
+            />
+          </>
+        )}
       </View>
     </MainLayout>
   );
@@ -59,10 +119,7 @@ export default function ScanPreviewScreen() {
 
 const styles = ScaledSheet.create({
   container: {
-    width: "100%",
-    height: "100%",
     flex: 1,
-    flexDirection: "column",
     justifyContent: "center",
     paddingHorizontal: "20@ms",
   },
