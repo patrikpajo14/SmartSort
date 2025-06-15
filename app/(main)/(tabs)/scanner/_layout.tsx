@@ -8,7 +8,12 @@ export default function ScannerLayout() {
       }}
     >
       <Stack.Screen name="index" />
-      <Stack.Screen name="camera" />
+      <Stack.Screen
+        name="camera"
+        options={{
+          presentation: "modal",
+        }}
+      />
       <Stack.Screen
         name="scan-preview"
         options={{

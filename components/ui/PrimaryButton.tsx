@@ -76,6 +76,7 @@ const PrimaryButton: React.FC<PrimaryButtonProps> = ({
           <Text
             style={{
               ...(FONTS.semiBold2 as TextStyle),
+              textAlign: "center",
               fontSize: small ? moderateScale(16, 0.2) : moderateScale(20, 0.2),
               lineHeight: small
                 ? moderateScale(20, 0.2)

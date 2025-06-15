@@ -1,18 +1,26 @@
-import { View } from "react-native";
+import { Text, TextStyle, View } from "react-native";
 import { router } from "expo-router";
 import icons from "@/constants/icons";
 import { moderateScale, ScaledSheet } from "react-native-size-matters";
 import { useTranslation } from "react-i18next";
 import MainLayout from "@/screen-layouts/MainLayout";
 import { Image } from "expo-image";
-import { COLORS } from "@/constants/theme";
+import { COLORS, FONTS } from "@/constants/theme";
 import PrimaryButton from "@/components/ui/PrimaryButton";
 import { useTheme } from "@/context/ThemeContext";
+import { useCameraPermissions } from "expo-camera";
 
 export default function ScannerScreen() {
   const { t } = useTranslation();
   const { mode } = useTheme();
   let activeColors = COLORS[mode ?? "light"];
+  const [permission, requestPermission] = useCameraPermissions();
+
+  if (!permission) {
+    // Camera permissions are still loading.
+    return <View />;
+  }
+
   return (
     <MainLayout
       title={t("scanner.title")}
@@ -37,10 +45,24 @@ export default function ScannerScreen() {
             source={icons.scan_big}
             contentFit="contain"
           />
-          <PrimaryButton
-            onPress={() => router.navigate("/(main)/(tabs)/scanner/camera")}
-            label={t("scanner.cta_label")}
-          />
+          {!permission.granted ? (
+            // Camera permissions are not granted yet.
+            <View>
+              <Text style={[styles.message, { color: activeColors.text }]}>
+                We need your permission to show the camera and enable scan
+                functionality.
+              </Text>
+              <PrimaryButton
+                onPress={requestPermission}
+                label="Grant permission"
+              />
+            </View>
+          ) : (
+            <PrimaryButton
+              onPress={() => router.navigate("/(main)/(tabs)/scanner/camera")}
+              label={t("scanner.cta_label")}
+            />
+          )}
         </View>
       </View>
     </MainLayout>
@@ -85,5 +107,10 @@ const styles = ScaledSheet.create({
   scanImage: {
     width: "200@ms",
     height: "200@ms",
+  },
+  message: {
+    ...(FONTS.body3 as TextStyle),
+    textAlign: "center",
+    paddingBottom: "10@ms",
   },
 });
