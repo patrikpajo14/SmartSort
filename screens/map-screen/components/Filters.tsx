@@ -40,7 +40,9 @@ const Filters = ({
   return (
     <BottomSheetView style={[styles.container]}>
       <View style={styles.topContainer}>
-        <Text style={styles.title}>{t("general.filters_title")}</Text>
+        <Text style={[styles.title, { color: activeColors.text }]}>
+          {t("general.filters_title")}
+        </Text>
         <Text
           style={[styles.clear, { color: activeColors.text }]}
           onPress={onClearAll}

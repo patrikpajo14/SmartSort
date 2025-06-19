@@ -85,7 +85,9 @@ export default function ProfileScreen() {
       break;
   }
   return (
-    <View style={styles.container}>
+    <View
+      style={[styles.container, { backgroundColor: activeColors.background }]}
+    >
       <MainSectionTitle
         activeColors={activeColors}
         returnIcon={screen !== "Edit" && icons.chevron_left}
@@ -134,7 +136,7 @@ export default function ProfileScreen() {
 const styles = ScaledSheet.create({
   container: {
     flex: 1,
-    paddingVertical: "25@ms0.2",
+    paddingVertical: "35@ms0.2",
   },
   innerContainer: {
     flexGrow: 1,

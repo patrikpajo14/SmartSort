@@ -5,7 +5,7 @@ import {
 } from "react-native-safe-area-context";
 import { ScaledSheet } from "react-native-size-matters";
 import { MainLayoutProps } from "@/types/layoutTypes";
-import { TouchableOpacity, View, ViewStyle } from "react-native";
+import { Platform, TouchableOpacity, View, ViewStyle } from "react-native";
 import { router } from "expo-router";
 import { useTheme } from "@/context/ThemeContext";
 import { COLORS } from "@/constants/theme";
@@ -40,7 +40,11 @@ const EducationLayout: React.FC<EducationLayoutProps> = ({
   return (
     <SafeAreaView
       style={[
-        { flex: 1, backgroundColor: activeColors.background },
+        {
+          flex: 1,
+          backgroundColor: activeColors.background,
+          paddingTop: Platform.OS === "android" ? 10 : 0,
+        },
         contentContainerStyle,
       ]}
       edges={["left", "right"]}

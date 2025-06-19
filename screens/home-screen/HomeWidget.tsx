@@ -1,4 +1,4 @@
-import { TextStyle, View, Text, ImageStyle } from "react-native";
+import { TextStyle, View, Text, ImageStyle, ViewStyle } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { COLORS, FONTS } from "@/constants/theme";
 import PrimaryButton from "@/components/ui/PrimaryButton";
@@ -11,6 +11,7 @@ interface HomeWidgetProps {
   onPress: () => void;
   image: string;
   imageStyles?: ImageStyle;
+  containerStyles?: ViewStyle;
 }
 
 export default function HomeWidget({
@@ -19,6 +20,7 @@ export default function HomeWidget({
   onPress,
   image,
   imageStyles,
+  containerStyles,
 }: HomeWidgetProps) {
   const { mode } = useTheme();
   let activeColors = COLORS[mode];
@@ -32,6 +34,7 @@ export default function HomeWidget({
           backgroundColor: activeColors.background,
           shadowColor: activeColors.primaryDark,
         },
+        containerStyles,
       ]}
     >
       <View style={styles.textWrap}>

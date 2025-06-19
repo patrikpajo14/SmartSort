@@ -6,6 +6,7 @@ import { Image } from "expo-image";
 import PrimaryButton from "@/components/ui/PrimaryButton";
 import { useTheme } from "@/context/ThemeContext";
 import { useTranslation } from "react-i18next";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function MainAuthScreen() {
   const { t } = useTranslation();
@@ -14,7 +15,7 @@ export default function MainAuthScreen() {
   const isDarkMode = mode === "dark";
   let activeColors = COLORS[mode ?? "light"];
   return (
-    <View
+    <SafeAreaView
       style={[styles.container, { backgroundColor: activeColors.background }]}
     >
       <View style={styles.imageWrap}>
@@ -50,26 +51,23 @@ export default function MainAuthScreen() {
           type={"outlined"}
         />
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = ScaledSheet.create({
   container: {
     width: "100%",
-    height: "100%",
-    flex: 1,
-    flexDirection: "column",
   },
   textWrap: {
     paddingHorizontal: "20@ms",
-    paddingBottom: "80@ms",
   },
   imageWrap: {
     width: "100%",
     height: "50%",
-    minHeight: "453@ms",
-    marginBottom: "40@ms",
+    minHeight: "440@ms",
+    marginBottom: "35@ms",
+    marginTop: "-30@ms",
   },
   image: {
     width: "100%",
@@ -93,6 +91,6 @@ const styles = ScaledSheet.create({
   description: {
     ...(FONTS.body1 as TextStyle),
     textAlign: "center",
-    paddingBottom: "40@ms",
+    paddingBottom: "35@ms",
   },
 });

@@ -78,7 +78,7 @@ const EditProfileForm = ({
         user: userObject,
       };
       console.log("body", body);
-      if (false) {
+      if (body) {
         Toast.show({
           type: "success",
           text1: t("settings.user_updated"),

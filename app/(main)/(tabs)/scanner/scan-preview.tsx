@@ -87,7 +87,6 @@ export default function ScanPreviewScreen() {
       returnIcon={icons.chevron_left}
       headerContainerStyle={{
         paddingHorizontal: moderateScale(20),
-        paddingTop: moderateScale(20),
       }}
     >
       <View style={styles.imageWrap}>

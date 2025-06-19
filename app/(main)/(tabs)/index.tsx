@@ -3,7 +3,7 @@ import { moderateScale, ScaledSheet } from "react-native-size-matters";
 import MainLayout from "@/screen-layouts/MainLayout";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "@/context/ThemeContext";
-import { COLORS, FONTS } from "@/constants/theme";
+import { COLORS, FONTS, SIZES } from "@/constants/theme";
 import HomeWidget from "@/screens/home-screen/HomeWidget";
 import { Image } from "expo-image";
 import EducationFlatList from "@/screens/home-screen/EducationFlatList";
@@ -46,7 +46,7 @@ export default function HomeScreen() {
           }}
           image={require("@/assets/images/earth.png")}
         />
-        <ScrollView>
+        <ScrollView style={styles.scrollContainer}>
           <EducationFlatList />
 
           <HomeWidget
@@ -57,6 +57,7 @@ export default function HomeScreen() {
             }}
             image={require("@/assets/images/trash-image.png")}
             imageStyles={{ width: moderateScale(110) }}
+            containerStyles={{ marginBottom: moderateScale(40) }}
           />
         </ScrollView>
       </View>
@@ -66,8 +67,13 @@ export default function HomeScreen() {
 
 const styles = ScaledSheet.create({
   container: {
+    height: SIZES.height,
     paddingHorizontal: "20@ms",
-    paddingBottom: "20@ms",
+    paddingBottom: "75@ms",
+  },
+  scrollContainer: {
+    marginHorizontal: "-20@ms",
+    paddingHorizontal: "20@ms",
   },
   textWrap: {
     width: "100%",

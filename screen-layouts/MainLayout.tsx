@@ -7,6 +7,7 @@ import { COLORS } from "@/constants/theme";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { router } from "expo-router";
 import { useTheme } from "@/context/ThemeContext";
+import { Platform } from "react-native";
 
 const MainLayout: React.FC<MainLayoutProps> = ({
   title,
@@ -37,7 +38,11 @@ const MainLayout: React.FC<MainLayoutProps> = ({
   return (
     <SafeAreaView
       style={[
-        { flex: 1, backgroundColor: activeColors.background },
+        {
+          flex: 1,
+          backgroundColor: activeColors.background,
+          paddingTop: Platform.OS === "android" ? 10 : 0,
+        },
         contentContainerStyle,
       ]}
       edges={insets as Edge[]}

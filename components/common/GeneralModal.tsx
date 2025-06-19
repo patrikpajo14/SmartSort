@@ -98,8 +98,13 @@ export default function GeneralModal({
               label={"Cancel"}
               onPress={onClose}
               type={"outlined"}
+              small={true}
             />
-            <PrimaryButton label={submitButtonText} onPress={onSubmit} />
+            <PrimaryButton
+              label={submitButtonText}
+              onPress={onSubmit}
+              small={true}
+            />
           </View>
         </View>
       </View>

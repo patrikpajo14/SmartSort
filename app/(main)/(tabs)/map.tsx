@@ -111,7 +111,6 @@ const MapScreen = () => {
   };*/
 
   const handleFilterPress = () => {
-    console.log("handleFilterPress");
     bottomSheetRef.current?.present();
   };
 
@@ -132,7 +131,6 @@ const MapScreen = () => {
   };
 
   const onLocationPress = (location: Location) => {
-    console.log("onLocationPress", location);
     setSelectedLocation(location);
     setNavigationModalVisible(true);
   };
@@ -185,8 +183,6 @@ const MapScreen = () => {
     }
   };
 
-  console.log("selectedFilters", selectedFilters);
-
   const renderTabBar = (props: any) => {
     return (
       <View style={styles.tabButtons}>
@@ -233,7 +229,7 @@ const MapScreen = () => {
       actionButtonStyle={{
         borderWidth: 1,
         borderColor: activeColors.border,
-        padding: 10,
+        padding: moderateScale(10),
         borderRadius: 10,
       }}
       actionIconStyle={{ tintColor: activeColors.text }}

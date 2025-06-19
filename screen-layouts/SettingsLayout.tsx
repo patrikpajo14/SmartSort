@@ -5,13 +5,18 @@ import {
 } from "react-native-safe-area-context";
 import { moderateScale, ScaledSheet } from "react-native-size-matters";
 import { MainLayoutProps } from "@/types/layoutTypes";
-import { Text, TextStyle, TouchableOpacity, View } from "react-native";
+import {
+  Platform,
+  Text,
+  TextStyle,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { router } from "expo-router";
 import { useTheme } from "@/context/ThemeContext";
 import { COLORS, FONTS } from "@/constants/theme";
 import { truncateText } from "@/utils/truncateText";
 import { Image, ImageBackground } from "expo-image";
-import { red } from "react-native-reanimated/lib/typescript/Colors";
 
 const SettingsLayout: React.FC<MainLayoutProps> = ({
   title,
@@ -49,7 +54,10 @@ const SettingsLayout: React.FC<MainLayoutProps> = ({
             style={[
               styles.container,
               contentContainerStyle,
-              { paddingTop: insets.top },
+              {
+                paddingTop:
+                  Platform.OS === "android" ? insets.top + 10 : insets.top,
+              },
             ]}
           >
             <TouchableOpacity
