@@ -3,6 +3,7 @@ import { Text, View, ViewStyle, TextStyle } from "react-native";
 import { moderateScale } from "react-native-size-matters";
 import { COLORS, FONTS } from "@/constants/theme";
 import { useTheme } from "@/context/ThemeContext";
+import { getContainerColor } from "@/utils/mapThemePickers";
 
 type BadgeProps = {
   label: string;
@@ -17,8 +18,8 @@ const Badge: React.FC<BadgeProps> = ({
 }) => {
   const { mode } = useTheme();
   let activeColors = COLORS[mode ?? "light"];
-  const backgroundColor = activeColors?.yellow;
-  const color = activeColors?.textGray;
+  const backgroundColor = getContainerColor(activeColors, label);
+  const color = label === "plastic" ? activeColors?.brown : activeColors?.white;
 
   return (
     <View
@@ -37,6 +38,7 @@ const Badge: React.FC<BadgeProps> = ({
           ...(FONTS.body5 as TextStyle),
           fontWeight: "500",
           color: color,
+          textTransform: "capitalize",
           ...labelStyle,
         }}
       >

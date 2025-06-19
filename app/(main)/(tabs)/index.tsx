@@ -46,19 +46,19 @@ export default function HomeScreen() {
           }}
           image={require("@/assets/images/earth.png")}
         />
-        {/*<ScrollView>*/}
-        <EducationFlatList />
+        <ScrollView>
+          <EducationFlatList />
 
-        <HomeWidget
-          title={t("home.map_widget_text")}
-          buttonText={t("home.map_widget_btn_text")}
-          onPress={() => {
-            router.navigate("/(main)/(tabs)/map");
-          }}
-          image={require("@/assets/images/trash-image.png")}
-          imageStyles={{ width: moderateScale(110) }}
-        />
-        {/*</ScrollView>*/}
+          <HomeWidget
+            title={t("home.map_widget_text")}
+            buttonText={t("home.map_widget_btn_text")}
+            onPress={() => {
+              router.navigate("/(main)/(tabs)/map");
+            }}
+            image={require("@/assets/images/trash-image.png")}
+            imageStyles={{ width: moderateScale(110) }}
+          />
+        </ScrollView>
       </View>
     </MainLayout>
   );

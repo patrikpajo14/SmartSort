@@ -21,6 +21,7 @@ import { useTheme } from "@/context/ThemeContext";
 import { COLORS } from "@/constants/theme";
 import { useTranslation } from "react-i18next";
 import loginForm from "@/screens/auth-screens/LoginForm";
+import { ScaledSheet } from "react-native-size-matters";
 
 export default function App() {
   const { t } = useTranslation();
@@ -129,22 +130,23 @@ export default function App() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
+    paddingVertical: "25@ms",
   },
   bottomContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingHorizontal: 30,
+    paddingHorizontal: "20@ms",
   },
   skipButton: {
-    fontSize: 16,
+    fontSize: "16@ms",
     fontWeight: "500",
   },
   paginationContainer: {
-    paddingBottom: 45,
+    paddingBottom: "45@ms",
   },
 });

@@ -148,7 +148,11 @@
     "scan_preview_title": "Scan results",
     "recyclable": "It’s Recyclable",
     "not_recyclable": "It’s not Recyclable",
-    "scan_preview_cta": "Show Container on Map"
+    "scan_preview_cta": "Show Container on Map",
+    "loading": "Analyzing image...",
+    "no_prediction_found": "No item detected. Please try again.",
+    "try_again_cta": "Try again",
+    "processing_image": "Processing Image..."
   },
   "form": {
     "name": "Name",

@@ -13,10 +13,17 @@ import { useFocusEffect } from "@react-navigation/native";
 import MainLayout from "@/screen-layouts/MainLayout";
 import icons from "@/constants/icons";
 import { moderateScale } from "react-native-size-matters";
+import { Image } from "expo-image";
+import { useTheme } from "@/context/ThemeContext";
+import { COLORS } from "@/constants/theme";
+import { useTranslation } from "react-i18next";
 
 const { width, height } = Dimensions.get("window");
 
 export default function CameraScreen() {
+  const { t } = useTranslation();
+  const { mode } = useTheme();
+  let activeColors = COLORS[mode ?? "light"];
   const cameraRef = useRef<CameraView>(null);
   const [isCameraActive, setCameraActive] = useState<boolean>(true);
   const [showCamera, setShowCamera] = useState<boolean>(true);
@@ -44,15 +51,12 @@ export default function CameraScreen() {
       setCameraActive(false);
       setShowCamera(false);
       console.log("📸 Captured");
-
       router.push({
         pathname: "/(main)/(tabs)/scanner/scan-preview",
         params: {
           uri: photo.uri,
         },
       });
-
-      console.log("ROUTER PUSHED");
     }
   };
 
@@ -69,14 +73,24 @@ export default function CameraScreen() {
             active={isCameraActive}
           />
           <View pointerEvents="none" style={styles.frameOverlay}>
-            <View style={styles.frameBox} />
+            <Image
+              source={require("@/assets/images/camera-frame.png")}
+              style={styles.frameBox}
+              contentFit={"contain"}
+            />
           </View>
           <View style={styles.controls}>
             <TouchableOpacity
               onPress={takePicture}
-              style={styles.captureButton}
+              style={[
+                styles.captureButton,
+                { borderColor: activeColors.white },
+              ]}
             >
-              <Text style={styles.buttonText}>📸</Text>
+              <Image
+                source={icons.camera}
+                style={{ width: moderateScale(24), height: moderateScale(24) }}
+              />
             </TouchableOpacity>
           </View>
         </View>
@@ -85,7 +99,9 @@ export default function CameraScreen() {
       {isProcessing && (
         <View style={styles.overlay}>
           <ActivityIndicator size="large" color="#fff" />
-          <Text style={styles.processingText}>Processing Image...</Text>
+          <Text style={styles.processingText}>
+            {t("scanner.processing_image")}
+          </Text>
         </View>
       )}
     </MainLayout>
@@ -101,7 +117,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   captureButton: {
-    backgroundColor: "#ffffffcc",
+    borderWidth: 1,
     padding: 16,
     borderRadius: 50,
   },
@@ -129,9 +145,5 @@ const styles = StyleSheet.create({
   frameBox: {
     width: width * 0.8,
     height: height * 0.4,
-    borderColor: "#00FFAA",
-    borderWidth: 3,
-    borderRadius: 12,
-    backgroundColor: "transparent",
   },
 });

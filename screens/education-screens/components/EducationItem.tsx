@@ -46,7 +46,12 @@ const EducationItem: React.FC<EducationItemProps> = ({
         style={{
           borderRadius: 20,
           borderWidth: 1,
+          alignItems: "center",
+          justifyContent: "center",
+          flexDirection: "column",
           borderColor: activeColors.primary,
+          height: small ? moderateScale(60, 0.2) : moderateScale(100, 0.2),
+          width: small ? moderateScale(60, 0.2) : moderateScale(100, 0.2),
           backgroundColor:
             type === "outlined"
               ? activeColors.transparent
@@ -54,40 +59,27 @@ const EducationItem: React.FC<EducationItemProps> = ({
           ...outerContainerStyle,
         }}
       >
-        <View
+        <Image
+          source={image}
+          contentFit={"contain"}
           style={{
-            alignItems: "center",
-            justifyContent: "center",
-            flexDirection: "column",
-            height: small ? moderateScale(60, 0.2) : moderateScale(100, 0.2),
-            width: small ? moderateScale(60, 0.2) : moderateScale(100, 0.2),
-            position: "relative",
+            width: moderateScale(30),
+            height: moderateScale(30),
+          }}
+        />
+        <Text
+          style={{
+            ...(FONTS.semiBold4 as TextStyle),
+            fontSize: small ? moderateScale(13, 0.2) : moderateScale(14, 0.2),
+            lineHeight: small ? moderateScale(20, 0.2) : moderateScale(24, 0.2),
+            color:
+              type === "outlined" ? activeColors.primary : activeColors.white,
+            paddingTop: moderateScale(3),
+            ...labelStyle,
           }}
         >
-          <Image
-            source={image}
-            contentFit={"contain"}
-            style={{
-              width: moderateScale(30),
-              height: moderateScale(30),
-            }}
-          />
-          <Text
-            style={{
-              ...(FONTS.semiBold4 as TextStyle),
-              fontSize: small ? moderateScale(13, 0.2) : moderateScale(14, 0.2),
-              lineHeight: small
-                ? moderateScale(20, 0.2)
-                : moderateScale(24, 0.2),
-              color:
-                type === "outlined" ? activeColors.primary : activeColors.white,
-              paddingTop: moderateScale(3),
-              ...labelStyle,
-            }}
-          >
-            {label}
-          </Text>
-        </View>
+          {label}
+        </Text>
       </View>
     </TouchableOpacity>
   );

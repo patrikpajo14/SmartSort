@@ -23,6 +23,8 @@ export const getContainerColor = (activeColors: any, type: string) => {
       return activeColors.primary;
     case "paper":
       return activeColors.blue;
+    case "metal":
+      return activeColors.brown;
     case "storage":
       return activeColors.brown;
     default:

@@ -1,9 +1,9 @@
-import { Button, StyleSheet, Text, View } from "react-native";
+import { Button, Dimensions, StyleSheet, Text, View } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import { moderateScale, ScaledSheet } from "react-native-size-matters";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "@/context/ThemeContext";
-import { COLORS } from "@/constants/theme";
+import { COLORS, SIZES } from "@/constants/theme";
 import MainLayout from "@/screen-layouts/MainLayout";
 import EducationItem from "@/screens/education-screens/components/EducationItem";
 import { Image } from "expo-image";
@@ -46,6 +46,10 @@ export default function EducationScreen() {
               key={item.id}
               label={item.title}
               image={item.icon}
+              outerContainerStyle={{
+                width: (SIZES.width - 65) / 3,
+                height: (SIZES.width - 65) / 3,
+              }}
               onPress={() =>
                 router.push({
                   pathname: "/(main)/(tabs)/education/[category]",
@@ -70,7 +74,7 @@ const styles = ScaledSheet.create({
     justifyContent: "center",
     width: "100%",
     flexWrap: "wrap",
-    gap: "20@ms",
+    gap: "10@ms",
   },
   imageWrap: {
     position: "absolute",

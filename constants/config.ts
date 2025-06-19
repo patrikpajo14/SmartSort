@@ -2,6 +2,7 @@ import { Location } from "@/types/global";
 import icons from "@/constants/icons";
 
 export const API_URL = process.env.EXPO_PUBLIC_API_URL;
+export const ROBOFLOW_API = process.env.EXPO_PUBLIC_ROBOFLOW_API;
 export const API_VERSION = process.env.EXPO_PUBLIC_API_VERSION;
 export const API_LANG = process.env.EXPO_PUBLIC_API_LANG;
 export const CURRENT_WALKTHROUGH_VERSION = "1.0.0";
