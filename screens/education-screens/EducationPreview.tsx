@@ -74,6 +74,7 @@ export default function EducationPreview({
         <PrimaryButton
           label={t("education.guidelines")}
           onPress={onPress}
+          small={true}
           outerContainerStyle={{ marginBottom: moderateScale(30) }}
         />
       </View>

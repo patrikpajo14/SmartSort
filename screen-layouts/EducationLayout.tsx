@@ -43,7 +43,7 @@ const EducationLayout: React.FC<EducationLayoutProps> = ({
         {
           flex: 1,
           backgroundColor: activeColors.background,
-          paddingTop: Platform.OS === "android" ? 10 : 0,
+          paddingTop: Platform.OS === "android" ? 20 : 0,
         },
         contentContainerStyle,
       ]}
@@ -127,15 +127,18 @@ const styles = ScaledSheet.create({
     height: "24@ms0.2",
   },
   gradient: {
-    height: "300@ms",
+    height: "270@ms",
   },
   gradientWrapper: {
+    marginTop: "-20@ms",
+    paddingTop: "20@ms",
     overflow: "hidden",
     position: "relative",
   },
   image: {
     position: "absolute",
     zIndex: -2,
+    top: -20,
     width: "100%",
     height: "100%",
   },
@@ -146,16 +149,17 @@ const styles = ScaledSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    maxHeight: "275@ms0.2",
-    marginTop: "-70@ms0.2",
+    maxHeight: "230@ms0.2",
+    marginTop: "-60@ms0.2",
   },
   mainImage: {
-    width: "275@ms0.2",
-    height: "275@ms0.2",
+    width: "230@ms0.2",
+    height: "230@ms0.2",
   },
   content: {
     flex: 1,
     zIndex: 2,
+    marginTop: "-20@ms",
     borderTopLeftRadius: "20@ms",
     borderTopRightRadius: "20@ms",
   },

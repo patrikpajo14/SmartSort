@@ -21,7 +21,7 @@ export default function EducationScreen() {
   useEffect(() => {
     if (category) {
       router.push({
-        pathname: "/(main)/(tabs)/education/[category]",
+        pathname: "/(main)/education/[category]",
         params: { category: category as string },
       });
     }
@@ -52,7 +52,7 @@ export default function EducationScreen() {
               }}
               onPress={() =>
                 router.push({
-                  pathname: "/(main)/(tabs)/education/[category]",
+                  pathname: "/(main)/education/[category]",
                   params: { category: item.type },
                 })
               }

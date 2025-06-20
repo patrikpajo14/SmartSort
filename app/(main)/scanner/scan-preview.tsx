@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Text,
-  TextStyle,
-  View,
-  ActivityIndicator,
-  Dimensions,
-} from "react-native";
+import { Text, TextStyle, View, Dimensions } from "react-native";
 import icons from "@/constants/icons";
 import { moderateScale, ScaledSheet } from "react-native-size-matters";
 import { Image } from "expo-image";

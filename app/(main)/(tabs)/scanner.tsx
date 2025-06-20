@@ -59,7 +59,7 @@ export default function ScannerScreen() {
             </View>
           ) : (
             <PrimaryButton
-              onPress={() => router.navigate("/(main)/(tabs)/scanner/camera")}
+              onPress={() => router.navigate("/(main)/scanner/camera")}
               label={t("scanner.cta_label")}
             />
           )}

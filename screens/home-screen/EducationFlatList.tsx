@@ -6,15 +6,17 @@ import { router } from "expo-router";
 import { moderateScale, ScaledSheet } from "react-native-size-matters";
 import { COLORS, FONTS } from "@/constants/theme";
 import { useTheme } from "@/context/ThemeContext";
+import { useTranslation } from "react-i18next";
 
 export default function EducationFlatList() {
+  const { t } = useTranslation();
   const { mode } = useTheme();
   let activeColors = COLORS[mode];
 
   return (
     <View style={styles.container}>
       <Text style={[styles.title, { color: activeColors.text }]}>
-        Recycling guide
+        {t("home.recycling_guide")}
       </Text>
       <FlatList
         data={educationList}

@@ -2,6 +2,7 @@ import { Tabs } from "expo-router";
 import React from "react";
 import { IconSymbol } from "@/components/ui/IconSymbol";
 import { TabsUi } from "@/components/navigation/TabsUi";
+import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 
 export type TabParamList = {
   Home: undefined;
@@ -45,17 +46,8 @@ export default function TabLayout() {
           ),
         }}
       />
-      <Tabs.Screen name="scanner" options={{ headerShown: false }} />
-
-      <Tabs.Screen
-        name="education"
-        options={{
-          title: "Education",
-          tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="book.fill" color={color} />
-          ),
-        }}
-      />
+      <Tabs.Screen name="scanner" />
+      <Tabs.Screen name="education" />
       <Tabs.Screen
         name="settings"
         options={{

@@ -4,23 +4,8 @@ import { useSession } from "@/context/AuthContext";
 
 export default function EducationLayout() {
   return (
-    <Stack
-      screenOptions={{
-        headerShown: false,
-      }}
-    >
-      <Stack.Screen
-        name="index"
-        options={{
-          title: "Education",
-        }}
-      />
-      <Stack.Screen
-        name="[category]"
-        options={{
-          presentation: "modal",
-        }}
-      />
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="index" />
     </Stack>
   );
 }

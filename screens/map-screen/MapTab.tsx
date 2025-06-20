@@ -1,5 +1,4 @@
-import { StyleSheet, TextStyle, View } from "react-native";
-import { FONTS } from "@/constants/theme";
+import { StyleSheet, View } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { Location } from "@/types/global";
 import MapView, { Marker } from "react-native-maps";
@@ -12,7 +11,7 @@ type MapTabProps = {
 };
 const MapTab = ({ locations, onLocationPress }: MapTabProps) => {
   return (
-    <View style={{ flex: 1 }}>
+    <View style={styles.mapContainer}>
       <MapView
         style={styles.map}
         initialRegion={{
@@ -21,6 +20,8 @@ const MapTab = ({ locations, onLocationPress }: MapTabProps) => {
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}
+        onMapReady={() => console.log("Map ready")}
+        onMapLoaded={() => console.log("Map loaded")}
       >
         {containerLocations.map((loc) => (
           <Marker
@@ -44,26 +45,7 @@ const styles = ScaledSheet.create({
     flex: 1,
     borderRadius: 16,
     overflow: "hidden",
-  },
-  centerButton: {
-    position: "absolute",
-    bottom: 10,
-    right: 10,
-    borderRadius: 50,
-    paddingHorizontal: 15,
-    paddingVertical: 5,
-    alignItems: "center",
-    justifyContent: "center",
-    elevation: 5,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
-  },
-  centerButtonText: {
-    ...(FONTS.body1 as TextStyle),
-    fontSize: "14@ms",
-    padding: 0,
+    marginBottom: "20@ms",
   },
   map: {
     borderRadius: 10,

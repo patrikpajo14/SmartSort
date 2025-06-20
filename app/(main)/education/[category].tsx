@@ -1,30 +1,16 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  Pressable,
-  Image,
-  ScrollView,
-  TextStyle,
-} from "react-native";
 import { useLocalSearchParams, useNavigation, router } from "expo-router";
 import { useLayoutEffect, useState } from "react";
 import EducationLayout from "@/screen-layouts/EducationLayout";
-import { COLORS, FONTS } from "@/constants/theme";
-import { moderateScale, ScaledSheet } from "react-native-size-matters";
+import { COLORS } from "@/constants/theme";
+import { moderateScale } from "react-native-size-matters";
 import icons from "@/constants/icons";
-import { useTranslation } from "react-i18next";
 import { useTheme } from "@/context/ThemeContext";
-import PrimaryButton from "@/components/ui/PrimaryButton";
-import { getContainerColor } from "@/utils/mapThemePickers";
-import Badge from "@/components/ui/Badge";
 import EducationPreview from "@/screens/education-screens/EducationPreview";
 import EducationGuidelinesScreen from "@/screens/education-screens/EducationGuidelines";
 
 export default function EducationCategoryScreen() {
   const { category } = useLocalSearchParams();
   const navigation = useNavigation();
-  const { t } = useTranslation();
   const { mode } = useTheme();
   const isDarkMode = mode === "dark";
   let activeColors = COLORS[mode ?? "light"];

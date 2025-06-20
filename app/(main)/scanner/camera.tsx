@@ -6,17 +6,18 @@ import {
   StyleSheet,
   ActivityIndicator,
   Dimensions,
+  TextStyle,
 } from "react-native";
 import { CameraView } from "expo-camera";
 import { router } from "expo-router";
 import { useFocusEffect } from "@react-navigation/native";
-import MainLayout from "@/screen-layouts/MainLayout";
 import icons from "@/constants/icons";
-import { moderateScale } from "react-native-size-matters";
+import { moderateScale, ScaledSheet } from "react-native-size-matters";
 import { Image } from "expo-image";
 import { useTheme } from "@/context/ThemeContext";
-import { COLORS } from "@/constants/theme";
+import { COLORS, FONTS, SIZES } from "@/constants/theme";
 import { useTranslation } from "react-i18next";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const { width, height } = Dimensions.get("window");
 
@@ -37,9 +38,10 @@ export default function CameraScreen() {
     }, []),
   );
 
+  const onReturnPress = () => router.back();
+
   const takePicture = async () => {
     if (!cameraRef.current) return;
-
     setIsProcessing(true);
 
     const photo = await cameraRef.current.takePictureAsync({
@@ -47,12 +49,12 @@ export default function CameraScreen() {
       base64: true,
     });
 
-    if (photo?.uri && photo?.base64) {
+    if (photo?.uri) {
       setCameraActive(false);
       setShowCamera(false);
       console.log("📸 Captured");
       router.push({
-        pathname: "/(main)/(tabs)/scanner/scan-preview",
+        pathname: "/(main)/scanner/scan-preview",
         params: {
           uri: photo.uri,
         },
@@ -61,24 +63,35 @@ export default function CameraScreen() {
   };
 
   return (
-    <MainLayout
-      returnIcon={icons.chevron_left}
-      headerContainerStyle={{ paddingHorizontal: moderateScale(20) }}
-    >
-      {showCamera && (
-        <View style={styles.container}>
-          <CameraView
-            ref={cameraRef}
-            style={{ flex: 1, width: "100%", height: "100%" }}
-            active={isCameraActive}
+    <SafeAreaView style={styles.safeArea} edges={["top", "bottom"]}>
+      <View style={styles.container}>
+        <TouchableOpacity onPress={onReturnPress} style={styles.returnButton}>
+          <Image
+            source={icons.chevron_left}
+            style={[styles.returnIcon, { tintColor: activeColors.white }]}
+            contentFit="contain"
           />
+        </TouchableOpacity>
+        {showCamera && (
+          <View style={styles.cameraWrapper}>
+            <CameraView
+              ref={cameraRef}
+              style={styles.camera}
+              active={isCameraActive}
+            />
+          </View>
+        )}
+        {showCamera && (
           <View pointerEvents="none" style={styles.frameOverlay}>
             <Image
               source={require("@/assets/images/camera-frame.png")}
               style={styles.frameBox}
-              contentFit={"contain"}
+              contentFit="contain"
             />
           </View>
+        )}
+
+        {showCamera && (
           <View style={styles.controls}>
             <TouchableOpacity
               onPress={takePicture}
@@ -93,35 +106,50 @@ export default function CameraScreen() {
               />
             </TouchableOpacity>
           </View>
-        </View>
-      )}
+        )}
 
-      {isProcessing && (
-        <View style={styles.overlay}>
-          <ActivityIndicator size="large" color="#fff" />
-          <Text style={styles.processingText}>
-            {t("scanner.processing_image")}
-          </Text>
-        </View>
-      )}
-    </MainLayout>
+        {isProcessing && (
+          <View style={styles.overlay}>
+            <ActivityIndicator size="large" color="#fff" />
+            <Text
+              style={[styles.processingText, { color: activeColors.white }]}
+            >
+              {t("scanner.processing_image")}
+            </Text>
+          </View>
+        )}
+      </View>
+    </SafeAreaView>
   );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1 },
+const styles = ScaledSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: "#000",
+  },
+  container: {
+    flex: 1,
+  },
   controls: {
     position: "absolute",
-    bottom: 40,
+    bottom: "40@ms",
     width: "100%",
     alignItems: "center",
   },
   captureButton: {
     borderWidth: 1,
-    padding: 16,
+    padding: "16@ms",
     borderRadius: 50,
   },
-  buttonText: { fontSize: 18, color: "#000" },
+  cameraWrapper: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  camera: {
+    flex: 1,
+    width: "100%",
+    height: "100%",
+  },
   overlay: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: "#000000aa",
@@ -129,21 +157,27 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   processingText: {
-    marginTop: 20,
-    color: "#fff",
-    fontSize: 18,
+    ...(FONTS.body1 as TextStyle),
+    marginTop: "20@ms",
   },
   frameOverlay: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
+    ...StyleSheet.absoluteFillObject,
     justifyContent: "center",
     alignItems: "center",
   },
   frameBox: {
     width: width * 0.8,
     height: height * 0.4,
+  },
+  returnButton: {
+    position: "absolute",
+    top: "20@ms",
+    left: "20@ms",
+    zIndex: 999,
+    paddingVertical: "10@ms",
+  },
+  returnIcon: {
+    width: "24@ms0.2",
+    height: "23@ms0.2",
   },
 });

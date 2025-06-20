@@ -33,7 +33,9 @@ export default function MainAuthScreen() {
           />
         </View>
       </View>
-      <View style={styles.textWrap}>
+      <View
+        style={[styles.textWrap, { backgroundColor: activeColors.background }]}
+      >
         <Text style={[styles.title, { color: activeColors.text }]}>
           {t("auth.main_title")}
         </Text>
@@ -57,6 +59,7 @@ export default function MainAuthScreen() {
 
 const styles = ScaledSheet.create({
   container: {
+    flex: 1,
     width: "100%",
   },
   textWrap: {
@@ -91,6 +94,6 @@ const styles = ScaledSheet.create({
   description: {
     ...(FONTS.body1 as TextStyle),
     textAlign: "center",
-    paddingBottom: "35@ms",
+    paddingBottom: "30@ms",
   },
 });

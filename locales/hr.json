@@ -20,8 +20,8 @@
   "settings": {
     "general": "Opće postavke",
     "title": "Postavke",
-    "impressum": "Impresum",
-    "dark_mode": "Tamni način rada",
+    "impressum": "Impressum",
+    "dark_mode": "Tamni način",
     "app_language": "Jezik aplikacije",
     "contact_info": "Kontakt informacije",
     "choose_language": "Odaberi jezik",
@@ -34,8 +34,8 @@
     "clipboard_success": "Kopirano u međuspremnik",
     "how_can_we_help": "Kako vam možemo pomoći?",
     "support": "Podrška",
-    "technical_support_info": "Informacije za tehničku podršku",
-    "tech_support_description": "Ako trebate tehničku podršku ili imate pitanja, ove informacije o vašem uređaju pomoći će nam da vam učinkovitije pomognemo.",
+    "technical_support_info": "Informacije o tehničkoj podršci",
+    "tech_support_description": "Ako trebate tehničku podršku ili imate pitanja, pružanje ovih informacija o uređaju koji koristite pomoći će nam da vam učinkovitije pomognemo.",
     "copy_information": "Kopiraj informacije",
     "os_version": "Verzija operacijskog sustava",
     "app_version": "Verzija aplikacije",
@@ -51,14 +51,14 @@
     "user_updated": "Korisnik uspješno ažuriran!",
     "delete_user": "Izbriši profil",
     "delete_user_modal": "Jeste li sigurni da želite izbrisati svoj profil?",
-    "delete_user_message": "Brisanjem računa trajno će se ukloniti vaši osobni podaci i prekinuti sve veze s prijateljima. Prijavljeni incidenti ostat će anonimni kao dokaz."
+    "delete_user_message": "Brisanjem računa trajno ćete ukloniti svoje osobne podatke i prekinuti sve veze s prijateljima. Prijavljeni incidenti ostat će anonimni u svrhu dokazivanja."
   },
   "main_layout": {
     "back": "Natrag",
     "no_data_message": "Nema dostupnih podataka",
     "next": "Dalje",
     "cancel": "Odustani",
-    "no_content": "Nema dostupnog sadržaja"
+    "no_content": "Nema sadržaja"
   },
   "general": {
     "error": "Greška",
@@ -72,44 +72,76 @@
     "read_more": "Pročitaj više",
     "back": "Natrag",
     "permission_required": "Potrebna dozvola",
-    "permission_required_text": "Aplikacija Noa treba pristup vašoj lokaciji za ispravan rad karata. Omogućite dozvole za lokaciju, a zatim ćete biti preusmjereni na postavke aplikacije gdje možete odabrati 'Dopusti cijelo vrijeme'.",
+    "permission_required_text": "Aplikacija SmartSort treba pristup vašoj lokaciji za ispravan rad karata. Omogućite dozvole za lokaciju, a zatim ćete biti preusmjereni na postavke aplikacije gdje možete odabrati 'Dopusti cijelo vrijeme'.",
     "request_permission": "Zatraži dozvole",
-    "check_wifi": "Nešto je pošlo po zlu. Provjerite svoju WIFI vezu.",
+    "check_wifi": "Nešto je pošlo po zlu. Provjerite WIFI vezu.",
     "cancel": "Odustani",
     "save": "Spremi",
-    "open_permissions": "Otvori prozor s dozvolama",
-    "permission_false": "Dozvole nisu odobrene!",
+    "open_permissions": "Otvori zahtjev za dozvolu",
+    "permission_false": "Dozvole nisu dodijeljene!",
     "permission_blocked_title": "Dozvola blokirana",
-    "permission_blocked_text": "Ova aplikacija treba pristup vašoj lokaciji kako bi prikazala interaktivnu kartu. Omogućite lokacijske usluge u svojim postavkama.",
+    "permission_blocked_text": "Ova aplikacija treba pristup vašoj lokaciji za prikaz interaktivne karte. Omogućite usluge lokacije u postavkama.",
     "open_settings": "Otvori postavke",
     "confirmation_modal": "Jeste li sigurni?",
     "delete_profile": "Izbriši profil",
+    "logout": "Odjava",
+    "logout_confirmation": "Želite li se zaista odjaviti?",
     "logout_success": "Uspješno ste se odjavili!",
     "delete_profile_success": "Profil je izbrisan!",
     "plastic": "Plastika",
-    "skip": "Preskoči"
+    "skip": "Preskoči",
+    "confirm": "Potvrdi",
+    "glass": "Staklo",
+    "paper": "Papir",
+    "batteries": "Baterije",
+    "metal": "Metal",
+    "carton": "Karton",
+    "tiers": "Gume",
+    "clear_all": "Očisti sve",
+    "filters_title": "Vrsta otpada",
+    "apply_filters": "Primijeni filtere",
+    "change_password": "Promijeniti lozinku?"
   },
   "terms": {
-    "accept": "Pročitao/la sam i prihvaćam ovo",
-    "start": "Započni korištenje aplikacije",
+    "accept": "Pročitao sam, slažem se i prihvaćam ovo",
+    "start": "Počni koristiti aplikaciju",
     "turn_notifications": "Uključi obavijesti",
     "turn_location": "Uključi usluge lokacije"
   },
   "education": {
-    "title": "Edukacija"
+    "title": "Edukacija",
+    "how_to": "Kako reciklirati",
+    "guidelines": "Pogledaj upute"
+  },
+  "locations": {
+    "map": "Karta",
+    "locations_list": "Lokacije",
+    "locations_list_title": "Mjesta za recikliranje",
+    "meters_away": "m udaljeno",
+    "kilometers_away": "km udaljeno",
+    "start_navigation": "Navigiraj",
+    "opened": "Otvoreno",
+    "closed": "Zatvoreno",
+    "no_locations": "Nema pronađenih lokacija",
+    "no_locations_text": "Trenutno nema dostupnih lokacija u vašoj blizini."
   },
   "onboardScreen": {
     "page_one_title": "Pridruži se zelenom pokretu",
     "page_one_subtitle": "Doprinesi održivosti jednostavnim i učinkovitim recikliranjem.",
-    "page_two_title": "Obližnje reciklažne stanice",
-    "page_two_subtitle": "Pronađi najbliže točke za reciklažu uz ažuriranja u stvarnom vremenu.",
+    "page_two_title": "Obližnje stanice za reciklažu",
+    "page_two_subtitle": "Pronađi najbliže reciklažne točke uz ažuriranja u stvarnom vremenu.",
     "page_three_title": "Pametna identifikacija otpada:",
-    "page_three_subtitle": "Odmah prepoznaj svoj otpad i dobivaj upute za pravilno odlaganje pomoću umjetne inteligencije.",
+    "page_three_subtitle": "Odmah prepoznaj otpad i dobij upute za pravilno odlaganje pomoću AI-ja.",
     "cta_label": "Započni"
   },
   "home": {
     "title": "Bok,",
-    "description": "Doprinosimo očuvanju našeg planeta."
+    "description": "Doprinesimo zajedno očuvanju Zemlje.",
+    "scan_widget_text": "Koristi funkciju skeniranja kako bi saznao je li tvoj otpad moguće reciklirati.",
+    "scan_widget_btn_text": "Skeniraj sada",
+    "map_widget_text": "Pronađi obližnje kontejnere i reciklažna mjesta",
+    "map_widget_btn_text": "Prikaži kartu",
+    "recycling_guide": "Priručnik za recikliranje"
   },
   "scanner": {
     "title": "Skeniraj svoj otpad",
@@ -117,7 +149,11 @@
     "scan_preview_title": "Rezultati skeniranja",
     "recyclable": "Može se reciklirati",
     "not_recyclable": "Ne može se reciklirati",
-    "scan_preview_cta": "Prikaži spremnik na karti"
+    "scan_preview_cta": "Prikaži kontejner na karti",
+    "loading": "Analiziram sliku...",
+    "no_prediction_found": "Nema prepoznatog predmeta. Pokušaj ponovno.",
+    "try_again_cta": "Pokušaj ponovno",
+    "processing_image": "Obrađujem sliku..."
   },
   "form": {
     "name": "Ime",
@@ -134,24 +170,24 @@
     "error": "Greška!",
     "validation_errors": "Provjerite obavezna polja u obrascu i pokušajte ponovno.",
     "mandatory": "* obavezno",
-    "invalid_email": "Nevažeća email adresa",
+    "invalid_email": "Neispravna e-mail adresa",
     "password_length": "Lozinka mora imati najmanje 8 znakova",
     "password_match": "Lozinke se ne podudaraju",
     "general_error": "Došlo je do pogreške. Pokušajte ponovno kasnije."
   },
   "auth": {
     "main_title": "Istraži aplikaciju",
-    "main_description": "Otkrij kako naša aplikacija pojednostavljuje razdvajanje otpada i promiče održivost.",
+    "main_description": "Saznaj kako naša aplikacija olakšava razdvajanje otpada i promiče održivost.",
     "sign_in": "Prijavi se",
-    "register": "Registracija",
+    "register": "Registriraj se",
     "create_acc": "Izradi račun",
-    "no_account": "Nemate račun?",
-    "have_account": "Već imate račun?",
-    "register_here": "Registrirajte se ovdje.",
-    "login_here": "Prijavite se ovdje.",
-    "login_success": "Prijava uspješna!",
-    "login_failed": "Prijava nije uspjela! Pokušajte kasnije.",
-    "register_failed": "Registracija nije uspjela! Pokušajte kasnije.",
-    "unexpected_error": "Neočekivana greška."
+    "no_account": "Nemaš račun?",
+    "have_account": "Već imaš račun?",
+    "register_here": "Registriraj se ovdje.",
+    "login_here": "Prijavi se ovdje.",
+    "login_success": "Uspješna prijava!",
+    "login_failed": "Prijava nije uspjela! Pokušaj kasnije.",
+    "register_failed": "Registracija nije uspjela! Pokušaj kasnije.",
+    "unexpected_error": "Dogodila se neočekivana pogreška."
   }
 }
