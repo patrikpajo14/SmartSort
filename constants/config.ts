@@ -3,6 +3,8 @@ import icons from "@/constants/icons";
 
 export const API_URL = process.env.EXPO_PUBLIC_API_URL;
 export const ROBOFLOW_API = process.env.EXPO_PUBLIC_ROBOFLOW_API;
+export const ANDROID_MAP_KEY =
+  process.env.EXPO_PUBLIC_ANDROID_GOOGLE_MAPS_API_KEY;
 export const API_VERSION = process.env.EXPO_PUBLIC_API_VERSION;
 export const API_LANG = process.env.EXPO_PUBLIC_API_LANG;
 export const CURRENT_WALKTHROUGH_VERSION = "1.0.0";

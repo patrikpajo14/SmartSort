@@ -23,6 +23,7 @@ export default function ScanPreviewScreen() {
   const activeColors = COLORS[mode ?? "light"];
   const { uri } = useLocalSearchParams<{ uri: string }>();
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [prediction, setPrediction] = useState<string | null>(null);
   const [boxes, setBoxes] = useState<
     {
@@ -39,7 +40,7 @@ export default function ScanPreviewScreen() {
     const processImage = async () => {
       try {
         if (!uri) return;
-
+        setError(null);
         const mimeType = mime.getType(uri) || "image/jpeg";
         const fileName = uri.split("/").pop();
 
@@ -51,7 +52,7 @@ export default function ScanPreviewScreen() {
         } as any);
 
         console.log("📡 Sending to:", ROBOFLOW_API);
-        console.log("🧾 Payload:", formData);
+        console.log("🧾 Payload:", formData, uri);
 
         const response = await axios.post(ROBOFLOW_API || "", formData, {
           headers: {
@@ -67,6 +68,7 @@ export default function ScanPreviewScreen() {
         console.log("Roboflow response:", response.data);
       } catch (err) {
         console.log("Roboflow error:", err);
+        setError("There was a problem connecting to the RoboFlow API.");
       } finally {
         setIsLoading(false);
       }
@@ -163,7 +165,7 @@ export default function ScanPreviewScreen() {
             ) : (
               <>
                 <Text style={[styles.title, { color: activeColors.text }]}>
-                  {t("scanner.no_prediction_found")}
+                  {error ? error : t("scanner.no_prediction_found")}
                 </Text>
                 <PrimaryButton
                   onPress={() => {

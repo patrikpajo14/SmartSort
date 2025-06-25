@@ -125,7 +125,7 @@ export default function NavigationModal({
           )}
 
           {location ? (
-            <>
+            <View style={{ alignItems: "center" }}>
               <Text
                 style={[
                   styles.type,
@@ -147,7 +147,7 @@ export default function NavigationModal({
                   {distanceText}
                 </Text>
               )}
-            </>
+            </View>
           ) : (
             <Text style={[styles.description, { color: activeColors.text }]}>
               {t("locations.no_friend_location")}
@@ -242,6 +242,7 @@ const styles = ScaledSheet.create({
     fontSize: "20@ms0.2",
     lineHeight: "24@ms0.2",
     marginBottom: "5@ms",
+    textAlign: "center",
   },
   date: {
     ...(FONTS.body1 as TextStyle),
@@ -262,6 +263,7 @@ const styles = ScaledSheet.create({
     fontSize: "14@ms0.2",
     lineHeight: "16@ms0.2",
     marginBottom: "10@ms",
+    textAlign: "center",
   },
   btnContainer: {
     flexDirection: "row",
@@ -278,6 +280,7 @@ const styles = ScaledSheet.create({
   address: {
     ...(FONTS.body3 as TextStyle),
     paddingBottom: "15@ms0.2",
+    textAlign: "center",
   },
   type: {
     ...(FONTS.semiBold2 as TextStyle),

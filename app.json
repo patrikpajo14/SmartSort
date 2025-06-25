@@ -4,7 +4,7 @@
     "slug": "SmartSort",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/logo.png",
+    "icon": "./assets/images/small-logo.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -19,14 +19,14 @@
       }
     },
     "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/images/foreground.png",
-        "backgroundColor": "#ffffff"
-      },
       "config": {
         "googleMaps": {
           "apiKey": "process.env.ANDROID_GOOGLE_MAPS_API_KEY"
         }
+      },
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/foreground.png",
+        "backgroundColor": "#ffffff"
       },
       "package": "com.ps.SmartSort"
     },
