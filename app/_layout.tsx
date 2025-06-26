@@ -4,17 +4,16 @@ import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "react-native-reanimated";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
-import { useColorScheme } from "@/hooks/useColorScheme";
-import { SessionProvider } from "@/context/AuthContext";
 import { StatusBar } from "expo-status-bar";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { ThemeProvider } from "@/context/ThemeContext";
+import { AuthProvider } from "@/context/auth/authContext";
+import MainNavigation from "@/screen-layouts/MainNavigation";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
   const [loaded] = useFonts({
     Poppins: require("../assets/fonts/poppins_regular.ttf"),
     "Poppins-Bold": require("../assets/fonts/poppins_bold.ttf"),
@@ -32,19 +31,15 @@ export default function RootLayout() {
   }
 
   return (
-    <SessionProvider>
+    <AuthProvider>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <BottomSheetModalProvider>
           <ThemeProvider>
-            <Stack screenOptions={{ headerShown: false }}>
-              <Stack.Screen name="(auth)" />
-              <Stack.Screen name="(main)" />
-              <Stack.Screen name="+not-found" />
-            </Stack>
+            <MainNavigation />
             <StatusBar style="auto" />
           </ThemeProvider>
         </BottomSheetModalProvider>
       </GestureHandlerRootView>
-    </SessionProvider>
+    </AuthProvider>
   );
 }

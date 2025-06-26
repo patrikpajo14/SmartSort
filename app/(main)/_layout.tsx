@@ -1,10 +1,10 @@
 import { Redirect, Stack } from "expo-router";
-import { useSession } from "@/context/AuthContext";
 import { Text } from "react-native";
+import { useAuthContext } from "@/context/auth/authContext";
 export default function MainLayout() {
-  const { session, isLoading } = useSession();
+  const { session, isStorageLoading } = useAuthContext();
 
-  if (isLoading) {
+  if (isStorageLoading) {
     return <Text>Loading...</Text>;
   }
 

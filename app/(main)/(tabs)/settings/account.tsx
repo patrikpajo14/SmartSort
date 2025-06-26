@@ -10,11 +10,11 @@ import icons from "@/constants/icons";
 import MainLayout from "@/screen-layouts/MainLayout";
 import GeneralModal from "@/components/common/GeneralModal";
 import AccountSubMenu from "@/screens/settings-screens/components/AccountSubMenu";
-import { useSession } from "@/context/AuthContext";
+import useLogout from "@/hooks/useLogout";
 
 const AccountSettingsScreen = () => {
   const { t } = useTranslation();
-  const { signOut } = useSession();
+  const { handleLogout } = useLogout();
   const { mode } = useTheme();
   let activeColors = COLORS[mode];
   const [modalVisible, setModalVisible] = useState(false);
@@ -24,7 +24,7 @@ const AccountSettingsScreen = () => {
   };
 
   const logoutUserSettings = () => {
-    signOut();
+    handleLogout();
     setModalVisible(false);
   };
 

@@ -3,7 +3,6 @@ import { ScaledSheet } from "react-native-size-matters";
 import React, { useState } from "react";
 import GeneralModal from "../../components/common/GeneralModal";
 import { COLORS } from "@/constants/theme";
-import { useSession } from "@/context/AuthContext";
 import icons from "@/constants/icons";
 import { useTheme } from "@/context/ThemeContext";
 import SettingsLayout from "@/screen-layouts/SettingsLayout";
@@ -13,6 +12,8 @@ import langList from "../../services/langList.json";
 import { useTranslation } from "react-i18next";
 import useGlobalStore from "@/stores/globalStore";
 import { router } from "expo-router";
+import { useAuthContext } from "@/context/auth/authContext";
+import useLogout from "@/hooks/useLogout";
 
 interface LanguageItem {
   name: string;
@@ -27,17 +28,14 @@ const typedLangList = langList as LangList;
 const Settings = () => {
   const { t } = useTranslation();
   const lang = useGlobalStore((state) => state.lang);
-  const { signOut } = useSession();
+  const { user } = useAuthContext();
+  const { handleLogout } = useLogout();
   const [modalVisible, setModalVisible] = useState(false);
   const { mode, toggleTheme } = useTheme();
   const isDarkMode = mode === "dark";
   let activeColors = COLORS[mode ?? "light"];
 
-  const user = {
-    name: "Patrik",
-    lastname: "Stojsavljevic",
-    email: "pstojsavl@text.net",
-  };
+  console.log("user", user);
   // const user = undefined;
 
   const handleEditProfile = () => {
@@ -48,7 +46,7 @@ const Settings = () => {
   };
 
   const logoutUserSettings = () => {
-    if (user) signOut();
+    if (user) handleLogout();
     setModalVisible(false);
   };
 

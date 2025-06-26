@@ -9,7 +9,7 @@ import {
 import { ScaledSheet } from "react-native-size-matters";
 import { Location as LocationInterface } from "@/types/global";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
-import { ANDROID_MAP_KEY, containerLocations } from "@/constants/config";
+import { containerLocations } from "@/constants/config";
 import { getMarkerIcon } from "@/utils/mapThemePickers";
 import { useEffect, useState } from "react";
 import { LocationObject } from "expo-location";

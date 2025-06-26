@@ -11,6 +11,9 @@ import PrimaryButton from "@/components/ui/PrimaryButton";
 import { router } from "expo-router";
 import { useTheme } from "@/context/ThemeContext";
 import { useTranslation } from "react-i18next";
+import useGlobalStore from "@/stores/globalStore";
+import { axiosInstance } from "@/axios/axiosInstance";
+import { useAuthContext } from "@/context/auth/authContext";
 
 interface RegisterFormProps {
   handleShowInlineAlert: (message: string, type: AlertType) => void;
@@ -20,7 +23,9 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
   handleShowInlineAlert,
 }) => {
   const { t } = useTranslation();
+  const serverUrl = useGlobalStore((state) => state.serverUrl);
   const { mode } = useTheme();
+  const { displayAlert } = useAuthContext();
   let activeColors = COLORS[mode ?? "light"];
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -71,21 +76,32 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
     try {
       setIsLoading(true);
       const registerUserObject = {
-        name: data?.name,
-        lastname: data?.lastname,
+        firstName: data?.name,
+        lastName: data?.lastname,
         email: data?.email,
         password: data?.password,
-        password2: data?.password2,
+        confirmPassword: data?.password2,
       };
 
       console.log(registerUserObject);
-
+      const response = await axiosInstance.post(
+        `/auth/register`,
+        registerUserObject,
+      );
+      console.log("REGISTER RESPONSE", response?.data);
+      if (response.data?.code === 200) {
+        handleShowInlineAlert(t("login.success_message_register"), "success");
+        router.navigate("/(auth)/login");
+        clearForm();
+      } else {
+        handleShowInlineAlert(
+          response.data?.message || t("login.register_failed"),
+          "error",
+        );
+      }
       setIsLoading(false);
-      // verifyCaptcha(async (token: string) => {
-      //
-      // });
     } catch (error) {
-      // displayAlert("error", t("login.unexpected_error"));
+      displayAlert("error", t("login.unexpected_error"));
       console.log(error);
     }
   };

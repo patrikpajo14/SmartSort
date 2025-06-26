@@ -6,14 +6,15 @@ import * as z from "zod";
 import { moderateScale, ScaledSheet } from "react-native-size-matters";
 import FormInput from "../../components/formElements/FormInput";
 import Toast from "react-native-toast-message";
-import { useColorScheme } from "@/hooks/useColorScheme";
 import { COLORS, FONTS } from "@/constants/theme";
 import { router } from "expo-router";
 import { AlertType } from "@/types/global";
 import PrimaryButton from "@/components/ui/PrimaryButton";
-import { useSession } from "@/context/AuthContext";
 import { useTheme } from "@/context/ThemeContext";
 import { useTranslation } from "react-i18next";
+import { useAuthContext } from "@/context/auth/authContext";
+import { axiosInstance } from "@/axios/axiosInstance";
+import useGlobalStore from "@/stores/globalStore";
 
 interface LoginFormProps {
   handleShowInlineAlert: (message: string, type: AlertType) => void;
@@ -23,9 +24,10 @@ const LoginForm: React.FC<LoginFormProps> = ({ handleShowInlineAlert }) => {
   const { t } = useTranslation();
   const { mode } = useTheme();
   let activeColors = COLORS[mode ?? "light"];
+  const serverUrl = useGlobalStore((state) => state.serverUrl);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isDisabled, setIsDisabled] = useState<boolean>(false);
-  const { signIn } = useSession();
+  const { setLoginUserSuccess, displayAlert } = useAuthContext();
 
   const schema = z.object({
     email: z
@@ -55,15 +57,32 @@ const LoginForm: React.FC<LoginFormProps> = ({ handleShowInlineAlert }) => {
   const onSubmit = async (data: FormData) => {
     try {
       setIsLoading(true);
-      console.log("LOGIN DATA", data);
-      signIn();
-      setIsLoading(false);
-      handleShowInlineAlert("Login successfully", "error");
+      console.log("SERVER URL", serverUrl, "192.168.100.120:8080", data);
+      const response = await axiosInstance.post(`/auth/login`, data);
+      console.log("response", response.data);
+      if (response.data?.code === 200) {
+        const { user, session, permissions } = response?.data?.data;
+        setLoginUserSuccess(user, session, permissions || null);
+        setIsLoading(false);
+        setIsDisabled(true);
+        Toast.show({
+          type: "success",
+          text1: t("login.login_success"),
+        });
+        reset();
+      } else {
+        setIsLoading(false);
+        handleShowInlineAlert(
+          response.data?.message || t("login.login_failed"),
+          "error",
+        );
+      }
     } catch (error) {
       Toast.show({
         type: "error",
         text1: t("form.general_error"),
       });
+      console.log(error);
       setIsLoading(false);
     }
   };
