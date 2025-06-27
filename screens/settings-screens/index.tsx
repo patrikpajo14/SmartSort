@@ -35,9 +35,6 @@ const Settings = () => {
   const isDarkMode = mode === "dark";
   let activeColors = COLORS[mode ?? "light"];
 
-  console.log("user", user);
-  // const user = undefined;
-
   const handleEditProfile = () => {
     router.navigate("/(main)/(tabs)/settings/profile");
   };

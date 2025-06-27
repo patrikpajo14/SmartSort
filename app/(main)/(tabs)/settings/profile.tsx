@@ -16,13 +16,14 @@ import MainSectionTitle from "@/components/common/MainSectionTitle";
 import icons from "@/constants/icons";
 import InlineAlert from "@/components/common/InlineAlert";
 import EditProfileForm from "@/screens/settings-screens/components/EditProfileForm";
+import { useAuthContext } from "@/context/auth/authContext";
+import { router } from "expo-router";
 
 export default function ProfileScreen() {
-  const navigation = useNavigation<any>();
   const { t } = useTranslation();
+  const { user } = useAuthContext();
   const { mode } = useTheme();
   let activeColors = COLORS[mode];
-
   const [screen, setScreen] = useState<
     "Edit" | "Update_Password" | "Forgot_Password"
   >("Edit");
@@ -49,8 +50,7 @@ export default function ProfileScreen() {
       case "Edit":
         return (
           <EditProfileForm
-            user={null}
-            navigation={navigation}
+            user={user}
             handleShowInlineAlert={handleShowInlineAlert}
             onSwitchMode={setScreen}
           />
@@ -97,7 +97,7 @@ export default function ProfileScreen() {
         }}
         onReturnPress={handleGoBack}
         actionIcon={icons.close}
-        onActionPress={() => navigation.goBack()}
+        onActionPress={() => router.back()}
         actionIconStyle={{
           width: moderateScale(17),
           height: moderateScale(17),

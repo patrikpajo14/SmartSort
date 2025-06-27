@@ -5,23 +5,27 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { Text, TextStyle, TouchableOpacity, View } from "react-native";
+import { TextStyle, View } from "react-native";
 import { moderateScale, ScaledSheet } from "react-native-size-matters";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useTranslation } from "react-i18next";
 
-import { AlertType } from "@/types/global";
+import { AlertType, RecaptchaUserBody } from "@/types/global";
 import Toast from "react-native-toast-message";
 import { useTheme } from "@/context/ThemeContext";
 import { COLORS, FONTS } from "@/constants/theme";
 import FormInput from "@/components/formElements/FormInput";
 import ProfileBottomAction from "@/screens/settings-screens/components/ProfileBottomAction";
+import { User } from "@/context/auth/authTypes";
+import { router } from "expo-router";
+import { useUpdateUser } from "@/reactQuery/user";
+import useGlobalStore from "@/stores/globalStore";
+import { useAuthContext } from "@/context/auth/authContext";
 
 interface EditProfileFormProps {
-  user: any | null;
-  navigation: any;
+  user: User | null;
   onSwitchMode: Dispatch<
     SetStateAction<"Edit" | "Update_Password" | "Forgot_Password">
   >;
@@ -31,14 +35,17 @@ interface EditProfileFormProps {
 const EditProfileForm = ({
   user,
   onSwitchMode,
-  navigation,
   handleShowInlineAlert,
 }: EditProfileFormProps) => {
   const { t } = useTranslation();
+  const lang = useGlobalStore((state) => state.lang);
   const { mode } = useTheme();
   let activeColors = COLORS[mode];
   const nameInputRef = useRef<any>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { updateUserBasicInfo } = useAuthContext();
+
+  const { mutateAsync: updateUser } = useUpdateUser(lang);
 
   useEffect(() => {
     if (nameInputRef.current) {
@@ -47,8 +54,8 @@ const EditProfileForm = ({
   }, []);
 
   const schema = z.object({
-    ime: z.string().min(1, { message: "Name is required" }),
-    prezime: z.string().min(1, { message: "Last name is required" }),
+    firstName: z.string().min(1, { message: "Name is required" }),
+    lastName: z.string().min(1, { message: "Last name is required" }),
     email: z.string().email({ message: "Invalid email" }),
   });
   type FormData = z.infer<typeof schema>;
@@ -59,16 +66,15 @@ const EditProfileForm = ({
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: {
-      ime: user?.ime || "",
-      prezime: user?.prezime || "",
-      email: user?.email || "test@test.com",
+      firstName: user?.firstName || "",
+      lastName: user?.lastName || "",
+      email: user?.email || "",
     },
   });
   const onSubmit = async (data: FormData) => {
     const userObject = {
-      ime: data.ime,
-      prezime: data.prezime,
-      email: user?.email || "test@test.com",
+      firstName: data.firstName,
+      lastName: data.lastName,
     };
 
     try {
@@ -77,20 +83,28 @@ const EditProfileForm = ({
         id: user?.id,
         user: userObject,
       };
-      console.log("body", body);
-      if (body) {
+
+      const response = await updateUser(body as RecaptchaUserBody);
+      console.log("RESPONSE", response.data);
+      if (response?.data?.code === 200) {
+        console.log("UPDATED USER", response?.data?.data);
+        updateUserBasicInfo(response?.data?.data);
         Toast.show({
           type: "success",
           text1: t("settings.user_updated"),
         });
-        navigation.goBack();
       } else {
-        console.log("show inline alert");
-        handleShowInlineAlert(t("form.general_error"), "error");
+        handleShowInlineAlert(t("general.general_error"), "error");
       }
-      setIsLoading(false);
+      router.back();
     } catch (e) {
-      console.log("ERROR", e);
+      Toast.show({
+        type: "error",
+        //text1: t("settings.user_updated"),
+        text1: "User update failed",
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -105,26 +119,26 @@ const EditProfileForm = ({
       <View>
         <Controller
           control={control}
-          name="ime"
+          name="firstName"
           render={({ field: { onChange, value } }) => (
             <FormInput
               label={t("form.name")}
               ref={nameInputRef}
               value={value}
               onChange={onChange}
-              errorMsg={errors.ime?.message}
+              errorMsg={errors.firstName?.message}
             />
           )}
         />
         <Controller
           control={control}
-          name="prezime"
+          name="lastName"
           render={({ field: { onChange, value } }) => (
             <FormInput
               label={t("form.lastname")}
               value={value}
               onChange={onChange}
-              errorMsg={errors.prezime?.message}
+              errorMsg={errors.lastName?.message}
             />
           )}
         />
@@ -151,9 +165,8 @@ const EditProfileForm = ({
         </View>*/}
       </View>
       <ProfileBottomAction
-        isLoading={isLoading}
         t={t}
-        navigation={navigation}
+        isLoading={isLoading}
         handleSubmit={handleSubmit}
         onSubmit={onSubmit}
       />

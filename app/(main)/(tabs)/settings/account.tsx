@@ -1,4 +1,4 @@
-import { ScrollView, TextStyle, View } from "react-native";
+import { ScrollView, TextStyle } from "react-native";
 import React, { useState } from "react";
 import { moderateScale, ScaledSheet } from "react-native-size-matters";
 import { useTranslation } from "react-i18next";
@@ -11,13 +11,20 @@ import MainLayout from "@/screen-layouts/MainLayout";
 import GeneralModal from "@/components/common/GeneralModal";
 import AccountSubMenu from "@/screens/settings-screens/components/AccountSubMenu";
 import useLogout from "@/hooks/useLogout";
+import { useDeleteUsers } from "@/reactQuery/user";
+import useGlobalStore from "@/stores/globalStore";
+import { useAuthContext } from "@/context/auth/authContext";
+import { axiosInstance } from "@/axios/axiosInstance";
 
 const AccountSettingsScreen = () => {
   const { t } = useTranslation();
   const { handleLogout } = useLogout();
   const { mode } = useTheme();
+  const { user, logoutUser } = useAuthContext();
+  const lang = useGlobalStore((state) => state.lang);
   let activeColors = COLORS[mode];
   const [modalVisible, setModalVisible] = useState(false);
+  const { mutate: deleteUser } = useDeleteUsers(lang);
 
   const handleEditPress = () => {
     router.navigate("/settings/profile");
@@ -32,10 +39,20 @@ const AccountSettingsScreen = () => {
     setModalVisible(true);
   };
   const onDeletePressCallback = () => {
-    Toast.show({
-      type: "success",
-      text1: t("general.delete_profile_success"),
-    });
+    if (user) {
+      deleteUser(user.id, {
+        onSuccess: async (response) => {
+          console.log("Response", response.data);
+          delete axiosInstance.defaults.headers["Userid"];
+          delete axiosInstance.defaults.headers["Authorization"];
+          await logoutUser();
+          Toast.show({
+            type: "success",
+            text1: t("general.delete_profile_success"),
+          });
+        },
+      });
+    }
   };
 
   const data = [

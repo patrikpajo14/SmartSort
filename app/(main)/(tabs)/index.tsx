@@ -8,8 +8,10 @@ import HomeWidget from "@/screens/home-screen/HomeWidget";
 import { Image } from "expo-image";
 import EducationFlatList from "@/screens/home-screen/EducationFlatList";
 import { router } from "expo-router";
+import { useAuthContext } from "@/context/auth/authContext";
 export default function HomeScreen() {
   const { t } = useTranslation();
+  const { user } = useAuthContext();
   const { mode } = useTheme();
   const isDarkMode = mode === "dark";
   let activeColors = COLORS[mode ?? "light"];
@@ -31,7 +33,7 @@ export default function HomeScreen() {
               {t("home.title")}
             </Text>
             <Text style={[styles.title, { color: activeColors.text }]}>
-              {"User"}
+              {user?.firstName}
             </Text>
           </View>
           <Text style={[styles.description, { color: activeColors.text }]}>

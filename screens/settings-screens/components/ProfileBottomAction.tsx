@@ -2,11 +2,11 @@ import { View } from "react-native";
 import { moderateScale, ScaledSheet } from "react-native-size-matters";
 import React from "react";
 import PrimaryButton from "@/components/ui/PrimaryButton";
+import { router } from "expo-router";
 
 interface ProfileBottomActionProps {
   isLoading: boolean;
   t: any;
-  navigation: any;
   handleSubmit: any;
   onSubmit: any;
 }
@@ -14,7 +14,6 @@ interface ProfileBottomActionProps {
 const ProfileBottomAction = ({
   isLoading,
   t,
-  navigation,
   handleSubmit,
   onSubmit,
 }: ProfileBottomActionProps) => {
@@ -22,20 +21,17 @@ const ProfileBottomAction = ({
     <View style={styles.btnContainer}>
       <PrimaryButton
         label={t("general.cancel")}
-        onPress={() => navigation.goBack()}
-        outerContainerStyle={{
-          width: moderateScale(140, 0.2),
-          height: moderateScale(50, 0.2),
-          alignItems: "center",
-          justifyContent: "center",
-        }}
+        onPress={() => router.back()}
+        small={true}
         type={"outlined"}
+        outerContainerStyle={{ width: moderateScale(120, 0.2) }}
       />
       <PrimaryButton
+        small={true}
         isLoading={isLoading}
-        outerContainerStyle={{ minWidth: moderateScale(140, 0.2) }}
         label={t("general.save")}
         onPress={handleSubmit(onSubmit)}
+        outerContainerStyle={{ minWidth: moderateScale(120, 0.2) }}
       />
     </View>
   );

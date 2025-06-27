@@ -16,13 +16,8 @@ export const useLogout = () => {
       const response = await axiosInstance.get(`/auth/logout`);
       console.log("LOGOUT", response.data);
       if (response.data?.code === 200) {
-        console.log(
-          "LOGOUT HEADERS  BEFORE DELETE",
-          axiosInstance.defaults.headers,
-        );
         delete axiosInstance.defaults.headers["Userid"];
         delete axiosInstance.defaults.headers["Authorization"];
-        console.log("LOGOUT HEADERS AFTER", axiosInstance.defaults.headers);
         await logoutUser();
         Toast.show({
           type: "success",
@@ -32,7 +27,7 @@ export const useLogout = () => {
     } catch (error) {
       Toast.show({
         type: "error",
-        text1: t("form00.general_error"),
+        text1: t("form.general_error"),
       });
       console.error(error);
     } finally {

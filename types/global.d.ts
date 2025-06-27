@@ -1,3 +1,5 @@
+import { User } from "@/context/auth/authTypes";
+
 export type ActiveColors = any;
 
 export interface Location {
@@ -46,9 +48,8 @@ export interface ListItemProps {
   listType: 0 | 1;
 }
 interface RecaptchaUserBody {
-  id: number;
-  user: any;
-  token?: string;
+  id: string;
+  user: { firstName: string; lastName: string };
 }
 interface UserVisibilityBody {
   id: number;

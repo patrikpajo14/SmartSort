@@ -8,9 +8,10 @@ import { COLORS, FONTS } from "@/constants/theme";
 import { getInitials } from "@/utils/getInitials";
 import icons from "@/constants/icons";
 import PrimaryButton from "@/components/ui/PrimaryButton";
+import { User } from "@/context/auth/authTypes";
 
 type ProfileProps = {
-  user: any | null;
+  user: User | null;
   onButtonPress: () => void;
 };
 const Profile = ({ onButtonPress, user }: ProfileProps) => {
@@ -36,25 +37,16 @@ const Profile = ({ onButtonPress, user }: ProfileProps) => {
               fontSize: moderateScale(32, 0.2),
             }}
           >
-            {getInitials(`${user.ime} ${user.prezime}`)}
+            {getInitials(`${user.firstName} ${user.lastName}`)}
           </Text>
         ) : (
           <Image source={icons.avatar} style={styles.avatar} />
         )}
       </View>
       <View style={styles.textContainer}>
-        {user?.ime && (
+        {user?.firstName && (
           <Text style={[styles.title, { color: activeColors.text }]}>
-            {user.ime} {user.prezime}
-          </Text>
-        )}
-        {user?.telefon && (
-          <Text style={[styles.number, { color: activeColors.text }]}>
-            {`${
-              user?.pozivni_broj && user?.pozivni_broj.startsWith("+")
-                ? user?.pozivni_broj
-                : `+${user?.pozivni_broj}`
-            } ${user.telefon}`}
+            {user.firstName} {user.lastName}
           </Text>
         )}
 
