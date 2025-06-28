@@ -57,7 +57,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ handleShowInlineAlert }) => {
   const onSubmit = async (data: FormData) => {
     try {
       setIsLoading(true);
-      console.log("SERVER URL", serverUrl, "192.168.100.120:8080", data);
+      console.log("SERVER URL", serverUrl, data);
       const response = await axiosInstance.post(`/auth/login`, data);
       console.log("response", response.data);
       if (response.data?.code === 200) {
@@ -67,13 +67,13 @@ const LoginForm: React.FC<LoginFormProps> = ({ handleShowInlineAlert }) => {
         setIsDisabled(true);
         Toast.show({
           type: "success",
-          text1: t("login.login_success"),
+          text1: t("auth.login_success"),
         });
         reset();
       } else {
         setIsLoading(false);
         handleShowInlineAlert(
-          response.data?.message || t("login.login_failed"),
+          response.data?.message || t("auth.login_failed"),
           "error",
         );
       }

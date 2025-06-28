@@ -90,18 +90,18 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
       );
       console.log("REGISTER RESPONSE", response?.data);
       if (response.data?.code === 200) {
-        handleShowInlineAlert(t("login.success_message_register"), "success");
+        handleShowInlineAlert(t("auth.success_message_register"), "success");
         router.navigate("/(auth)/login");
         clearForm();
       } else {
         handleShowInlineAlert(
-          response.data?.message || t("login.register_failed"),
+          response.data?.message || t("auth.register_failed"),
           "error",
         );
       }
       setIsLoading(false);
     } catch (error) {
-      displayAlert("error", t("login.unexpected_error"));
+      displayAlert("error", t("auth.unexpected_error"));
       console.log(error);
     }
   };

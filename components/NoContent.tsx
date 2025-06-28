@@ -20,6 +20,7 @@ const NoContent = ({ title, description, icon }: NoContentProps) => {
         source={icon}
         style={styles.icon}
         tintColor={activeColors.primary}
+        contentFit={"contain"}
       />
       <Text style={[styles.title, { color: activeColors.text }]}>{title}</Text>
       <Text style={[styles.description, { color: activeColors.text }]}>
@@ -38,7 +39,7 @@ export const styles = ScaledSheet.create({
   },
   icon: {
     width: "35@ms0.2",
-    height: "40@ms0.2",
+    height: "35@ms0.2",
     objectFit: "contain",
     marginBottom: "10@ms0.2",
   },

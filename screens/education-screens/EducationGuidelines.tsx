@@ -1,4 +1,11 @@
-import { Text, View, ScrollView, TextStyle, Switch } from "react-native";
+import {
+  Text,
+  View,
+  ScrollView,
+  TextStyle,
+  Switch,
+  RefreshControl,
+} from "react-native";
 import { router, useNavigation } from "expo-router";
 import React, { useLayoutEffect, useState } from "react";
 import { ScaledSheet } from "react-native-size-matters";
@@ -9,13 +16,18 @@ import { useTheme } from "@/context/ThemeContext";
 import { COLORS, FONTS } from "@/constants/theme";
 import PrimaryButton from "@/components/ui/PrimaryButton";
 import { Image } from "expo-image";
+import { Education } from "@/types/global";
 
 interface EducationGuidelinesProps {
-  category: string | string[];
+  data?: Education;
+  refreshing: boolean;
+  onRefresh: () => void;
   toggleSwitch: () => void;
 }
 export default function EducationGuidelinesScreen({
-  category,
+  data,
+  refreshing,
+  onRefresh,
   toggleSwitch,
 }: EducationGuidelinesProps) {
   const { t } = useTranslation();
@@ -25,37 +37,21 @@ export default function EducationGuidelinesScreen({
   const [isEnabled, setIsEnabled] = useState(true);
 
   useLayoutEffect(() => {
-    navigation.setOptions({ title: String(category) });
-  }, [category]);
+    navigation.setOptions({ title: String(data?.category) });
+  }, [data?.category]);
 
   const handleSwitchChange = () => {
     toggleSwitch();
     setIsEnabled((prev: boolean) => !prev);
   };
 
-  const guidelines = isEnabled
-    ? [
-        "Rinse plastics to remove food and liquid residue.",
-        "Check recycling symbols (1–7) to confirm recyclability.",
-        "Separate by type if required by local guidelines.",
-        "Follow local rules for what is accepted in recycling bins.",
-        "Remove caps unless marked as recyclable together.",
-        "Flatten bottles only if allowed by the recycling facility.",
-        "Recycle clean packaging like water bottles and food containers.",
-      ]
-    : [
-        "Do not mix non-recyclables with recyclables.",
-        "Avoid recycling containers with food residue.",
-        "Don’t include plastic bags unless accepted locally.",
-        "No hazardous waste in recycling.",
-        "Do not recycle electronics unless at designated centers.",
-      ];
+  const guidelines = isEnabled ? data?.pros : data?.cons;
 
   return (
     <View style={styles.container}>
       <View style={styles.topWrapper}>
         <Text style={[styles.headerTitle, { color: activeColors.text }]}>
-          Plastic
+          {data?.title}
         </Text>
         <Switch
           trackColor={{
@@ -71,8 +67,16 @@ export default function EducationGuidelinesScreen({
         />
       </View>
 
-      <ScrollView>
-        {guidelines.map((text, index) => (
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor={activeColors.text}
+          />
+        }
+      >
+        {guidelines?.map((text, index) => (
           <View style={styles.guidelineRow} key={index}>
             <Image
               source={isEnabled ? icons.recycle : icons.close}
@@ -102,10 +106,10 @@ export default function EducationGuidelinesScreen({
 
 const styles = ScaledSheet.create({
   container: {
-    paddingHorizontal: "20@ms",
-    paddingVertical: "25@ms",
     flex: 1,
     gap: "20@ms",
+    paddingTop: "25@ms",
+    paddingHorizontal: "20@ms",
   },
   topWrapper: {
     flexDirection: "row",

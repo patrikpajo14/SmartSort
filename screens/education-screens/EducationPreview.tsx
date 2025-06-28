@@ -1,18 +1,30 @@
-import { ScrollView, Text, TextStyle, View } from "react-native";
+import {
+  RefreshControl,
+  ScrollView,
+  Text,
+  TextStyle,
+  View,
+} from "react-native";
 import Badge from "@/components/ui/Badge";
 import PrimaryButton from "@/components/ui/PrimaryButton";
-import { moderateScale, ScaledSheet } from "react-native-size-matters";
+import { ScaledSheet } from "react-native-size-matters";
 import { COLORS, FONTS } from "@/constants/theme";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "@/context/ThemeContext";
+import { Education } from "@/types/global";
+import { getContainerText } from "@/utils/mapThemePickers";
 
 interface EducationPreviewProps {
-  category: string | string[];
+  data: Education;
+  refreshing: boolean;
   onPress: () => void;
+  onRefresh: () => void;
 }
 
 export default function EducationPreview({
-  category,
+  data,
+  refreshing,
+  onRefresh,
   onPress,
 }: EducationPreviewProps) {
   const { t } = useTranslation();
@@ -26,12 +38,26 @@ export default function EducationPreview({
           style={[styles.headerTitle, { color: activeColors.text }]}
           numberOfLines={2}
         >
-          {t("education.how_to")} {category}
+          {t("education.how_to")} {data?.title}
         </Text>
-        <Badge label={"Yellow container"} />
+        <Badge
+          label={getContainerText(t, data?.category)}
+          category={data?.category}
+        />
       </View>
-      <ScrollView>
-        <View style={styles.bullets}>
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor={activeColors.text}
+          />
+        }
+      >
+        <Text style={[styles.bullets, { color: activeColors.text }]}>
+          {data?.description}
+        </Text>
+        {/*<View style={styles.bullets}>
           <Text style={[styles.bullet, { color: activeColors.text }]}>
             <Text style={styles.bulletBold}>• Check: </Text>
             Find the recycling symbol (1–7) on the plastic.
@@ -68,14 +94,13 @@ export default function EducationPreview({
             Saves costs, creates jobs in recycling industries, and supports a
             circular economy.
           </Text>
-        </View>
+        </View>*/}
       </ScrollView>
       <View style={styles.buttonWrapper}>
         <PrimaryButton
           label={t("education.guidelines")}
           onPress={onPress}
           small={true}
-          outerContainerStyle={{ marginBottom: moderateScale(30) }}
         />
       </View>
     </View>
@@ -84,9 +109,9 @@ export default function EducationPreview({
 
 const styles = ScaledSheet.create({
   container: {
-    paddingVertical: "25@ms",
+    flex: 1,
+    paddingTop: "25@ms",
     paddingHorizontal: "20@ms",
-    marginBottom: "100@ms",
   },
   header: {
     width: "100%",

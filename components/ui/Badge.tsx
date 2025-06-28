@@ -7,19 +7,23 @@ import { getContainerColor } from "@/utils/mapThemePickers";
 
 type BadgeProps = {
   label: string;
+  category: string;
   labelStyle?: TextStyle;
   outerContainerStyle?: ViewStyle;
 };
 
 const Badge: React.FC<BadgeProps> = ({
   label,
+  category,
   labelStyle,
   outerContainerStyle,
 }) => {
   const { mode } = useTheme();
+  console.log("BADGE CATEGORY", category);
   let activeColors = COLORS[mode ?? "light"];
-  const backgroundColor = getContainerColor(activeColors, label);
-  const color = label === "plastic" ? activeColors?.brown : activeColors?.white;
+  const backgroundColor = getContainerColor(activeColors, category);
+  const color =
+    category === "plastic" ? activeColors?.brown : activeColors?.white;
 
   return (
     <View

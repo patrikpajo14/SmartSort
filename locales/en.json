@@ -110,7 +110,14 @@
   "education": {
     "title": "Education",
     "how_to": "How to Recycle",
-    "guidelines": "View guidelines"
+    "guidelines": "View guidelines",
+    "empty_educations_title": "No educational content yet",
+    "empty_educations_description": "We didn't created or received any educational materials. Once available, they’ll appear here to help you learn how to sort waste properly.",
+    "plastic_container": "Yellow container",
+    "glass_container": "Green container",
+    "paper_container": "Blue container",
+    "metal_container": "Recycle yard",
+    "storage_container": "Recycle yard"
   },
   "locations": {
     "map": "Map",
@@ -186,7 +193,9 @@
     "login_here": "Login here.",
     "login_success": "Login successful!",
     "login_failed": "Login failed! Try again later.",
+    "success_message_register": "Register successful!",
     "register_failed": "Register failed! Try again later.",
-    "unexpected_error": "An unexpected error occurred."
+    "unexpected_error": "An unexpected error occurred.",
+    "session_expired": "Your session has expired. You have been safely logged out."
   }
 }

@@ -1,14 +1,20 @@
-import Settings from "@/screens/settings-screens";
 import { FlatList, Text, TextStyle, View } from "react-native";
-import { educationList } from "@/constants/config";
 import EducationItem from "@/screens/education-screens/components/EducationItem";
 import { router } from "expo-router";
 import { moderateScale, ScaledSheet } from "react-native-size-matters";
 import { COLORS, FONTS } from "@/constants/theme";
 import { useTheme } from "@/context/ThemeContext";
 import { useTranslation } from "react-i18next";
+import { Education } from "@/types/global";
+import icons from "@/constants/icons";
 
-export default function EducationFlatList() {
+interface EducationFlatListProps {
+  educations: Education[];
+}
+
+export default function EducationFlatList({
+  educations,
+}: EducationFlatListProps) {
   const { t } = useTranslation();
   const { mode } = useTheme();
   let activeColors = COLORS[mode];
@@ -19,7 +25,7 @@ export default function EducationFlatList() {
         {t("home.recycling_guide")}
       </Text>
       <FlatList
-        data={educationList}
+        data={educations}
         horizontal={true}
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
@@ -27,12 +33,12 @@ export default function EducationFlatList() {
           <EducationItem
             key={item.id}
             label={item.title}
-            image={item.icon}
+            image={item.icon || icons.education}
             educationStyles={{ marginRight: moderateScale(10) }}
             onPress={() => {
               router.push({
                 pathname: "/(main)/(tabs)/education",
-                params: { category: item.type },
+                params: { id: item.id, category: item.category },
               });
             }}
           />

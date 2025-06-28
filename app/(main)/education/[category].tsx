@@ -7,16 +7,28 @@ import icons from "@/constants/icons";
 import { useTheme } from "@/context/ThemeContext";
 import EducationPreview from "@/screens/education-screens/EducationPreview";
 import EducationGuidelinesScreen from "@/screens/education-screens/EducationGuidelines";
+import { useFetchSingleEducation } from "@/reactQuery/educations";
+import useGlobalStore from "@/stores/globalStore";
+import ErrorContainer from "@/components/errorHandling/ErrorContainer";
+import Spinner from "@/components/common/Spinner";
 
 export default function EducationCategoryScreen() {
-  const { category } = useLocalSearchParams();
+  const { id, category } = useLocalSearchParams();
   const navigation = useNavigation();
   const { mode } = useTheme();
   const isDarkMode = mode === "dark";
   let activeColors = COLORS[mode ?? "light"];
-
+  const lang = useGlobalStore((state) => state.lang);
   const [screen, setScreen] = useState<"Preview" | "Guidelines">("Preview");
+  const [refreshing, setRefreshing] = useState(false);
   const [enabled, setEnabled] = useState<boolean>(true);
+
+  const { data, isPending, isError, refetch } = useFetchSingleEducation(
+    lang,
+    id as string,
+  );
+
+  console.log("SINGLE EDUCATION DATA", data, id, category);
 
   useLayoutEffect(() => {
     navigation.setOptions({ title: String(category) });
@@ -34,12 +46,20 @@ export default function EducationCategoryScreen() {
     setEnabled(!enabled);
   };
 
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await refetch();
+    setRefreshing(false);
+  };
+
   const renderScreen = () => {
     switch (screen) {
       case "Preview":
         return (
           <EducationPreview
-            category={category}
+            data={data}
+            refreshing={refreshing}
+            onRefresh={onRefresh}
             onPress={() => {
               setScreen("Guidelines");
             }}
@@ -48,7 +68,9 @@ export default function EducationCategoryScreen() {
       case "Guidelines":
         return (
           <EducationGuidelinesScreen
-            category={category}
+            data={data}
+            refreshing={refreshing}
+            onRefresh={onRefresh}
             toggleSwitch={handleToggleSwitch}
           />
         );
@@ -57,9 +79,24 @@ export default function EducationCategoryScreen() {
     }
   };
 
+  const guideImages: Record<string, any> = {
+    plastic: require("@/assets/images/guides/plastic-guide.png"),
+    glass: require("@/assets/images/guides/glass-guide.png"),
+    paper: require("@/assets/images/guides/paper-guide.png"),
+    metal: require("@/assets/images/guides/metal-guide.png"),
+    bio: require("@/assets/images/guides/bio-guide.png"),
+    carton: require("@/assets/images/guides/carton-guide.png"),
+    clothes: require("@/assets/images/guides/clothes-guide.png"),
+    batteries: require("@/assets/images/guides/batteries-guide.png"),
+    electronics: require("@/assets/images/guides/electronics-guide.png"),
+    construction: require("@/assets/images/guides/construction-guide.png"),
+    storage: require("@/assets/images/guides/construction-guide.png"),
+    general: require("@/assets/images/guides/general-guide.png"),
+  };
+
   const selectedImage =
     screen === "Guidelines"
-      ? require("@/assets/images/plasic-guide.png")
+      ? guideImages[data?.category || "general"]
       : require("@/assets/images/recycle-world.png");
 
   return (
@@ -95,7 +132,9 @@ export default function EducationCategoryScreen() {
             : "transparent",
       }}
     >
-      {renderScreen()}
+      {isPending && <Spinner />}
+      {!isPending && isError && <ErrorContainer callback={refetch} />}
+      {!isPending && !isError && data && renderScreen()}
     </EducationLayout>
   );
 }

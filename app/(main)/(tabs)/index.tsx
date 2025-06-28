@@ -1,4 +1,10 @@
-import { View, Text, TextStyle, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  TextStyle,
+  ScrollView,
+  RefreshControl,
+} from "react-native";
 import { moderateScale, ScaledSheet } from "react-native-size-matters";
 import MainLayout from "@/screen-layouts/MainLayout";
 import { useTranslation } from "react-i18next";
@@ -9,12 +15,47 @@ import { Image } from "expo-image";
 import EducationFlatList from "@/screens/home-screen/EducationFlatList";
 import { router } from "expo-router";
 import { useAuthContext } from "@/context/auth/authContext";
+import { useFetchHomeScreen } from "@/reactQuery/previewScreens";
+import useGlobalStore from "@/stores/globalStore";
+import useRefetchOnFocus from "@/hooks/useRefetchOnFocus";
+import { useEffect, useState } from "react";
+import Toast from "react-native-toast-message";
+import NoContent from "@/components/NoContent";
+import icons from "@/constants/icons";
 export default function HomeScreen() {
   const { t } = useTranslation();
-  const { user } = useAuthContext();
   const { mode } = useTheme();
   const isDarkMode = mode === "dark";
   let activeColors = COLORS[mode ?? "light"];
+  const { user, isStorageLoading } = useAuthContext();
+  const [refreshing, setRefreshing] = useState(false);
+  const lang = useGlobalStore((state) => state.lang);
+
+  const { data, isError, refetch, isPending } = useFetchHomeScreen(
+    lang,
+    user?.id,
+    isStorageLoading,
+  );
+
+  useRefetchOnFocus(refetch);
+
+  useEffect(() => {
+    if (!isPending && isError) {
+      Toast.show({
+        type: "error",
+        text1: t("general.error"),
+        text2: t("general.error_data"),
+      });
+    }
+  }, [isPending, isError, t]);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await refetch();
+    setRefreshing(false);
+  };
+
+  console.log("HOME SCREEN DATA", data);
 
   return (
     <MainLayout>
@@ -48,8 +89,25 @@ export default function HomeScreen() {
           }}
           image={require("@/assets/images/earth.png")}
         />
-        <ScrollView style={styles.scrollContainer}>
-          <EducationFlatList />
+        <ScrollView
+          style={styles.scrollContainer}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              tintColor={activeColors.white}
+            />
+          }
+        >
+          {data?.data?.educations?.length > 0 ? (
+            <EducationFlatList educations={data?.data?.educations} />
+          ) : (
+            <NoContent
+              title={t("education.empty_educations_title")}
+              description={t("education.empty_educations_description")}
+              icon={icons.education}
+            />
+          )}
 
           <HomeWidget
             title={t("home.map_widget_text")}

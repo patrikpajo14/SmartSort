@@ -70,7 +70,7 @@ export default function ProfileScreen() {
         return null;
     }
   };
-  let mainTitle = t("login.title_login");
+  let mainTitle = t("auth.title_login");
   switch (screen) {
     case "Edit":
       mainTitle = t("settings.edit_profile");

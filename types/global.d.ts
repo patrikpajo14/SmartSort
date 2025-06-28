@@ -14,6 +14,16 @@ export interface Location {
   type: string;
 }
 
+export interface Education {
+  id: string;
+  icon: string;
+  category: string;
+  title: string;
+  description: string;
+  pros: string[];
+  cons: string[];
+}
+
 export interface FriendCoordinate {
   id: number;
   friend_name?: string;

@@ -31,3 +31,20 @@ export const getContainerColor = (activeColors: any, type: string) => {
       return activeColors.primary;
   }
 };
+
+export const getContainerText = (t: any, type: string) => {
+  switch (type) {
+    case "plastic":
+      return t("education.plastic_container");
+    case "glass":
+      return t("education.glass_container");
+    case "paper":
+      return t("education.paper_container");
+    case "metal":
+      return t("education.metal_container");
+    case "storage":
+      return t("education.storage_container");
+    default:
+      return t("education.storage_container");
+  }
+};

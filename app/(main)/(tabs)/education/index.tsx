@@ -9,23 +9,35 @@ import EducationItem from "@/screens/education-screens/components/EducationItem"
 import { Image } from "expo-image";
 import { educationList } from "@/constants/config";
 import { useEffect } from "react";
+import { useFetchAllEducations } from "@/reactQuery/educations";
+import useGlobalStore from "@/stores/globalStore";
+import { Education } from "@/types/global";
+import icons from "@/constants/icons";
+import NoContent from "@/components/NoContent";
 
 export default function EducationScreen() {
   const { t } = useTranslation();
   const { mode } = useTheme();
   let activeColors = COLORS[mode ?? "light"];
-  const { category } = useLocalSearchParams();
-
-  console.log("Category", category);
+  const lang = useGlobalStore((state) => state.lang);
+  const { id, category } = useLocalSearchParams();
+  const {
+    data: educationsData,
+    refetch,
+    isError,
+    isPending,
+  } = useFetchAllEducations(lang);
 
   useEffect(() => {
     if (category) {
       router.push({
         pathname: "/(main)/education/[category]",
-        params: { category: category as string },
+        params: { id: id as string, category: category as string },
       });
     }
   }, [category]);
+
+  console.log("EDUCATIONS DATA", educationsData?.data);
 
   return (
     <MainLayout
@@ -40,25 +52,35 @@ export default function EducationScreen() {
         />
       </View>
       <View style={styles.container}>
-        <View style={styles.itemList}>
-          {educationList.map((item) => (
-            <EducationItem
-              key={item.id}
-              label={item.title}
-              image={item.icon}
-              outerContainerStyle={{
-                width: (SIZES.width - 65) / 3,
-                height: (SIZES.width - 65) / 3,
-              }}
-              onPress={() =>
-                router.push({
-                  pathname: "/(main)/education/[category]",
-                  params: { category: item.type },
-                })
-              }
+        {educationsData.length > 0 ? (
+          <View style={styles.itemList}>
+            {educationsData?.map((item: Education) => (
+              <EducationItem
+                key={item.id}
+                label={item.title}
+                image={item?.icon || icons.education}
+                outerContainerStyle={{
+                  width: (SIZES.width - 65) / 3,
+                  height: (SIZES.width - 65) / 3,
+                }}
+                onPress={() =>
+                  router.push({
+                    pathname: "/(main)/education/[category]",
+                    params: { id: item.id, category: item.category },
+                  })
+                }
+              />
+            ))}
+          </View>
+        ) : (
+          <View style={{ minHeight: moderateScale(250) }}>
+            <NoContent
+              title={t("education.empty_educations_title")}
+              description={t("education.empty_educations_description")}
+              icon={icons.education}
             />
-          ))}
-        </View>
+          </View>
+        )}
       </View>
     </MainLayout>
   );
