@@ -181,6 +181,13 @@ export const FONTS = {
     fontFamily: "Poppins",
     fontSize: SIZES.body5,
   },
+  light: {
+    fontFamily: "Poppins-Light",
+  },
+  italic: {
+    fontFamily: "Poppins-Italic",
+    fontSize: SIZES.body3,
+  },
 };
 
 const appTheme = { COLORS, SIZES, FONTS };

@@ -8,11 +8,15 @@ import {
 import Badge from "@/components/ui/Badge";
 import PrimaryButton from "@/components/ui/PrimaryButton";
 import { ScaledSheet } from "react-native-size-matters";
-import { COLORS, FONTS } from "@/constants/theme";
+import RenderHTML from "react-native-render-html";
+import sanitizeHtml from "sanitize-html";
+import { COLORS, FONTS, SIZES } from "@/constants/theme";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "@/context/ThemeContext";
 import { Education } from "@/types/global";
 import { getContainerText } from "@/utils/mapThemePickers";
+import { systemFonts } from "@/constants/generalStyles";
+import useGetThemeForHTML from "@/hooks/useGetThemeForHTML";
 
 interface EducationPreviewProps {
   data: Education;
@@ -30,6 +34,16 @@ export default function EducationPreview({
   const { t } = useTranslation();
   const { mode } = useTheme();
   let activeColors = COLORS[mode ?? "light"];
+  const htmlStyles = useGetThemeForHTML(mode);
+  const sanitizedHtml = sanitizeHtml(data?.description || "");
+
+  const source = {
+    html:
+      sanitizedHtml ||
+      `<h1 style="text-align: center; padding-top: 30px">${t(
+        "main_layout.no_content",
+      )}</h1>`,
+  };
 
   return (
     <View style={styles.container}>
@@ -54,9 +68,12 @@ export default function EducationPreview({
           />
         }
       >
-        <Text style={[styles.bullets, { color: activeColors.text }]}>
-          {data?.description}
-        </Text>
+        <RenderHTML
+          contentWidth={SIZES.width}
+          source={source}
+          systemFonts={systemFonts}
+          tagsStyles={htmlStyles as any}
+        />
         {/*<View style={styles.bullets}>
           <Text style={[styles.bullet, { color: activeColors.text }]}>
             <Text style={styles.bulletBold}>• Check: </Text>

@@ -1,24 +1,22 @@
-import { Button, Dimensions, StyleSheet, Text, View } from "react-native";
+import { View } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import { moderateScale, ScaledSheet } from "react-native-size-matters";
 import { useTranslation } from "react-i18next";
-import { useTheme } from "@/context/ThemeContext";
-import { COLORS, SIZES } from "@/constants/theme";
+import { SIZES } from "@/constants/theme";
 import MainLayout from "@/screen-layouts/MainLayout";
 import EducationItem from "@/screens/education-screens/components/EducationItem";
 import { Image } from "expo-image";
-import { educationList } from "@/constants/config";
 import { useEffect } from "react";
 import { useFetchAllEducations } from "@/reactQuery/educations";
 import useGlobalStore from "@/stores/globalStore";
 import { Education } from "@/types/global";
 import icons from "@/constants/icons";
 import NoContent from "@/components/NoContent";
+import Spinner from "@/components/common/Spinner";
+import ErrorContainer from "@/components/errorHandling/ErrorContainer";
 
 export default function EducationScreen() {
   const { t } = useTranslation();
-  const { mode } = useTheme();
-  let activeColors = COLORS[mode ?? "light"];
   const lang = useGlobalStore((state) => state.lang);
   const { id, category } = useLocalSearchParams();
   const {
@@ -52,7 +50,9 @@ export default function EducationScreen() {
         />
       </View>
       <View style={styles.container}>
-        {educationsData.length > 0 ? (
+        {isPending && <Spinner />}
+        {!isPending && isError && <ErrorContainer callback={refetch} />}
+        {!isPending && !isError && educationsData?.length > 0 ? (
           <View style={styles.itemList}>
             {educationsData?.map((item: Education) => (
               <EducationItem
