@@ -7,8 +7,6 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-// import Spinner from "../../components/common/Spinner";
-import useGlobalStore from "../../stores/globalStore";
 import { moderateScale, ScaledSheet } from "react-native-size-matters";
 import { useTheme } from "@/context/ThemeContext";
 import { COLORS, FONTS } from "@/constants/theme";
@@ -16,14 +14,19 @@ import LocationListItem from "@/screens/map-screen/components/LocationListItem";
 import { Location } from "@/types/global";
 import NoContent from "@/components/NoContent";
 import icons from "@/constants/icons";
+import Spinner from "@/components/common/Spinner";
 export interface LocationsFlatListProps {
-  user: any | null;
   locations: Location[] | null;
+  refetch: () => void;
+  loadMore: () => void;
+  isFetchingNextPage: boolean;
   onLocationPress: (item: Location) => void;
 }
 const LocationsListTab: React.FC<LocationsFlatListProps> = ({
-  user,
   locations,
+  refetch,
+  loadMore,
+  isFetchingNextPage,
   onLocationPress,
 }) => {
   const { t } = useTranslation();
@@ -37,14 +40,21 @@ const LocationsListTab: React.FC<LocationsFlatListProps> = ({
 
   const onRefresh = async () => {
     setRefreshing(true);
-    // await refetch();
+    await refetch();
     setRefreshing(false);
   };
 
   const renderLocationCard = ({ item }: { item: Location }) => {
-    return (
-      <LocationListItem item={item} onPress={() => handleLocationPress(item)} />
-    );
+    if (item.latitude && item.longitude) {
+      return (
+        <LocationListItem
+          item={item}
+          onPress={() => handleLocationPress(item)}
+        />
+      );
+    } else {
+      return null;
+    }
   };
 
   const renderHeader = ({
@@ -77,7 +87,7 @@ const LocationsListTab: React.FC<LocationsFlatListProps> = ({
     }
   };
 
-  const renderFooter = () => /*isFetchingNextPage ? <Spinner /> :*/ null;
+  const renderFooter = () => (isFetchingNextPage ? <Spinner /> : null);
 
   return (
     <View style={{ flex: 1 }}>
@@ -102,17 +112,13 @@ const LocationsListTab: React.FC<LocationsFlatListProps> = ({
           </View>
         }
         refreshControl={
-          user ? (
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={onRefresh}
-              tintColor={activeColors.primary}
-            />
-          ) : undefined
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor={activeColors.primary}
+          />
         }
-        onEndReached={() => {
-          console.log("load more");
-        }}
+        onEndReached={loadMore}
         onEndReachedThreshold={0.1}
         stickySectionHeadersEnabled={true}
       />

@@ -9,9 +9,7 @@ import { moderateScale, ScaledSheet } from "react-native-size-matters";
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
-
 import { SceneRendererProps, TabView } from "react-native-tab-view";
-// import Spinner from "../../components/common/Spinner";
 import { TabParamList } from "@/app/(main)/(tabs)/_layout";
 import { useTheme } from "@/context/ThemeContext";
 import { COLORS, FONTS, SIZES } from "@/constants/theme";
@@ -24,8 +22,9 @@ import { Location } from "@/types/global";
 import MainLayout from "@/screen-layouts/MainLayout";
 import icons from "@/constants/icons";
 import CustomBottomSheet from "@/components/common/CustomBottomSheet";
-import { containerLocations } from "@/constants/config";
 import Filters from "@/screens/map-screen/components/Filters";
+import { useFetchLocations } from "@/reactQuery/locations";
+import useGlobalStore from "@/stores/globalStore";
 
 type Route = any;
 
@@ -33,22 +32,22 @@ type RenderSceneProps = SceneRendererProps & {
   route: Route;
 };
 
-const FirstRoute = ({
-  locations,
-  onLocationPress,
-}: {
-  locations: Location[];
-  onLocationPress: any;
-}) => <MapTab locations={locations} onLocationPress={onLocationPress} />;
+const FirstRoute = ({ onLocationPress }: { onLocationPress: any }) => (
+  <MapTab onLocationPress={onLocationPress} />
+);
 
 const SecondRoute = ({
-  user,
   locations,
+  loadMore,
+  refetch,
+  isFetchingNextPage,
   onLocationPress,
 }: LocationsFlatListProps) => (
   <LocationsListTab
-    user={user}
     locations={locations}
+    refetch={refetch}
+    loadMore={loadMore}
+    isFetchingNextPage={isFetchingNextPage}
     onLocationPress={onLocationPress}
   />
 );
@@ -58,6 +57,7 @@ type MapScreenRouteProp = RouteProp<TabParamList, "Map">;
 const MapScreen = () => {
   const { t } = useTranslation();
   const navigation = useNavigation<any>();
+  const lang = useGlobalStore((state) => state.lang);
   const route = useRoute<MapScreenRouteProp>();
   const { openBottomSheet } = route.params || {};
   const { mode } = useTheme();
@@ -70,17 +70,20 @@ const MapScreen = () => {
   const [isFocused, setIsFocused] = useState(false);
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
 
+  const {
+    data: locations,
+    isError: locationsError,
+    refetch: locationsRefetch,
+    isLoading: locationsLoading,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+  } = useFetchLocations(lang, isFocused);
+
   const [routes] = useState([
     { key: "map", title: t("locations.map") },
     { key: "locations", title: t("locations.locations_list") },
   ]);
-  const user = {
-    id: 1,
-    name: "Patrik",
-    lastname: "Stojsavljevic",
-    email: "pstojsavl@text.net",
-  };
-  const userId = user?.id || null;
 
   useFocusEffect(
     React.useCallback(() => {
@@ -99,16 +102,27 @@ const MapScreen = () => {
     }, [route.params?.openBottomSheet]),
   );
 
-  // const fetchMoreRef = useRef(false);
+  const locationsList = locations?.pages
+    ? locations.pages.flatMap((page) => {
+        const locationsList = page?.locations || [];
+        return locationsList.filter(
+          (location: any) => Object.keys(location).length > 0,
+        );
+      })
+    : [];
 
-  /*const loadMore = () => {
+  console.log("locations", locationsList);
+
+  const fetchMoreRef = useRef(false);
+
+  const loadMore = () => {
     if (hasNextPage && !isFetchingNextPage && !fetchMoreRef.current) {
       fetchMoreRef.current = true;
       fetchNextPage().finally(() => {
         fetchMoreRef.current = false;
       });
     }
-  };*/
+  };
 
   const handleFilterPress = () => {
     bottomSheetRef.current?.present();
@@ -135,23 +149,12 @@ const MapScreen = () => {
     setNavigationModalVisible(true);
   };
 
-  /* useEffect(() => {
+  useEffect(() => {
     if (route.params?.selectedTab) {
       setTimeout(() => {
         setIndex(1);
       }, 400);
     }
-    /!* if (route.params?.id && flatFriends.length > 0) {
-      const friend = flatFriends.find(
-        (friend) => friend.id === route.params?.id,
-      );
-      onFriendFlatListPress(friend);
-      if (route.params?.id) {
-        navigation.setParams({
-          id: null,
-        });
-      }
-    }*!/
     return () => {
       if (route.params?.selectedTab) {
         navigation.setParams({
@@ -159,23 +162,20 @@ const MapScreen = () => {
         });
       }
     };
-  }, [route.params]);*/
+  }, [route.params]);
 
   const renderScene = ({ route }: RenderSceneProps) => {
     switch (route.key) {
       case "map":
-        return (
-          <FirstRoute
-            locations={containerLocations}
-            onLocationPress={onLocationPress}
-          />
-        );
+        return <FirstRoute onLocationPress={onLocationPress} />;
       case "locations":
         return (
           <SecondRoute
-            user={user}
-            locations={containerLocations}
+            locations={locationsList}
             onLocationPress={onLocationPress}
+            loadMore={loadMore}
+            refetch={locationsRefetch}
+            isFetchingNextPage={isFetchingNextPage}
           />
         );
       default:

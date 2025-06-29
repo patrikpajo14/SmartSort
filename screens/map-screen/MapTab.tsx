@@ -7,45 +7,100 @@ import {
   View,
 } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
-import { Location as LocationInterface } from "@/types/global";
-import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
-import { containerLocations } from "@/constants/config";
-import { getMarkerIcon } from "@/utils/mapThemePickers";
-import { useEffect, useState } from "react";
-import { LocationObject } from "expo-location";
+import MapView, { Marker, PROVIDER_GOOGLE, Region } from "react-native-maps";
 import * as Location from "expo-location";
-import PrimaryButton from "@/components/ui/PrimaryButton";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { COLORS, FONTS } from "@/constants/theme";
 import { useTheme } from "@/context/ThemeContext";
+import useGlobalStore from "@/stores/globalStore";
+import PrimaryButton from "@/components/ui/PrimaryButton";
+import { COLORS, FONTS } from "@/constants/theme";
+import { Location as LocationInterface, RegionRequest } from "@/types/global";
+import { getMarkerIcon } from "@/utils/mapThemePickers";
+import { useFetchLocationsCoordinates } from "@/reactQuery/locations";
 
 type MapTabProps = {
-  locations: any;
+  filter: string | string[];
   onLocationPress: (location: LocationInterface) => void;
 };
-const MapTab = ({ locations, onLocationPress }: MapTabProps) => {
+
+export default function MapTab({ filter, onLocationPress }: MapTabProps) {
   const { t } = useTranslation();
   const { mode } = useTheme();
-  let activeColors = COLORS[mode];
-  const [location, setLocation] = useState<LocationObject | null>(null);
-  const [permissionStatus, setPermissionStatus] =
+  const lang = useGlobalStore((s) => s.lang);
+  const setUserLocation = useGlobalStore((state) => state.setUserLocation);
+  const activeColors = COLORS[mode];
+  const mapRef = useRef<MapView>(null);
+  const [permission, setPermission] =
     useState<Location.PermissionStatus | null>(null);
+  const regionChangeTimeout = useRef<NodeJS.Timeout | null>(null);
+  const [userLoc, setUserLoc] = useState<Location.LocationObject | null>(null);
+  const [regionRequest, setRegionRequest] = useState<RegionRequest | null>(
+    null,
+  );
+  const [visibleLocations, setVisibleLocations] = useState<LocationInterface[]>(
+    [],
+  );
 
-  const requestPermission = async () => {
-    const { status } = await Location.requestForegroundPermissionsAsync();
-    setPermissionStatus(status);
-
-    if (status === "granted") {
-      const current = await Location.getCurrentPositionAsync({});
-      setLocation(current);
-    }
-  };
-
+  // ask & store permission + current location
   useEffect(() => {
-    requestPermission();
+    (async () => {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      setPermission(status);
+      if (status === "granted") {
+        const location = await Location.getCurrentPositionAsync();
+        setUserLoc(location);
+        setUserLocation({
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+        });
+        // once we have it, animate/zoom in
+        mapRef.current?.animateCamera({
+          center: {
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude,
+          },
+          zoom: 15,
+        });
+      }
+    })();
   }, []);
 
-  if (permissionStatus === "denied") {
+  // whenever the regionRequest changes, refetch
+  const { data: newLocations = [] } = useFetchLocationsCoordinates(
+    lang,
+    regionRequest!,
+    Boolean(regionRequest),
+  );
+
+  useEffect(() => {
+    if (newLocations.length) {
+      setVisibleLocations((prev) => {
+        const unseen = newLocations.filter(
+          (location: LocationInterface) =>
+            !prev.some((prevLocation) => prevLocation.id === location.id),
+        );
+        return [...prev, ...unseen];
+      });
+    }
+  }, [newLocations]);
+
+  const handleRegionChangeComplete = (r: Region) => {
+    if (regionChangeTimeout.current) clearTimeout(regionChangeTimeout.current);
+    regionChangeTimeout.current = setTimeout(() => {
+      const halfLat = r.latitudeDelta / 2;
+      const halfLng = r.longitudeDelta / 2;
+      setRegionRequest({
+        latMin: r.latitude - halfLat,
+        latMax: r.latitude + halfLat,
+        lngMin: r.longitude - halfLng,
+        lngMax: r.longitude + halfLng,
+      });
+    }, 500); // wait 500ms of no movement before firing
+  };
+
+  // render a permission prompt if denied
+  if (permission === "denied") {
     return (
       <View style={styles.permissionContainer}>
         <Text style={[styles.permissionTitle, { color: activeColors.text }]}>
@@ -56,19 +111,21 @@ const MapTab = ({ locations, onLocationPress }: MapTabProps) => {
             ? t("general.location_permission_required_text")
             : t("general.location_permission_required_text_ios")}
         </Text>
-
-        {Platform.OS === "android" ? (
-          <PrimaryButton
-            label={t("general.open_settings")}
-            small={true}
-            onPress={() => Linking.openSettings()}
-          />
-        ) : (
-          <PrimaryButton
-            label={t("general.try_again")}
-            onPress={requestPermission}
-          />
-        )}
+        <PrimaryButton
+          label={
+            Platform.OS === "android"
+              ? t("general.open_settings")
+              : t("general.try_again")
+          }
+          small
+          onPress={() =>
+            Platform.OS === "android"
+              ? Linking.openSettings()
+              : Location.requestForegroundPermissionsAsync().then((r) =>
+                  setPermission(r.status),
+                )
+          }
+        />
       </View>
     );
   }
@@ -76,34 +133,29 @@ const MapTab = ({ locations, onLocationPress }: MapTabProps) => {
   return (
     <View style={styles.mapContainer}>
       <MapView
+        ref={mapRef}
         provider={PROVIDER_GOOGLE}
         style={styles.map}
-        initialRegion={{
-          latitude: location?.coords.latitude || 45.815,
-          longitude: location?.coords.longitude || 15.9819,
-          latitudeDelta: 0.05,
-          longitudeDelta: 0.05,
-        }}
-        showsUserLocation={true}
-        showsMyLocationButton={true}
+        showsUserLocation
+        showsMyLocationButton
+        onRegionChangeComplete={handleRegionChangeComplete}
       >
-        {containerLocations.map((loc) => (
+        {visibleLocations.map((location: LocationInterface) => (
           <Marker
-            key={loc.id}
+            key={location.id}
             coordinate={{
-              latitude: loc.latitude,
-              longitude: loc.longitude,
+              latitude: location.latitude,
+              longitude: location.longitude,
             }}
-            image={getMarkerIcon(loc.type)}
-            onPress={() => {
-              onLocationPress(loc);
-            }}
+            image={getMarkerIcon(location.type)}
+            onPress={() => onLocationPress(location)}
           />
         ))}
       </MapView>
     </View>
   );
-};
+}
+
 const styles = ScaledSheet.create({
   mapContainer: {
     flex: 1,
@@ -134,4 +186,3 @@ const styles = ScaledSheet.create({
     marginBottom: "20@ms",
   },
 });
-export default MapTab;

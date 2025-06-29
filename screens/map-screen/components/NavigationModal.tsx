@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   Modal,
   View,
@@ -41,10 +41,7 @@ export default function NavigationModal({
   const insets = useSafeAreaInsets();
   const { t } = useTranslation();
   const userLocation = useGlobalStore((state) => state.userLocation);
-  const setUserLocation = useGlobalStore((state) => state.setUserLocation);
-  useEffect(() => {
-    setUserLocation({ latitude: 45.8131, longitude: 15.977 });
-  }, []);
+
   const showDistance =
     userLocation?.latitude &&
     userLocation?.longitude &&
@@ -56,12 +53,11 @@ export default function NavigationModal({
       fromLongitude: userLocation?.longitude,
       toLatitude: location?.latitude,
       toLongitude: location?.longitude,
-      destinationName: location?.title,
+      destinationName: location?.title || location?.address,
     });
   };
 
   let distanceText = "";
-  console.log("userLocation", userLocation);
   if (showDistance) {
     const distance = calculateDistance(
       userLocation.latitude,
@@ -71,8 +67,6 @@ export default function NavigationModal({
     );
 
     distanceText = showDistanceText(distance, t);
-
-    console.log("distanceText", distanceText);
   }
 
   return (
@@ -97,7 +91,7 @@ export default function NavigationModal({
             { backgroundColor: activeColors.background },
           ]}
         >
-          {location?.title && (
+          {(location?.title || location?.hood) && (
             <View
               style={[
                 styles.topCircle,
@@ -135,7 +129,7 @@ export default function NavigationModal({
                 {location?.type}
               </Text>
               <Text style={[styles.name, { color: activeColors.text }]}>
-                {location?.title}
+                {location?.title || location?.hood}
               </Text>
               <Text style={[styles.address, { color: activeColors.textGray }]}>
                 {location?.address}
@@ -185,7 +179,7 @@ export default function NavigationModal({
 const styles = ScaledSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: "30@ms0.2",
+    paddingHorizontal: "20@ms0.2",
     justifyContent: "center",
     alignItems: "center",
   },
@@ -239,17 +233,11 @@ const styles = ScaledSheet.create({
   },
   name: {
     ...(FONTS.h2 as TextStyle),
-    fontSize: "20@ms0.2",
+    fontSize: "18@ms0.2",
     lineHeight: "24@ms0.2",
     marginBottom: "5@ms",
     textAlign: "center",
-  },
-  date: {
-    ...(FONTS.body1 as TextStyle),
-    fontSize: "13@ms0.2",
-    lineHeight: "16@ms0.2",
-    marginBottom: "10@ms",
-    textAlign: "center",
+    textTransform: "capitalize",
   },
   description: {
     ...(FONTS.body1 as TextStyle),
@@ -281,10 +269,11 @@ const styles = ScaledSheet.create({
     ...(FONTS.body3 as TextStyle),
     paddingBottom: "15@ms0.2",
     textAlign: "center",
+    textTransform: "capitalize",
   },
   type: {
     ...(FONTS.semiBold2 as TextStyle),
     textTransform: "uppercase",
-    paddingBottom: "10@ms0.2",
+    paddingBottom: "5@ms0.2",
   },
 });

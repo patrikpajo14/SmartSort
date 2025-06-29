@@ -7,7 +7,6 @@ import { Location } from "@/types/global";
 import { Image } from "expo-image";
 import icons from "@/constants/icons";
 import { useTranslation } from "react-i18next";
-import { isLocationOpen } from "@/utils/locationOpen";
 import { getContainerColor } from "@/utils/mapThemePickers";
 import { calculateDistance, showDistanceText } from "@/utils/calculateDistance";
 import useGlobalStore from "@/stores/globalStore";
@@ -23,7 +22,6 @@ const LocationListItem = ({
   const { mode } = useTheme();
   let activeColors = COLORS[mode];
   const userLocation = useGlobalStore((state) => state.userLocation);
-  const isOpen = item ? isLocationOpen(item.open_at, item.closing_at) : false;
   const showDistance =
     userLocation?.latitude &&
     userLocation?.longitude &&
@@ -45,11 +43,7 @@ const LocationListItem = ({
   return (
     <TouchableOpacity
       onPress={onPress}
-      style={[
-        styles.container,
-        { borderColor: activeColors.border, opacity: isOpen ? 1 : 0.5 },
-      ]}
-      disabled={!isOpen}
+      style={[styles.container, { borderColor: activeColors.border }]}
     >
       <View style={{ paddingTop: moderateScale(5) }}>
         <Text
@@ -63,33 +57,16 @@ const LocationListItem = ({
           {item?.type}
         </Text>
         <Text style={[styles.name, { color: activeColors.text }]}>
-          {item?.title}
+          {item?.title || item?.hood}
         </Text>
         <Text style={[styles.address, { color: activeColors.textLightGray }]}>
           {item?.address}
         </Text>
         <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>
-          {item?.open_at && item?.closing_at && (
-            <Text
-              style={[
-                styles.desc,
-                {
-                  color: isOpen ? activeColors.success : activeColors.danger,
-                },
-              ]}
-            >
-              {isOpen ? t("locations.opened") : t("locations.closed")}
-            </Text>
-          )}
           <Text style={[styles.desc, { color: activeColors.text }]}>
             {distanceText}
           </Text>
         </View>
-        {item?.rating && (
-          <Text style={[styles.rating, { color: activeColors.text }]}>
-            {item?.rating}
-          </Text>
-        )}
       </View>
       <View
         style={{
@@ -121,11 +98,12 @@ const styles = ScaledSheet.create({
     borderBottomWidth: 1,
   },
   name: {
-    ...(FONTS.body2 as TextStyle),
+    ...(FONTS.body3 as TextStyle),
     fontWeight: 500,
+    textTransform: "capitalize",
   },
   desc: {
-    ...(FONTS.body3 as TextStyle),
+    ...(FONTS.body4 as TextStyle),
   },
   rating: {
     ...(FONTS.body3 as TextStyle),
@@ -133,6 +111,7 @@ const styles = ScaledSheet.create({
   },
   address: {
     ...(FONTS.body3 as TextStyle),
+    textTransform: "capitalize",
   },
   type: {
     ...(FONTS.semiBold4 as TextStyle),

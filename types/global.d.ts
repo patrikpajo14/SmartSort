@@ -4,14 +4,28 @@ export type ActiveColors = any;
 
 export interface Location {
   id: string;
-  title: string;
-  address: string;
   latitude: number;
   longitude: number;
-  open_at: string;
-  closing_at: string;
-  rating: number;
   type: string;
+  title?: string;
+  address?: string;
+  hood?: string;
+  phone?: string;
+}
+
+export interface LocationsList {
+  locations: Location[];
+  total: number;
+  per_page: number;
+  page: number;
+}
+
+export interface RegionRequest {
+  latMin: number;
+  latMax: number;
+  lngMin: number;
+  lngMax: number;
+  type?: string;
 }
 
 export interface Education {
