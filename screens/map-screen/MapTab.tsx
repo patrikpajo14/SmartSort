@@ -42,6 +42,8 @@ export default function MapTab({ filter, onLocationPress }: MapTabProps) {
     [],
   );
 
+  console.log("FILTER", filter);
+
   // ask & store permission + current location
   useEffect(() => {
     (async () => {
@@ -67,11 +69,17 @@ export default function MapTab({ filter, onLocationPress }: MapTabProps) {
   }, []);
 
   // whenever the regionRequest changes, refetch
-  const { data: newLocations = [] } = useFetchLocationsCoordinates(
+  const { data: newLocations = [], refetch } = useFetchLocationsCoordinates(
     lang,
     regionRequest!,
     Boolean(regionRequest),
   );
+
+  useEffect(() => {
+    if (filter) {
+      refetch();
+    }
+  }, [filter]);
 
   useEffect(() => {
     if (newLocations.length) {
@@ -95,6 +103,7 @@ export default function MapTab({ filter, onLocationPress }: MapTabProps) {
         latMax: r.latitude + halfLat,
         lngMin: r.longitude - halfLng,
         lngMax: r.longitude + halfLng,
+        type: filter[0],
       });
     }, 500); // wait 500ms of no movement before firing
   };

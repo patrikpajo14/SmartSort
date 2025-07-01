@@ -4,7 +4,7 @@
     "slug": "SmartSort",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/small-logo.png",
+    "icon": "./assets/images/foreground.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -53,7 +53,16 @@
           "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone",
           "recordAudioAndroid": false
         }
+      ],
+      [
+        "expo-asset",
+        {
+          "assets": ["./locales/en.json", "./locales/hr.json"]
+        }
       ]
+    ],
+    "assetBundlePatterns": [
+      "locales/*.json"
     ],
     "experiments": {
       "typedRoutes": true

@@ -26,7 +26,6 @@ const LoginForm: React.FC<LoginFormProps> = ({ handleShowInlineAlert }) => {
   let activeColors = COLORS[mode ?? "light"];
   const serverUrl = useGlobalStore((state) => state.serverUrl);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isDisabled, setIsDisabled] = useState<boolean>(false);
   const { setLoginUserSuccess, displayAlert } = useAuthContext();
 
   const schema = z.object({
@@ -64,7 +63,6 @@ const LoginForm: React.FC<LoginFormProps> = ({ handleShowInlineAlert }) => {
         const { user, session, permissions } = response?.data?.data;
         setLoginUserSuccess(user, session, permissions || null);
         setIsLoading(false);
-        setIsDisabled(true);
         Toast.show({
           type: "success",
           text1: t("auth.login_success"),
@@ -91,7 +89,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ handleShowInlineAlert }) => {
     <View
       style={[
         styles.container,
-        isDisabled && { opacity: 0.5, pointerEvents: "none" },
+        isLoading && { opacity: 0.5, pointerEvents: "none" },
       ]}
     >
       <View style={styles.form}>

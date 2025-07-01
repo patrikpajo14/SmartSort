@@ -1,39 +1,71 @@
 import React, { useRef, useState } from "react";
 import {
   View,
-  Text,
   TouchableOpacity,
-  StyleSheet,
   ActivityIndicator,
   Dimensions,
+  Platform,
+  Text,
+  StyleSheet,
   TextStyle,
 } from "react-native";
 import { CameraView } from "expo-camera";
+import * as FileSystem from "expo-file-system";
 import { router } from "expo-router";
 import { useFocusEffect } from "@react-navigation/native";
 import icons from "@/constants/icons";
-import { moderateScale, ScaledSheet } from "react-native-size-matters";
+import { ScaledSheet, moderateScale } from "react-native-size-matters";
 import { Image } from "expo-image";
 import { useTheme } from "@/context/ThemeContext";
-import { COLORS, FONTS, SIZES } from "@/constants/theme";
+import { COLORS, FONTS } from "@/constants/theme";
 import { useTranslation } from "react-i18next";
 import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  CLOUDINARY_CLOUD_NAME,
+  CLOUDINARY_UPLOAD_PRESET,
+} from "@/constants/config";
 
 const { width, height } = Dimensions.get("window");
+
+async function uploadToCloudinary(uri: string): Promise<string> {
+  let localUri = uri;
+  if (Platform.OS === "android" && uri.startsWith("content://")) {
+    const name = uri.split("/").pop();
+    const dest = (FileSystem.cacheDirectory || "") + name;
+    await FileSystem.downloadAsync(uri, dest);
+    localUri = dest;
+  }
+
+  const form = new FormData();
+  form.append("file", {
+    uri: localUri,
+    name: "photo.jpg",
+    type: "image/jpeg",
+  } as any);
+  form.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+  form.append("folder", "expo_uploads");
+  form.append("tags", "sortsmart_scanner");
+
+  const res = await fetch(
+    `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`,
+    { method: "POST", body: form },
+  );
+  if (!res.ok) throw new Error(`Cloudinary upload failed: ${res.status}`);
+  const json = await res.json();
+  return json.secure_url as string;
+}
 
 export default function CameraScreen() {
   const { t } = useTranslation();
   const { mode } = useTheme();
   let activeColors = COLORS[mode ?? "light"];
   const cameraRef = useRef<CameraView>(null);
-  const [isCameraActive, setCameraActive] = useState<boolean>(true);
-  const [showCamera, setShowCamera] = useState<boolean>(true);
+  const [showCamera, setShowCamera] = useState(true);
   const [isProcessing, setIsProcessing] = useState(false);
 
   useFocusEffect(
     React.useCallback(() => {
       setShowCamera(true);
-      setCameraActive(true);
       setIsProcessing(false);
     }, []),
   );
@@ -43,22 +75,20 @@ export default function CameraScreen() {
   const takePicture = async () => {
     if (!cameraRef.current) return;
     setIsProcessing(true);
-
-    const photo = await cameraRef.current.takePictureAsync({
-      quality: 1,
-      base64: true,
-    });
-
-    if (photo?.uri) {
-      setCameraActive(false);
-      setShowCamera(false);
-      console.log("📸 Captured");
+    const photo = await cameraRef.current.takePictureAsync({ quality: 1 });
+    const uri = photo ? photo.uri : "";
+    try {
+      const imageUrl = await uploadToCloudinary(uri);
       router.push({
         pathname: "/(main)/scanner/scan-preview",
         params: {
-          uri: photo.uri,
+          imageUrl: encodeURIComponent(imageUrl),
+          localUri: encodeURIComponent(uri),
         },
       });
+    } catch (e) {
+      console.error("Cloudinary upload error:", e);
+      setIsProcessing(false);
     }
   };
 
@@ -73,13 +103,11 @@ export default function CameraScreen() {
           />
         </TouchableOpacity>
         {showCamera && (
-          <View style={styles.cameraWrapper}>
-            <CameraView
-              ref={cameraRef}
-              style={styles.camera}
-              active={isCameraActive}
-            />
-          </View>
+          <CameraView
+            ref={cameraRef}
+            style={styles.camera}
+            active={showCamera}
+          />
         )}
         {showCamera && (
           <View pointerEvents="none" style={styles.frameOverlay}>
@@ -90,7 +118,6 @@ export default function CameraScreen() {
             />
           </View>
         )}
-
         {showCamera && (
           <View style={styles.controls}>
             <TouchableOpacity
@@ -107,7 +134,6 @@ export default function CameraScreen() {
             </TouchableOpacity>
           </View>
         )}
-
         {isProcessing && (
           <View style={styles.overlay}>
             <ActivityIndicator size="large" color="#fff" />
@@ -124,13 +150,8 @@ export default function CameraScreen() {
 }
 
 const styles = ScaledSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: "#000",
-  },
-  container: {
-    flex: 1,
-  },
+  safeArea: { flex: 1, backgroundColor: "#000" },
+  container: { flex: 1 },
   controls: {
     position: "absolute",
     bottom: "40@ms",

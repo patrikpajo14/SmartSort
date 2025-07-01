@@ -1,27 +1,33 @@
 import React, { useEffect, useState } from "react";
-import { Text, TextStyle, View, Dimensions } from "react-native";
-import icons from "@/constants/icons";
-import { moderateScale, ScaledSheet } from "react-native-size-matters";
+import { Text, View, Dimensions, TextStyle } from "react-native";
 import { Image } from "expo-image";
+import ScannerLoader from "@/components/ui/ScannerLoader";
 import PrimaryButton from "@/components/ui/PrimaryButton";
-import { router, useLocalSearchParams } from "expo-router";
+import Badge from "@/components/ui/Badge";
 import MainLayout from "@/screen-layouts/MainLayout";
+import { router, useLocalSearchParams } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "@/context/ThemeContext";
 import { COLORS, FONTS } from "@/constants/theme";
-import Badge from "@/components/ui/Badge";
-import axios from "axios";
-import mime from "mime";
+import icons from "@/constants/icons";
+import { moderateScale, ScaledSheet } from "react-native-size-matters";
 import { ROBOFLOW_API } from "@/constants/config";
-import ScannerLoader from "@/components/ui/ScannerLoader";
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
+
+async function detectWithRoboflow(imageUrl: string) {
+  const res = await fetch(
+    `${ROBOFLOW_API}&image=${encodeURIComponent(imageUrl)}&format=json`,
+  );
+  if (!res.ok) throw new Error(`Roboflow failed: ${res.status}`);
+  return res.json();
+}
 
 export default function ScanPreviewScreen() {
   const { t } = useTranslation();
   const { mode } = useTheme();
   const activeColors = COLORS[mode ?? "light"];
-  const { uri } = useLocalSearchParams<{ uri: string }>();
+  const { imageUrl } = useLocalSearchParams<{ imageUrl: string }>();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [prediction, setPrediction] = useState<string | null>(null);
@@ -37,53 +43,29 @@ export default function ScanPreviewScreen() {
   >([]);
 
   useEffect(() => {
-    const processImage = async () => {
+    (async () => {
+      if (!imageUrl) return;
+      setIsLoading(true);
+      setError(null);
       try {
-        if (!uri) return;
-        setError(null);
-        const mimeType = mime.getType(uri) || "image/jpeg";
-        const fileName = uri.split("/").pop();
-
-        const formData = new FormData();
-        formData.append("file", {
-          uri,
-          type: mimeType,
-          name: fileName,
-        } as any);
-
-        console.log("📡 Sending to:", ROBOFLOW_API);
-        console.log("🧾 Payload:", formData, uri);
-
-        const response = await axios.post(ROBOFLOW_API || "", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
-
-        const pred = response?.data?.predictions?.[0]?.class ?? null;
-        const preds = response?.data?.predictions ?? [];
-
-        setPrediction(pred);
+        const data = await detectWithRoboflow(imageUrl);
+        const preds = data.predictions || [];
+        setPrediction(preds[0]?.class ?? null);
         setBoxes(preds);
-        console.log("Roboflow response:", response.data);
-      } catch (err) {
-        console.log("Roboflow error:", err);
-        setError("There was a problem connecting to the RoboFlow API.");
+      } catch (e) {
+        console.error("Roboflow error:", e);
+        setError(t("scanner.api_error"));
       } finally {
         setIsLoading(false);
       }
-    };
-
-    processImage();
-  }, [uri]);
+    })();
+  }, [imageUrl]);
 
   return (
     <MainLayout
       title={t("scanner.scan_preview_title")}
       returnIcon={icons.chevron_left}
-      headerContainerStyle={{
-        paddingHorizontal: moderateScale(20),
-      }}
+      headerContainerStyle={{ paddingHorizontal: moderateScale(20) }}
     >
       <View style={styles.imageWrap}>
         <Image
@@ -92,26 +74,26 @@ export default function ScanPreviewScreen() {
           contentFit="cover"
         />
       </View>
+
       <View style={styles.container}>
         <View style={styles.innerContainer}>
-          {uri && (
+          {imageUrl && (
             <View>
               <Image
                 style={styles.scanImage}
-                source={{ uri }}
+                source={{ uri: imageUrl }}
                 contentFit="contain"
               />
-              {boxes.map((box, index) => {
-                const scaleFactor = SCREEN_WIDTH / 3072;
+              {boxes.map((box, i) => {
+                const scale = SCREEN_WIDTH / 3072;
                 const boxStyle = {
-                  left: box.x * scaleFactor - (box.width * scaleFactor) / 2,
-                  top: box.y * scaleFactor - (box.height * scaleFactor) / 2,
-                  width: box.width * scaleFactor,
-                  height: box.height * scaleFactor,
+                  left: box.x * scale - (box.width * scale) / 2,
+                  top: box.y * scale - (box.height * scale) / 2,
+                  width: box.width * scale,
+                  height: box.height * scale,
                 };
-
                 return (
-                  <View key={index} style={[styles.boundingBox, boxStyle]}>
+                  <View key={i} style={[styles.boundingBox, boxStyle]}>
                     <Text
                       style={[
                         styles.labelText,
@@ -126,8 +108,7 @@ export default function ScanPreviewScreen() {
                   </View>
                 );
               })}
-
-              {isLoading && <ScannerLoader isLoading={isLoading} />}
+              {isLoading && <ScannerLoader isLoading />}
             </View>
           )}
         </View>
@@ -138,44 +119,40 @@ export default function ScanPreviewScreen() {
               {t("scanner.loading")}
             </Text>
           </View>
+        ) : prediction ? (
+          <>
+            <View
+              style={{ alignItems: "center", marginBottom: moderateScale(10) }}
+            >
+              <Badge category={prediction} label={prediction} />
+            </View>
+            <Text style={[styles.title, { color: activeColors.text }]}>
+              {t("scanner.recyclable")}
+            </Text>
+            <PrimaryButton
+              onPress={() => {
+                router.back();
+                router.push({
+                  pathname: "/(main)/(tabs)/map",
+                  params: {
+                    type: prediction?.toLowerCase() as string,
+                  },
+                });
+              }}
+              small
+              label={t("scanner.scan_preview_cta")}
+            />
+          </>
         ) : (
           <>
-            {prediction ? (
-              <>
-                <View
-                  style={{
-                    alignItems: "center",
-                    marginBottom: moderateScale(10),
-                  }}
-                >
-                  <Badge label={prediction} />
-                </View>
-                <Text style={[styles.title, { color: activeColors.text }]}>
-                  {t("scanner.recyclable")}
-                </Text>
-                <PrimaryButton
-                  onPress={() => {
-                    router.back();
-                    router.replace("/(main)/(tabs)/map");
-                  }}
-                  small={true}
-                  label={t("scanner.scan_preview_cta")}
-                />
-              </>
-            ) : (
-              <>
-                <Text style={[styles.title, { color: activeColors.text }]}>
-                  {error ? error : t("scanner.no_prediction_found")}
-                </Text>
-                <PrimaryButton
-                  onPress={() => {
-                    router.back();
-                  }}
-                  small={true}
-                  label={t("scanner.try_again_cta")}
-                />
-              </>
-            )}
+            <Text style={[styles.title, { color: activeColors.text }]}>
+              {error || t("scanner.no_prediction_found")}
+            </Text>
+            <PrimaryButton
+              onPress={() => router.back()}
+              small
+              label={t("scanner.try_again_cta")}
+            />
           </>
         )}
       </View>
@@ -184,11 +161,7 @@ export default function ScanPreviewScreen() {
 }
 
 const styles = ScaledSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    paddingHorizontal: "20@ms",
-  },
+  container: { flex: 1, justifyContent: "center", paddingHorizontal: "20@ms" },
   innerContainer: {
     borderRadius: "20@ms",
     shadowColor: "#000",
@@ -209,15 +182,8 @@ const styles = ScaledSheet.create({
     height: "50%",
     minHeight: "650@ms",
   },
-  image: {
-    width: "100%",
-    height: "100%",
-  },
-  scanImage: {
-    width: "100%",
-    height: "100%",
-    aspectRatio: 3 / 4,
-  },
+  image: { width: "100%", height: "100%" },
+  scanImage: { width: "100%", height: "100%", aspectRatio: 3 / 4 },
   title: {
     ...(FONTS.h2 as TextStyle),
     textAlign: "center",

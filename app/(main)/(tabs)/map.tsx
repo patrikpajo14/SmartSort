@@ -25,6 +25,7 @@ import CustomBottomSheet from "@/components/common/CustomBottomSheet";
 import Filters from "@/screens/map-screen/components/Filters";
 import { useFetchLocations } from "@/reactQuery/locations";
 import useGlobalStore from "@/stores/globalStore";
+import { useLocalSearchParams } from "expo-router";
 
 type Route = any;
 
@@ -32,9 +33,13 @@ type RenderSceneProps = SceneRendererProps & {
   route: Route;
 };
 
-const FirstRoute = ({ onLocationPress }: { onLocationPress: any }) => (
-  <MapTab onLocationPress={onLocationPress} />
-);
+const FirstRoute = ({
+  onLocationPress,
+  filter,
+}: {
+  onLocationPress: any;
+  filter: string | string[];
+}) => <MapTab filter={filter} onLocationPress={onLocationPress} />;
 
 const SecondRoute = ({
   locations,
@@ -59,6 +64,7 @@ const MapScreen = () => {
   const navigation = useNavigation<any>();
   const lang = useGlobalStore((state) => state.lang);
   const route = useRoute<MapScreenRouteProp>();
+  const { type } = useLocalSearchParams<{ type: string }>();
   const { openBottomSheet } = route.params || {};
   const { mode } = useTheme();
   let activeColors = COLORS[mode];
@@ -68,7 +74,9 @@ const MapScreen = () => {
   const [selectedLocation, setSelectedLocation] = useState<Location>();
   const [index, setIndex] = useState(0);
   const [isFocused, setIsFocused] = useState(false);
-  const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
+  const [selectedFilters, setSelectedFilters] = useState<string[]>(
+    type ? [type] : [],
+  );
 
   const {
     data: locations,
@@ -84,6 +92,9 @@ const MapScreen = () => {
     { key: "map", title: t("locations.map") },
     { key: "locations", title: t("locations.locations_list") },
   ]);
+
+  console.log("MAP TYPE", type);
+  console.log("MAP Selected filters", selectedFilters);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -167,7 +178,12 @@ const MapScreen = () => {
   const renderScene = ({ route }: RenderSceneProps) => {
     switch (route.key) {
       case "map":
-        return <FirstRoute onLocationPress={onLocationPress} />;
+        return (
+          <FirstRoute
+            filter={selectedFilters}
+            onLocationPress={onLocationPress}
+          />
+        );
       case "locations":
         return (
           <SecondRoute

@@ -15,7 +15,7 @@ export const langResources = {
 
 const initI18n = async () => {
   // Try to get the stored language preference
-  let storedLang = "hr"; // Default fallback
+  let storedLang = "en"; // Default fallback
   try {
     const storedData = await AsyncStorage.getItem("globalStore");
     if (storedData) {
@@ -31,7 +31,7 @@ const initI18n = async () => {
     compatibilityJSON: "v4",
     resources: langResources,
     lng: storedLang, // Default language
-    fallbackLng: "hr",
+    fallbackLng: "en",
     interpolation: {
       escapeValue: false, // React already escapes values
     },
