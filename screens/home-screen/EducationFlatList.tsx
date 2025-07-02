@@ -32,8 +32,7 @@ export default function EducationFlatList({
         renderItem={({ item }) => (
           <EducationItem
             key={item.id}
-            label={item.title}
-            image={item.icon || icons.education}
+            item={item}
             educationStyles={{ marginRight: moderateScale(10) }}
             onPress={() => {
               router.push({

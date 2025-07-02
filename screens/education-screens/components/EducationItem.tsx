@@ -10,10 +10,12 @@ import { moderateScale } from "react-native-size-matters";
 import { COLORS, FONTS } from "@/constants/theme";
 import { useTheme } from "@/context/ThemeContext";
 import { Image } from "expo-image";
+import { Education } from "@/types/global";
+import Icons from "@/constants/icons";
+import icons from "@/constants/icons";
 
 type EducationItemProps = {
-  label: string;
-  image: string;
+  item: Education;
   labelStyle?: TextStyle;
   disabled?: boolean;
   onPress: () => void;
@@ -23,9 +25,19 @@ type EducationItemProps = {
   educationStyles?: ViewStyle;
 };
 
+const categoryIcons: Record<Education["category"], any> = {
+  plastic: icons.bottle,
+  glass: icons.glass,
+  paper: icons.paper,
+  metal: icons.metal,
+  batteries: icons.batteries,
+  electronics: icons.electronics,
+  bio: icons.bio,
+  construction: icons.construction,
+};
+
 const EducationItem: React.FC<EducationItemProps> = ({
-  label,
-  image,
+  item,
   labelStyle,
   disabled,
   onPress,
@@ -36,6 +48,8 @@ const EducationItem: React.FC<EducationItemProps> = ({
 }) => {
   const { mode } = useTheme();
   let activeColors = COLORS[mode ?? "light"];
+
+  const icon = categoryIcons[item?.category] || icons.education;
   return (
     <TouchableOpacity
       disabled={disabled}
@@ -60,7 +74,7 @@ const EducationItem: React.FC<EducationItemProps> = ({
         }}
       >
         <Image
-          source={image}
+          source={icon}
           contentFit={"contain"}
           style={{
             width: moderateScale(30),
@@ -78,7 +92,7 @@ const EducationItem: React.FC<EducationItemProps> = ({
             ...labelStyle,
           }}
         >
-          {label}
+          {item?.title}
         </Text>
       </View>
     </TouchableOpacity>

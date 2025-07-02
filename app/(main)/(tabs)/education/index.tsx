@@ -57,8 +57,7 @@ export default function EducationScreen() {
             {educationsData?.map((item: Education) => (
               <EducationItem
                 key={item.id}
-                label={item.title}
-                image={item?.icon || icons.education}
+                item={item}
                 outerContainerStyle={{
                   width: (SIZES.width - 65) / 3,
                   height: (SIZES.width - 65) / 3,
