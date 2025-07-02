@@ -77,7 +77,7 @@ const Settings = () => {
       title: t("settings.privacy"),
       icon: icons.chevron_right,
       menu_item_type: 1 as 1,
-      link: "https://www.noa-zrce.com/en/legal/mobile-application-privacy-policy",
+      link: "https://www.google.com/",
     },
     {
       id: 5,
