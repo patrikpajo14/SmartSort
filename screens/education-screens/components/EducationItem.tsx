@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import {
   Text,
   TouchableOpacity,
@@ -49,7 +49,11 @@ const EducationItem: React.FC<EducationItemProps> = ({
   const { mode } = useTheme();
   let activeColors = COLORS[mode ?? "light"];
 
-  const icon = categoryIcons[item?.category] || icons.education;
+  const iconSource = useMemo(
+    () => categoryIcons[item.category] || icons.education,
+    [item.category],
+  );
+
   return (
     <TouchableOpacity
       disabled={disabled}
@@ -74,7 +78,7 @@ const EducationItem: React.FC<EducationItemProps> = ({
         }}
       >
         <Image
-          source={icon}
+          source={iconSource}
           contentFit={"contain"}
           style={{
             width: moderateScale(30),

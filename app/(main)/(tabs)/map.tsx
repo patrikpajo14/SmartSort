@@ -86,7 +86,7 @@ const MapScreen = () => {
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
-  } = useFetchLocations(lang, isFocused);
+  } = useFetchLocations(lang, isFocused, 5, selectedFilters[0]);
 
   const [routes] = useState([
     { key: "map", title: t("locations.map") },
@@ -143,12 +143,9 @@ const MapScreen = () => {
     bottomSheetRef.current?.dismiss();
   };
 
-  const handleFilterChange = (type: string) => {
-    setSelectedFilters((prev) =>
-      prev.includes(type)
-        ? prev.filter((item) => item !== type)
-        : [...prev, type],
-    );
+  const handleFilterChange = (newFilters: string[]) => {
+    console.log("MAP Selected filters", newFilters);
+    setSelectedFilters(newFilters);
   };
 
   const handleClearAll = () => {
@@ -274,7 +271,6 @@ const MapScreen = () => {
           t={t}
           filters={selectedFilters}
           onFilterChange={handleFilterChange}
-          onClearAll={handleClearAll}
           handleFilterClose={handleFilterClose}
         />
       </CustomBottomSheet>

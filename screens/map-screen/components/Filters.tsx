@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Text, View } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { BottomSheetView } from "@gorhom/bottom-sheet";
@@ -8,9 +8,8 @@ import PrimaryButtonForSheet from "@/components/ui/PrimaryButtonForSheet";
 type FiltersProps = {
   activeColors: any;
   t: any;
-  filters: any;
-  onFilterChange: (filters: any) => void;
-  onClearAll: () => void;
+  filters: string[];
+  onFilterChange: (filters: string[]) => void;
   handleFilterClose: () => void;
 };
 
@@ -19,45 +18,63 @@ const Filters = ({
   t,
   filters,
   onFilterChange,
-  onClearAll,
   handleFilterClose,
 }: FiltersProps) => {
+  const [localFilters, setLocalFilters] = useState<string[]>(filters);
+
+  // keep in sync if parent re-opens with different filters
+  useEffect(() => {
+    setLocalFilters(filters);
+  }, [filters]);
+
   const availableFilters = [
     { id: 1, name: t("general.plastic"), type: "plastic" },
     { id: 2, name: t("general.glass"), type: "glass" },
     { id: 3, name: t("general.paper"), type: "paper" },
-    { id: 4, name: t("general.tiers"), type: "recycle_yard" },
+    /*    { id: 4, name: t("general.tiers"), type: "recycle_yard" },
     { id: 5, name: t("general.batteries"), type: "recycle_yard" },
     { id: 6, name: t("general.metal"), type: "recycle_yard" },
-    { id: 7, name: t("general.carton"), type: "paper" },
+    { id: 7, name: t("general.carton"), type: "paper" },*/
   ];
 
+  const toggleFilter = (type: string) => {
+    setLocalFilters((prev) =>
+      prev.includes(type) ? prev.filter((f) => f !== type) : [...prev, type],
+    );
+  };
+
+  const clearAll = () => {
+    setLocalFilters([]);
+  };
+
   const applyFilters = () => {
-    console.log("applyFilters", filters);
+    console.log("applyFilters", filters, localFilters);
+    onFilterChange(localFilters as string[]);
     handleFilterClose();
   };
 
   return (
-    <BottomSheetView style={[styles.container]}>
+    <BottomSheetView style={styles.container}>
       <View style={styles.topContainer}>
         <Text style={[styles.title, { color: activeColors.text }]}>
           {t("general.filters_title")}
         </Text>
         <Text
           style={[styles.clear, { color: activeColors.text }]}
-          onPress={onClearAll}
+          onPress={clearAll}
         >
           {t("general.clear_all")}
         </Text>
       </View>
+
       <View style={styles.filtersWrap}>
         {availableFilters.map((filter) => (
           <FilterButton
             key={filter.id}
             activeColors={activeColors}
             text={filter.name}
-            active={filters.includes(filter.type)}
-            onPress={() => onFilterChange(filter.type)}
+            active={localFilters.includes(filter.type)}
+            onPress={() => toggleFilter(filter.type)}
           />
         ))}
       </View>
@@ -100,4 +117,5 @@ const styles = ScaledSheet.create({
     paddingBottom: "60@ms",
   },
 });
+
 export default Filters;

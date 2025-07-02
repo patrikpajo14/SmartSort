@@ -5,6 +5,7 @@ import {
   Text,
   TextStyle,
   View,
+  Dimensions,
 } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import MapView, { Marker, PROVIDER_GOOGLE, Region } from "react-native-maps";
@@ -42,9 +43,7 @@ export default function MapTab({ filter, onLocationPress }: MapTabProps) {
     [],
   );
 
-  console.log("FILTER", filter);
-
-  // ask & store permission + current location
+  // 1) Ask permission, center map, and set initial regionRequest
   useEffect(() => {
     (async () => {
       const { status } = await Location.requestForegroundPermissionsAsync();
@@ -56,31 +55,42 @@ export default function MapTab({ filter, onLocationPress }: MapTabProps) {
           latitude: location.coords.latitude,
           longitude: location.coords.longitude,
         });
-        // once we have it, animate/zoom in
-        mapRef.current?.animateCamera({
-          center: {
-            latitude: location.coords.latitude,
-            longitude: location.coords.longitude,
-          },
-          zoom: 15,
+
+        const aspect =
+          Dimensions.get("window").width / Dimensions.get("window").height;
+        const initialRegion: Region = {
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+          latitudeDelta: 0.05,
+          longitudeDelta: 0.05 * aspect,
+        };
+
+        mapRef.current?.animateCamera(
+          { center: initialRegion, zoom: 15 },
+          { duration: 500 },
+        );
+
+        const halfLat = initialRegion.latitudeDelta / 2;
+        const halfLng = initialRegion.longitudeDelta / 2;
+        setRegionRequest({
+          latMin: initialRegion.latitude - halfLat,
+          latMax: initialRegion.latitude + halfLat,
+          lngMin: initialRegion.longitude - halfLng,
+          lngMax: initialRegion.longitude + halfLng,
+          type: Array.isArray(filter) ? filter[0] : filter,
         });
       }
     })();
   }, []);
 
-  // whenever the regionRequest changes, refetch
-  const { data: newLocations = [], refetch } = useFetchLocationsCoordinates(
+  // 2) Fetch whenever regionRequest changes
+  const { data: newLocations = [] } = useFetchLocationsCoordinates(
     lang,
     regionRequest!,
     Boolean(regionRequest),
   );
 
-  useEffect(() => {
-    if (filter) {
-      refetch();
-    }
-  }, [filter]);
-
+  // 3) Accumulate only *new* locations
   useEffect(() => {
     if (newLocations.length) {
       setVisibleLocations((prev) => {
@@ -93,6 +103,31 @@ export default function MapTab({ filter, onLocationPress }: MapTabProps) {
     }
   }, [newLocations]);
 
+  // 4) When filter changes: purge non-matching pins and re-fire query
+  useEffect(() => {
+    if (!regionRequest) return;
+    // Purge old types
+    setVisibleLocations((prev) =>
+      prev.filter((location) =>
+        Array.isArray(filter)
+          ? filter.length === 0 || filter.includes(location.type)
+          : filter === "" || location.type === filter,
+      ),
+    );
+    // Re-issue same box but new type
+    setRegionRequest((prev) => {
+      if (!prev) return prev;
+      return {
+        latMin: prev.latMin,
+        latMax: prev.latMax,
+        lngMin: prev.lngMin,
+        lngMax: prev.lngMax,
+        type: Array.isArray(filter) ? filter[0] : filter,
+      };
+    });
+  }, [filter]);
+
+  // 5) Throttled region change → update regionRequest
   const handleRegionChangeComplete = (r: Region) => {
     if (regionChangeTimeout.current) clearTimeout(regionChangeTimeout.current);
     regionChangeTimeout.current = setTimeout(() => {
@@ -103,12 +138,12 @@ export default function MapTab({ filter, onLocationPress }: MapTabProps) {
         latMax: r.latitude + halfLat,
         lngMin: r.longitude - halfLng,
         lngMax: r.longitude + halfLng,
-        type: filter[0],
+        type: Array.isArray(filter) ? filter[0] : filter,
       });
-    }, 500); // wait 500ms of no movement before firing
+    }, 500);
   };
 
-  // render a permission prompt if denied
+  // 6) Denied? Show prompt
   if (permission === "denied") {
     return (
       <View style={styles.permissionContainer}>
@@ -139,6 +174,7 @@ export default function MapTab({ filter, onLocationPress }: MapTabProps) {
     );
   }
 
+  // 7) Render map with your accumulated & filtered pins
   return (
     <View style={styles.mapContainer}>
       <MapView

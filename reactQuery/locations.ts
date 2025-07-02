@@ -14,17 +14,17 @@ const version = API_VERSION;
 const fetchLocations = async (
   currentLang: string,
   page: number = 1,
-  per_page: number = 8,
-  sort?: string,
+  per_page: number = 5,
   type?: string,
+  sort?: string,
 ) => {
   try {
     let url = `/locations?per_page=${per_page}&page=${page}`;
-    if (sort) {
-      url += `&sort=${sort}`;
-    }
     if (type) {
       url += `&type=${type}`;
+    }
+    if (sort) {
+      url += `&sort=${sort}`;
     }
     return await axiosInstance.get(url);
   } catch (error: any) {
@@ -36,21 +36,21 @@ const fetchLocations = async (
 export const useFetchLocations = (
   currentLang: string,
   isFocused: boolean,
-  per_page: number = 6,
-  sort?: string,
+  per_page: number = 5,
   type?: string,
+  sort?: string,
   initialPage: number = 1,
 ) => {
   const { isStorageLoading } = useAuthContext();
   return useInfiniteQuery({
-    queryKey: ["locations"],
+    queryKey: ["locations", currentLang, type, sort],
     queryFn: async ({ pageParam = initialPage }) => {
       const response = await fetchLocations(
         currentLang,
         pageParam,
         per_page,
-        sort,
         type,
+        sort,
       );
       return response?.data?.data;
     },

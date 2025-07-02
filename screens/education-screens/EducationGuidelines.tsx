@@ -97,7 +97,12 @@ export default function EducationGuidelinesScreen({
         small={true}
         onPress={() => {
           router.back();
-          router.navigate("/(main)/(tabs)/map");
+          router.push({
+            pathname: "/(main)/(tabs)/map",
+            params: {
+              type: data?.category?.toLowerCase() as string,
+            },
+          });
         }}
       />
     </View>
