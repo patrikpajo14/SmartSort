@@ -131,12 +131,9 @@ export default function ScanPreviewScreen() {
             </Text>
             <PrimaryButton
               onPress={() => {
-                router.back();
-                router.push({
+                router.replace({
                   pathname: "/(main)/(tabs)/map",
-                  params: {
-                    type: prediction?.toLowerCase() as string,
-                  },
+                  params: { type: prediction as string },
                 });
               }}
               small

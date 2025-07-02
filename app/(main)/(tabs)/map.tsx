@@ -74,9 +74,16 @@ const MapScreen = () => {
   const [selectedLocation, setSelectedLocation] = useState<Location>();
   const [index, setIndex] = useState(0);
   const [isFocused, setIsFocused] = useState(false);
-  const [selectedFilters, setSelectedFilters] = useState<string[]>(
-    type ? [type] : [],
-  );
+  const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
+
+  useEffect(() => {
+    console.log("USEFEECT TYPE", type);
+    if (type) {
+      setSelectedFilters([type]);
+    } else {
+      setSelectedFilters([]);
+    }
+  }, [type]);
 
   const {
     data: locations,

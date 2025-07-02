@@ -30,6 +30,7 @@ export default function MapTab({ filter, onLocationPress }: MapTabProps) {
   const { mode } = useTheme();
   const lang = useGlobalStore((s) => s.lang);
   const setUserLocation = useGlobalStore((state) => state.setUserLocation);
+  const userLocation = useGlobalStore((state) => state.userLocation);
   const activeColors = COLORS[mode];
   const mapRef = useRef<MapView>(null);
   const [permission, setPermission] =
@@ -42,6 +43,8 @@ export default function MapTab({ filter, onLocationPress }: MapTabProps) {
   const [visibleLocations, setVisibleLocations] = useState<LocationInterface[]>(
     [],
   );
+
+  console.log("MAP TAB FILTERS", filter);
 
   // 1) Ask permission, center map, and set initial regionRequest
   useEffect(() => {
@@ -106,25 +109,13 @@ export default function MapTab({ filter, onLocationPress }: MapTabProps) {
   // 4) When filter changes: purge non-matching pins and re-fire query
   useEffect(() => {
     if (!regionRequest) return;
-    // Purge old types
-    setVisibleLocations((prev) =>
-      prev.filter((location) =>
-        Array.isArray(filter)
-          ? filter.length === 0 || filter.includes(location.type)
-          : filter === "" || location.type === filter,
-      ),
+    setRegionRequest(
+      (prev) =>
+        prev && {
+          ...prev,
+          type: Array.isArray(filter) && filter.length > 0 ? filter[0] : "",
+        },
     );
-    // Re-issue same box but new type
-    setRegionRequest((prev) => {
-      if (!prev) return prev;
-      return {
-        latMin: prev.latMin,
-        latMax: prev.latMax,
-        lngMin: prev.lngMin,
-        lngMax: prev.lngMax,
-        type: Array.isArray(filter) ? filter[0] : filter,
-      };
-    });
   }, [filter]);
 
   // 5) Throttled region change → update regionRequest
@@ -185,17 +176,23 @@ export default function MapTab({ filter, onLocationPress }: MapTabProps) {
         showsMyLocationButton
         onRegionChangeComplete={handleRegionChangeComplete}
       >
-        {visibleLocations.map((location: LocationInterface) => (
-          <Marker
-            key={location.id}
-            coordinate={{
-              latitude: location.latitude,
-              longitude: location.longitude,
-            }}
-            image={getMarkerIcon(location.type)}
-            onPress={() => onLocationPress(location)}
-          />
-        ))}
+        {visibleLocations
+          .filter((location) =>
+            Array.isArray(filter)
+              ? filter.length === 0 || filter.includes(location.type)
+              : !filter || location.type === filter,
+          )
+          .map((location) => (
+            <Marker
+              key={location.id}
+              coordinate={{
+                latitude: location.latitude,
+                longitude: location.longitude,
+              }}
+              image={getMarkerIcon(location.type)}
+              onPress={() => onLocationPress(location)}
+            />
+          ))}
       </MapView>
     </View>
   );
