@@ -99,7 +99,8 @@
     "clear_all": "Clear all",
     "filters_title": "Type of waste",
     "apply_filters": "Apply filters",
-    "change_password": "Change password?"
+    "change_password": "Change password?",
+    "scanner_permission": "We need your permission to show the camera and enable scan functionality."
   },
   "terms": {
     "accept":"I have read and i Agree and accept this ",

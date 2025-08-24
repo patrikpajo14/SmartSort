@@ -49,12 +49,11 @@ export default function ScannerScreen() {
             // Camera permissions are not granted yet.
             <View>
               <Text style={[styles.message, { color: activeColors.text }]}>
-                We need your permission to show the camera and enable scan
-                functionality.
+                {t("general.scanner_permission")}
               </Text>
               <PrimaryButton
                 onPress={requestPermission}
-                label="Grant permission"
+                label={t("general.request_permission")}
               />
             </View>
           ) : (

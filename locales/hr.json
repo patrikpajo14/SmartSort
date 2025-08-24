@@ -72,15 +72,14 @@
     "read_more": "Pročitaj više",
     "back": "Natrag",
     "permission_required": "Potrebna dozvola",
-    "permission_required_text": "Aplikacija SmartSort treba pristup vašoj lokaciji za ispravan rad karata. Omogućite dozvole za lokaciju, a zatim ćete biti preusmjereni na postavke aplikacije gdje možete odabrati 'Dopusti cijelo vrijeme'.",
+    "location_permission_required_text": "Aplikaciji SmartSort potreban je pristup vašoj lokaciji kako bi karte ispravno radile. Omogućite dopuštenja za lokaciju, nakon čega ćete biti preusmjereni na postavke lokacije aplikacije gdje možete odabrati \"Dopusti cijelo vrijeme\".",
+    "location_permission_required_text_ios": "Aplikaciji SmartSort potreban je pristup vašoj lokaciji kako bi karte ispravno radile, omogućite dopuštenja za lokaciju.",
     "request_permission": "Zatraži dozvole",
     "check_wifi": "Nešto je pošlo po zlu. Provjerite WIFI vezu.",
     "cancel": "Odustani",
     "save": "Spremi",
     "open_permissions": "Otvori zahtjev za dozvolu",
     "permission_false": "Dozvole nisu dodijeljene!",
-    "permission_blocked_title": "Dozvola blokirana",
-    "permission_blocked_text": "Ova aplikacija treba pristup vašoj lokaciji za prikaz interaktivne karte. Omogućite usluge lokacije u postavkama.",
     "open_settings": "Otvori postavke",
     "confirmation_modal": "Jeste li sigurni?",
     "delete_profile": "Izbriši profil",
@@ -100,7 +99,8 @@
     "clear_all": "Očisti sve",
     "filters_title": "Vrsta otpada",
     "apply_filters": "Primijeni filtere",
-    "change_password": "Promijeniti lozinku?"
+    "change_password": "Promijeniti lozinku?",
+    "scanner_permission": "Trebamo vaše dopuštenje za prikaz kamere i omogućavanje skeniranja."
   },
   "terms": {
     "accept": "Pročitao sam, slažem se i prihvaćam ovo",
@@ -111,7 +111,14 @@
   "education": {
     "title": "Edukacija",
     "how_to": "Kako reciklirati",
-    "guidelines": "Pogledaj upute"
+    "guidelines": "Pogledaj upute",
+    "empty_educations_title": "Još nema Edukativnog sadržaja",
+    "empty_educations_description": "Nismo izradili niti primili nikakve edukativne materijale. Čim budu dostupni, pojavit će se ovdje kako bi vam pomogli da naučite kako pravilno sortirati otpad.",
+    "plastic_container": "Žuti kontejner",
+    "glass_container": "Zeleni kontejner",
+    "paper_container": "Plavi kontejner",
+    "metal_container": "Reciklažno dvorište",
+    "storage_container": "Reciklažno dvorište"
   },
   "locations": {
     "map": "Karta",
@@ -189,6 +196,7 @@
     "login_failed": "Prijava nije uspjela! Pokušaj kasnije.",
     "success_message_register": "Uspješna registracija!",
     "register_failed": "Registracija nije uspjela! Pokušaj kasnije.",
-    "unexpected_error": "Dogodila se neočekivana pogreška."
+    "unexpected_error": "Dogodila se neočekivana pogreška.",
+    "session_expired": "Vaša je sesija istekla. Sigurno ste odjavljeni."
   }
 }

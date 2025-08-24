@@ -21,7 +21,7 @@
     "android": {
       "config": {
         "googleMaps": {
-          "apiKey": "process.env.ANDROID_GOOGLE_MAPS_API_KEY"
+          "apiKey": "AIzaSyBysCvvNqPbQ2-InAkGXgYAvJST3UoH6WA"
         }
       },
       "adaptiveIcon": {
@@ -57,9 +57,15 @@
       [
         "expo-asset",
         {
-          "assets": ["./locales/en.json", "./locales/hr.json"]
+          "assets": [
+            "./locales/en.json",
+            "./locales/hr.json"
+          ]
         }
-      ]
+      ],
+      "expo-font",
+      "expo-secure-store",
+      "expo-web-browser"
     ],
     "assetBundlePatterns": [
       "locales/*.json"

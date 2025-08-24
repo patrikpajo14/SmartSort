@@ -19,6 +19,7 @@ import { COLORS, FONTS } from "@/constants/theme";
 import { Location as LocationInterface, RegionRequest } from "@/types/global";
 import { getMarkerIcon } from "@/utils/mapThemePickers";
 import { useFetchLocationsCoordinates } from "@/reactQuery/locations";
+import { ANDROID_MAP_KEY } from "@/constants/config";
 
 type MapTabProps = {
   filter: string | string[];
@@ -35,7 +36,9 @@ export default function MapTab({ filter, onLocationPress }: MapTabProps) {
   const mapRef = useRef<MapView>(null);
   const [permission, setPermission] =
     useState<Location.PermissionStatus | null>(null);
-  const regionChangeTimeout = useRef<NodeJS.Timeout | null>(null);
+  const regionChangeTimeout = useRef<ReturnType<typeof setTimeout> | null>(
+    null,
+  );
   const [userLoc, setUserLoc] = useState<Location.LocationObject | null>(null);
   const [regionRequest, setRegionRequest] = useState<RegionRequest | null>(
     null,
@@ -43,6 +46,8 @@ export default function MapTab({ filter, onLocationPress }: MapTabProps) {
   const [visibleLocations, setVisibleLocations] = useState<LocationInterface[]>(
     [],
   );
+
+  console.log("MAP API KEY", ANDROID_MAP_KEY);
 
   console.log("MAP TAB FILTERS", filter);
 
