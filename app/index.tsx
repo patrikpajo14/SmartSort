@@ -2,7 +2,6 @@ import { useCallback, useState } from "react";
 import {
   ImageURISource,
   Pressable,
-  SafeAreaView,
   StyleSheet,
   Text,
   View,
@@ -20,8 +19,8 @@ import Button from "@/components/Button";
 import { useTheme } from "@/context/ThemeContext";
 import { COLORS } from "@/constants/theme";
 import { useTranslation } from "react-i18next";
-import loginForm from "@/screens/auth-screens/LoginForm";
 import { ScaledSheet } from "react-native-size-matters";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function App() {
   const { t } = useTranslation();
